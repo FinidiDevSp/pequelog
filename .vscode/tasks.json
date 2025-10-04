@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "dev",
+            "label": "npm: dev",
+            "detail": "Inicia el servidor de desarrollo de PequeLog",
+            "problemMatcher": [],
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        }
+    ]
+}
