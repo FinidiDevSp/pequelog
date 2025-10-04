@@ -1,12 +1,16 @@
-# PequeLog
+# pequelog
 
-Este repositorio incluye configuraciones básicas de Visual Studio Code para iniciar el servidor de desarrollo mediante `npm run dev`, depurar la aplicación y mantener un estilo de código consistente.
+A new Flutter project.
 
-## VS Code
+## Getting Started
 
-- **launch.json**: inicia la depuración ejecutando el script `npm run dev`.
-- **tasks.json**: define la tarea `npm: dev` que se usa como pre-tarea para la depuración.
-- **settings.json**: activa el formateo automático y la integración con ESLint y Prettier.
-- **extensions.json**: recomienda extensiones útiles para trabajar en el proyecto.
+This project is a starting point for a Flutter application.
 
-Ajusta los scripts o las rutas según evolucione la aplicación.
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
