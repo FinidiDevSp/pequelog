@@ -143,6 +143,29 @@ class AppLocalizationsEs extends AppLocalizations {
   String get babyHomeActionsTitle => 'Acciones rápidas';
 
   @override
+  String get babyHomeHighlightsTitle => 'Últimos momentos clave';
+
+  @override
+  String get babyHomeHighlightsFeed => 'Último biberón';
+
+  @override
+  String get babyHomeHighlightsDiaper => 'Última caca';
+
+  @override
+  String get babyHomeHighlightsBath => 'Último baño';
+
+  @override
+  String get babyHomeHighlightsVomit => 'Último vómito';
+
+  @override
+  String get babyHomeHighlightsNoData => 'Sin registros aún';
+
+  @override
+  String babyHomeHighlightsEntry(Object date, Object time, Object elapsed) {
+    return '$date a las $time · hace $elapsed';
+  }
+
+  @override
   String get babyHomeMenuEdit => 'Editar bebé';
 
   @override
@@ -159,6 +182,26 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get babyActionDiaper => 'Registrar caca';
+
+  @override
+  String get babyActionHistory => 'Historial';
+
+  @override
+  String get babyActionStatistics => 'Estadísticas';
+
+  @override
+  String get babyActionAskPediatrician => 'Preguntas al pediatra';
+
+  @override
+  String get babyActionMedicalAgenda => 'Agenda médica';
+
+  @override
+  String get babyActionGrowth => 'Crecimiento';
+
+  @override
+  String babyHomeFeatureComingSoon(Object feature) {
+    return 'La sección $feature estará disponible pronto.';
+  }
 
   @override
   String get babyActionPlaceholderDescription =>

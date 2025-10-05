@@ -58,12 +58,37 @@
   },
   "babyHomePhotoPlaceholder": "No photo",
   "babyHomeActionsTitle": "Quick actions",
+  "babyHomeHighlightsTitle": "Last key moments",
+  "babyHomeHighlightsFeed": "Last bottle",
+  "babyHomeHighlightsDiaper": "Last diaper change",
+  "babyHomeHighlightsBath": "Last bath",
+  "babyHomeHighlightsVomit": "Last spit up",
+  "babyHomeHighlightsNoData": "No records yet",
+  "babyHomeHighlightsEntry": "{date} at {time} · {elapsed} ago",
+  "@babyHomeHighlightsEntry": {
+    "placeholders": {
+      "date": {},
+      "time": {},
+      "elapsed": {}
+    }
+  },
   "babyHomeMenuEdit": "Edit baby",
   "babyHomeMenuSettings": "Settings",
   "babyActionFeed": "Log feed",
   "babyActionBath": "Log bath",
   "babyActionVomited": "Log spit up",
   "babyActionDiaper": "Log diaper",
+  "babyActionHistory": "History",
+  "babyActionStatistics": "Statistics",
+  "babyActionAskPediatrician": "Ask pediatrician",
+  "babyActionMedicalAgenda": "Medical agenda",
+  "babyActionGrowth": "Growth",
+  "babyHomeFeatureComingSoon": "{feature} will be available soon.",
+  "@babyHomeFeatureComingSoon": {
+    "placeholders": {
+      "feature": {}
+    }
+  },
   "babyActionPlaceholderDescription": "You'll be able to record this activity very soon.",
   "actionDateLabel": "Date",
   "actionDateHint": "Select the day",

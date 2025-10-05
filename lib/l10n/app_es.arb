@@ -58,12 +58,37 @@
   },
   "babyHomePhotoPlaceholder": "Sin foto",
   "babyHomeActionsTitle": "Acciones rápidas",
+  "babyHomeHighlightsTitle": "Últimos momentos clave",
+  "babyHomeHighlightsFeed": "Último biberón",
+  "babyHomeHighlightsDiaper": "Última caca",
+  "babyHomeHighlightsBath": "Último baño",
+  "babyHomeHighlightsVomit": "Último vómito",
+  "babyHomeHighlightsNoData": "Sin registros aún",
+  "babyHomeHighlightsEntry": "{date} a las {time} · hace {elapsed}",
+  "@babyHomeHighlightsEntry": {
+    "placeholders": {
+      "date": {},
+      "time": {},
+      "elapsed": {}
+    }
+  },
   "babyHomeMenuEdit": "Editar bebé",
   "babyHomeMenuSettings": "Configuración",
   "babyActionFeed": "Registrar toma",
   "babyActionBath": "Registrar baño",
   "babyActionVomited": "Registrar vómito",
   "babyActionDiaper": "Registrar caca",
+  "babyActionHistory": "Historial",
+  "babyActionStatistics": "Estadísticas",
+  "babyActionAskPediatrician": "Preguntas al pediatra",
+  "babyActionMedicalAgenda": "Agenda médica",
+  "babyActionGrowth": "Crecimiento",
+  "babyHomeFeatureComingSoon": "La sección {feature} estará disponible pronto.",
+  "@babyHomeFeatureComingSoon": {
+    "placeholders": {
+      "feature": {}
+    }
+  },
   "babyActionPlaceholderDescription": "Muy pronto podrás registrar esta actividad con todo detalle.",
   "actionDateLabel": "Fecha",
   "actionDateHint": "Selecciona el día",
