@@ -31,6 +31,25 @@ class _InMemoryBabyRepository implements BabyRepository {
     _babies.add(baby);
     return baby;
   }
+
+  @override
+  Future<Baby> updateBaby(int id, BabyDraft draft) async {
+    final index = _babies.indexWhere((baby) => baby.id == id);
+    if (index == -1) {
+      throw StateError('Baby not found');
+    }
+    final updated = Baby(
+      id: id,
+      name: draft.name,
+      birthDateTime: draft.birthDateTime,
+      sex: draft.sex,
+      birthLengthCm: draft.birthLengthCm,
+      birthWeightKg: draft.birthWeightKg,
+      photoPath: draft.photoPath,
+    );
+    _babies[index] = updated;
+    return updated;
+  }
 }
 
 class _FakeImagePickerService implements ImagePickerService {
@@ -115,14 +134,20 @@ void main() {
     await tester.tap(feedAction);
     await tester.pumpAndSettle();
 
-    expect(find.text('Registrar toma'), findsOneWidget);
-    expect(
-      find.text('Muy pronto podrás registrar esta actividad con todo detalle.'),
-      findsOneWidget,
-    );
+    expect(find.byKey(const Key('feed_submit')), findsOneWidget);
 
-    await tester.tap(find.byType(BackButton));
+    await tester.enterText(find.byKey(const Key('feed_amount')), '90');
+    await tester.enterText(find.byKey(const Key('feed_notes')), 'Left side');
+
+    await tester.tap(find.byKey(const Key('feed_submit')));
     await tester.pumpAndSettle();
+
+    expect(find.text('Feed saved'), findsOneWidget);
+
+    await tester.pumpAndSettle();
+
+    expect(find.text('Latest actions'), findsOneWidget);
+    expect(find.textContaining('Bottle · 90 ml'), findsOneWidget);
 
     final context = tester.element(find.byType(BabyHomeScreen));
     final l10n = AppLocalizations.of(context)!;

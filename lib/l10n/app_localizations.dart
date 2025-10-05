@@ -392,17 +392,329 @@ abstract class AppLocalizations {
   /// **'Muy pronto podrás registrar esta actividad con todo detalle.'**
   String get babyActionPlaceholderDescription;
 
-  /// No description provided for @editBabyPlaceholderTitle.
+  /// No description provided for @actionDateLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha'**
+  String get actionDateLabel;
+
+  /// No description provided for @actionDateHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona el día'**
+  String get actionDateHint;
+
+  /// No description provided for @actionTimeLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Hora'**
+  String get actionTimeLabel;
+
+  /// No description provided for @actionTimeHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona la hora'**
+  String get actionTimeHint;
+
+  /// No description provided for @actionNotesLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Notas'**
+  String get actionNotesLabel;
+
+  /// No description provided for @actionNotesHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Agrega detalles u observaciones'**
+  String get actionNotesHint;
+
+  /// No description provided for @actionDatePickerHelp.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige el día de la actividad'**
+  String get actionDatePickerHelp;
+
+  /// No description provided for @actionTimePickerHelp.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige la hora de la actividad'**
+  String get actionTimePickerHelp;
+
+  /// No description provided for @feedMethodLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Método de alimentación'**
+  String get feedMethodLabel;
+
+  /// No description provided for @feedMethodError.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona un método'**
+  String get feedMethodError;
+
+  /// No description provided for @feedMethodBreast.
+  ///
+  /// In es, this message translates to:
+  /// **'Pecho'**
+  String get feedMethodBreast;
+
+  /// No description provided for @feedMethodBottle.
+  ///
+  /// In es, this message translates to:
+  /// **'Biberón'**
+  String get feedMethodBottle;
+
+  /// No description provided for @feedMethodMixed.
+  ///
+  /// In es, this message translates to:
+  /// **'Mixto'**
+  String get feedMethodMixed;
+
+  /// No description provided for @feedAmountLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad (ml)'**
+  String get feedAmountLabel;
+
+  /// No description provided for @feedAmountHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ejemplo: 120'**
+  String get feedAmountHint;
+
+  /// No description provided for @feedAmountRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa una cantidad'**
+  String get feedAmountRequired;
+
+  /// No description provided for @feedAmountError.
+  ///
+  /// In es, this message translates to:
+  /// **'Usa una cantidad válida mayor a cero'**
+  String get feedAmountError;
+
+  /// No description provided for @feedActionSubmit.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar toma'**
+  String get feedActionSubmit;
+
+  /// No description provided for @feedActionSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Toma guardada'**
+  String get feedActionSuccess;
+
+  /// No description provided for @feedActionError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos guardar la toma. Inténtalo de nuevo.'**
+  String get feedActionError;
+
+  /// No description provided for @bathDurationLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Duración del baño'**
+  String get bathDurationLabel;
+
+  /// No description provided for @bathDurationHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Minutos'**
+  String get bathDurationHint;
+
+  /// No description provided for @bathDurationHelper.
+  ///
+  /// In es, this message translates to:
+  /// **'Déjalo vacío si no quieres registrarlo'**
+  String get bathDurationHelper;
+
+  /// No description provided for @bathDurationError.
+  ///
+  /// In es, this message translates to:
+  /// **'Usa minutos enteros mayores a cero'**
+  String get bathDurationError;
+
+  /// No description provided for @bathActionSubmit.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar baño'**
+  String get bathActionSubmit;
+
+  /// No description provided for @bathActionSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Baño guardado'**
+  String get bathActionSuccess;
+
+  /// No description provided for @bathActionError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos guardar el baño. Inténtalo de nuevo.'**
+  String get bathActionError;
+
+  /// No description provided for @vomitSeverityLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Intensidad'**
+  String get vomitSeverityLabel;
+
+  /// No description provided for @vomitSeverityMild.
+  ///
+  /// In es, this message translates to:
+  /// **'Leve'**
+  String get vomitSeverityMild;
+
+  /// No description provided for @vomitSeverityModerate.
+  ///
+  /// In es, this message translates to:
+  /// **'Moderada'**
+  String get vomitSeverityModerate;
+
+  /// No description provided for @vomitSeverityIntense.
+  ///
+  /// In es, this message translates to:
+  /// **'Intensa'**
+  String get vomitSeverityIntense;
+
+  /// No description provided for @vomitActionSubmit.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar vómito'**
+  String get vomitActionSubmit;
+
+  /// No description provided for @vomitActionSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Vómito guardado'**
+  String get vomitActionSuccess;
+
+  /// No description provided for @vomitActionError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos guardar el vómito. Inténtalo de nuevo.'**
+  String get vomitActionError;
+
+  /// No description provided for @diaperTextureLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Textura'**
+  String get diaperTextureLabel;
+
+  /// No description provided for @diaperTextureLiquid.
+  ///
+  /// In es, this message translates to:
+  /// **'Líquida'**
+  String get diaperTextureLiquid;
+
+  /// No description provided for @diaperTextureSoft.
+  ///
+  /// In es, this message translates to:
+  /// **'Blanda'**
+  String get diaperTextureSoft;
+
+  /// No description provided for @diaperTextureSolid.
+  ///
+  /// In es, this message translates to:
+  /// **'Firme'**
+  String get diaperTextureSolid;
+
+  /// No description provided for @diaperPeeLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'También hubo pipí'**
+  String get diaperPeeLabel;
+
+  /// No description provided for @diaperPeeTag.
+  ///
+  /// In es, this message translates to:
+  /// **'con pipí'**
+  String get diaperPeeTag;
+
+  /// No description provided for @diaperActionSubmit.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar cambio'**
+  String get diaperActionSubmit;
+
+  /// No description provided for @diaperActionSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambio guardado'**
+  String get diaperActionSuccess;
+
+  /// No description provided for @diaperActionError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos guardar el cambio. Inténtalo de nuevo.'**
+  String get diaperActionError;
+
+  /// No description provided for @recentActionsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Últimas acciones'**
+  String get recentActionsTitle;
+
+  /// No description provided for @recentActionsEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay registros. Usa los accesos rápidos para comenzar.'**
+  String get recentActionsEmpty;
+
+  /// No description provided for @recentActionFeed.
+  ///
+  /// In es, this message translates to:
+  /// **'{time} · {method} · {amount}'**
+  String recentActionFeed(String time, String method, String amount);
+
+  /// No description provided for @recentActionBath.
+  ///
+  /// In es, this message translates to:
+  /// **'{time} · Baño'**
+  String recentActionBath(String time);
+
+  /// No description provided for @recentActionBathWithDuration.
+  ///
+  /// In es, this message translates to:
+  /// **'{time} · Baño de {duration}'**
+  String recentActionBathWithDuration(String time, String duration);
+
+  /// No description provided for @recentActionVomit.
+  ///
+  /// In es, this message translates to:
+  /// **'{time} · Vómito {severity}'**
+  String recentActionVomit(String time, String severity);
+
+  /// No description provided for @recentActionDiaper.
+  ///
+  /// In es, this message translates to:
+  /// **'{time} · {texture}'**
+  String recentActionDiaper(String time, String texture);
+
+  /// No description provided for @recentActionDiaperWithPee.
+  ///
+  /// In es, this message translates to:
+  /// **'{time} · {texture} · {pee}'**
+  String recentActionDiaperWithPee(String time, String texture, String pee);
+
+  /// No description provided for @recentActionNotes.
+  ///
+  /// In es, this message translates to:
+  /// **'Notas: {notes}'**
+  String recentActionNotes(String notes);
+
+  /// No description provided for @editBabyTitle.
   ///
   /// In es, this message translates to:
   /// **'Editar bebé'**
-  String get editBabyPlaceholderTitle;
+  String get editBabyTitle;
 
-  /// No description provided for @editBabyPlaceholderDescription.
+  /// No description provided for @editBabySave.
   ///
   /// In es, this message translates to:
-  /// **'Podrás actualizar los datos muy pronto.'**
-  String get editBabyPlaceholderDescription;
+  /// **'Guardar cambios'**
+  String get editBabySave;
 
   /// No description provided for @configurationTitle.
   ///

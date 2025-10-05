@@ -77,4 +77,27 @@ class BabyState extends ChangeNotifier {
       rethrow;
     }
   }
+
+  /// Updates the provided [baby] using the given [draft], refreshing listeners.
+  Future<void> updateBaby(Baby baby, BabyDraft draft) async {
+    try {
+      final updated = await repository.updateBaby(baby.id, draft);
+      final index = _babies.indexWhere((existing) => existing.id == updated.id);
+      if (index >= 0) {
+        _babies[index] = updated;
+      } else {
+        _babies.add(updated);
+      }
+      _babies.sort((a, b) => a.id.compareTo(b.id));
+      _selectedBaby = updated;
+      _status = BabyStatus.ready;
+      _error = null;
+      notifyListeners();
+    } catch (err) {
+      _status = BabyStatus.error;
+      _error = err;
+      notifyListeners();
+      rethrow;
+    }
+  }
 }

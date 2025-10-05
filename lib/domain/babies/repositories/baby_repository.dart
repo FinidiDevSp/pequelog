@@ -8,4 +8,7 @@ abstract class BabyRepository {
 
   /// Persists a new baby and returns the stored entity.
   Future<Baby> createBaby(BabyDraft draft);
+
+  /// Updates an existing baby and returns the stored entity.
+  Future<Baby> updateBaby(int id, BabyDraft draft);
 }
