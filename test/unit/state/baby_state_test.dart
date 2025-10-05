@@ -7,8 +7,13 @@ import 'package:pequelog/presentation/features/startup/baby_state.dart';
 
 class _FakeBabyRepository implements BabyRepository {
   _FakeBabyRepository({List<Baby>? initialBabies})
-      : _babies = List.of(initialBabies ?? const <Baby>[]),
-        _nextId = (initialBabies?.map((b) => b.id).fold<int>(0, (prev, id) => id > prev ? id : prev) ?? 0) + 1;
+    : _babies = List.of(initialBabies ?? const <Baby>[]),
+      _nextId =
+          (initialBabies
+                  ?.map((b) => b.id)
+                  .fold<int>(0, (prev, id) => id > prev ? id : prev) ??
+              0) +
+          1;
 
   final List<Baby> _babies;
   int _nextId;
@@ -21,7 +26,7 @@ class _FakeBabyRepository implements BabyRepository {
     final baby = Baby(
       id: _nextId++,
       name: draft.name,
-      birthDate: draft.birthDate,
+      birthDateTime: draft.birthDateTime,
       sex: draft.sex,
       birthLengthCm: draft.birthLengthCm,
       birthWeightKg: draft.birthWeightKg,
@@ -45,10 +50,11 @@ void main() {
     });
 
     test('selects the first baby returned by the repository', () async {
+      final birthDateTime = DateTime(2024, 1, 10, 8, 45);
       final baby = Baby(
         id: 1,
         name: 'Lucia',
-        birthDate: DateTime.utc(2024, 1, 10),
+        birthDateTime: birthDateTime,
         sex: BabySex.female,
         birthLengthCm: 50.0,
         birthWeightKg: 3.2,
@@ -61,6 +67,7 @@ void main() {
 
       expect(state.status, BabyStatus.ready);
       expect(state.selectedBaby, equals(baby));
+      expect(state.selectedBaby?.birthDateTime, equals(birthDateTime));
     });
 
     test('addBaby persists and selects the new baby', () async {
@@ -71,9 +78,9 @@ void main() {
       expect(state.status, BabyStatus.missingBaby);
 
       await state.addBaby(
-        const BabyDraft(
+        BabyDraft(
           name: 'Noa',
-          birthDate: DateTime.utc(2024, 5, 4),
+          birthDateTime: DateTime(2024, 5, 4, 3, 15),
           sex: BabySex.other,
           birthLengthCm: 49.0,
           birthWeightKg: 3.0,
@@ -83,6 +90,7 @@ void main() {
 
       expect(state.status, BabyStatus.ready);
       expect(state.selectedBaby?.name, 'Noa');
+      expect(state.selectedBaby?.birthDateTime.hour, 3);
       expect(state.babies.length, 1);
       expect(state.babies.first.photoPath, 'photo.png');
     });

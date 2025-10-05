@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pequelog/core/services/image_picker_service.dart';
 import 'package:pequelog/domain/babies/entities/baby.dart';
 import 'package:pequelog/domain/babies/entities/baby_draft.dart';
 import 'package:pequelog/domain/babies/entities/baby_sex.dart';
 import 'package:pequelog/domain/babies/repositories/baby_repository.dart';
+import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/features/startup/baby_home_screen.dart';
 import 'package:pequelog/presentation/features/startup/setup_screen.dart';
 import 'package:pequelog/presentation/pequelog_app.dart';
@@ -33,18 +35,23 @@ void main() {
     testWidgets('shows minimal UI with actions and snackbar', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: SetupScreen(
-            onConfigure: () {},
-            onCreateBaby: () {},
-          ),
+          locale: const Locale('es'),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SetupScreen(onConfigure: () {}, onCreateBaby: () {}),
         ),
       );
 
       await tester.pump();
 
       expect(find.text('Configurar App'), findsOneWidget);
-      expect(find.text('Nuevo bebe'), findsOneWidget);
-      expect(find.text('Registra un bebe para empezar'), findsOneWidget);
+      expect(find.text('Nuevo bebé'), findsOneWidget);
+      expect(find.text('Registra un bebé para empezar'), findsOneWidget);
     });
   });
 
@@ -64,11 +71,13 @@ void main() {
       expect(find.byType(SetupScreen), findsOneWidget);
     });
 
-    testWidgets('renders baby home when repository provides babies', (tester) async {
+    testWidgets('renders baby home when repository provides babies', (
+      tester,
+    ) async {
       final baby = Baby(
         id: 1,
         name: 'Mateo',
-        birthDate: DateTime.utc(2023, 6, 12),
+        birthDateTime: DateTime(2023, 6, 12, 9, 30),
         sex: BabySex.male,
         birthLengthCm: 52.5,
         birthWeightKg: 3.4,

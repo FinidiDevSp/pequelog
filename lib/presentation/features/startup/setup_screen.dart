@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pequelog/l10n/app_localizations.dart';
 
 /// Empty state displayed when no babies exist yet in storage.
 class SetupScreen extends StatefulWidget {
@@ -34,11 +35,13 @@ class _SetupScreenState extends State<SetupScreen> {
         return;
       }
 
+      final l10n = AppLocalizations.of(context)!;
+
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(
-            content: Text('Registra un bebe para empezar'),
+          SnackBar(
+            content: Text(l10n.setupSnackMessage),
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -50,6 +53,7 @@ class _SetupScreenState extends State<SetupScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
@@ -61,7 +65,7 @@ class _SetupScreenState extends State<SetupScreen> {
             children: [
               const SizedBox(height: 48),
               Text(
-                'PequeLog',
+                l10n.appTitle,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w700,
@@ -70,7 +74,7 @@ class _SetupScreenState extends State<SetupScreen> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Prepara la app para tu primer registro.',
+                l10n.setupSubtitle,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: theme.colorScheme.onBackground.withOpacity(0.72),
@@ -78,19 +82,21 @@ class _SetupScreenState extends State<SetupScreen> {
               ),
               const Spacer(),
               ElevatedButton(
+                key: const Key('setup_configure'),
                 onPressed: widget.onConfigure,
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(56),
                 ),
-                child: const Text('Configurar App'),
+                child: Text(l10n.setupConfigure),
               ),
               const SizedBox(height: 16),
               OutlinedButton(
+                key: const Key('setup_newBaby'),
                 onPressed: widget.onCreateBaby,
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size.fromHeight(56),
                 ),
-                child: const Text('Nuevo bebe'),
+                child: Text(l10n.setupNewBaby),
               ),
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pequelog/l10n/app_localizations.dart';
 
 /// First-run onboarding experience that introduces the PequeLog brand.
 class OnboardingPage extends StatelessWidget {
@@ -8,6 +9,7 @@ class OnboardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: SafeArea(
@@ -24,7 +26,7 @@ class OnboardingPage extends StatelessWidget {
               children: [
                 const Spacer(),
                 Semantics(
-                  label: 'Logotipo de PequeLog',
+                  label: l10n.onboardingLogoDescription,
                   child: Center(
                     child: Image.asset(
                       'assets/logo.png',
@@ -35,7 +37,7 @@ class OnboardingPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'PequeLog',
+                  l10n.appTitle,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w700,
@@ -46,7 +48,7 @@ class OnboardingPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Text(
-                    'Tu bitacora diaria para tus peques. Registra tomas, cambios y momentos clave en segundos.',
+                    l10n.onboardingDescription,
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyLarge?.copyWith(
                       color: theme.colorScheme.onBackground.withOpacity(0.72),
@@ -63,7 +65,7 @@ class OnboardingPage extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(52),
                     ),
-                    child: const Text('Comenzar'),
+                    child: Text(l10n.onboardingCta),
                   ),
                 ),
               ],

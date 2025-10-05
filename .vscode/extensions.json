@@ -1,7 +1,8 @@
 {
     "recommendations": [
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "ms-azuretools.vscode-docker"
+        "Dart-Code.flutter",
+        "Dart-Code.dart-code",
+        "nash.awesome-flutter-snippets",
+        "jeroen-meijer.pubspec-assist"
     ]
 }

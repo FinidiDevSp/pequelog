@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pequelog/core/services/image_picker_service.dart';
 import 'package:pequelog/data/babies/sqlite_baby_repository.dart';
 import 'package:pequelog/domain/babies/repositories/baby_repository.dart';
+import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
 import 'package:pequelog/presentation/features/settings/configuration_screen.dart';
 import 'package:pequelog/presentation/features/startup/baby_home_screen.dart';
@@ -21,20 +23,38 @@ class PequeLogApp extends StatelessWidget {
     super.key,
     BabyRepository? repository,
     ImagePickerService? imagePicker,
-  })  : _repository = repository ?? SQLiteBabyRepository(),
-        _imagePicker = imagePicker ?? DeviceImagePickerService();
+    DatePickerLauncher? datePicker,
+    TimePickerLauncher? timePicker,
+  }) : _repository = repository ?? SQLiteBabyRepository(),
+       _imagePicker = imagePicker ?? DeviceImagePickerService(),
+       _datePicker = datePicker,
+       _timePicker = timePicker;
 
   final BabyRepository _repository;
   final ImagePickerService _imagePicker;
+  final DatePickerLauncher? _datePicker;
+  final TimePickerLauncher? _timePicker;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => BabyState(repository: _repository)..load(),
       child: MaterialApp(
-        title: 'PequeLog',
+        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
         theme: _buildTheme(),
-        home: _StartupRouter(imagePicker: _imagePicker),
+        locale: const Locale('es'),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: _StartupRouter(
+          imagePicker: _imagePicker,
+          datePicker: _datePicker,
+          timePicker: _timePicker,
+        ),
       ),
     );
   }
@@ -80,9 +100,15 @@ ThemeData _buildTheme() {
 }
 
 class _StartupRouter extends StatelessWidget {
-  const _StartupRouter({required this.imagePicker});
+  const _StartupRouter({
+    required this.imagePicker,
+    required this.datePicker,
+    required this.timePicker,
+  });
 
   final ImagePickerService imagePicker;
+  final DatePickerLauncher? datePicker;
+  final TimePickerLauncher? timePicker;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +131,11 @@ class _StartupRouter extends StatelessWidget {
               onCreateBaby: () {
                 Navigator.of(context).push(
                   MaterialPageRoute<void>(
-                    builder: (_) => NewBabyScreen(imagePicker: imagePicker),
+                    builder: (_) => NewBabyScreen(
+                      imagePicker: imagePicker,
+                      datePicker: datePicker,
+                      timePicker: timePicker,
+                    ),
                   ),
                 );
               },
@@ -127,9 +157,7 @@ class _LoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
-    );
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }
 
@@ -140,16 +168,20 @@ class _ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Ops, algo salio mal al cargar.'),
+            Text(l10n.errorLoadingMessage),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () { unawaited(onRetry()); },
-              child: const Text('Reintentar'),
+              onPressed: () {
+                unawaited(onRetry());
+              },
+              child: Text(l10n.retryButton),
             ),
           ],
         ),

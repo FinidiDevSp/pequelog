@@ -5,7 +5,7 @@ class BabyDraft {
   /// Creates a new draft with the provided attributes.
   const BabyDraft({
     required this.name,
-    required this.birthDate,
+    required this.birthDateTime,
     required this.sex,
     required this.birthLengthCm,
     required this.birthWeightKg,
@@ -13,7 +13,7 @@ class BabyDraft {
   });
 
   final String name;
-  final DateTime birthDate;
+  final DateTime birthDateTime;
   final BabySex sex;
   final double birthLengthCm;
   final double birthWeightKg;

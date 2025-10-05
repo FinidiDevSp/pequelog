@@ -1,5 +1,10 @@
-package com.example.pequelog
+package pequelog.app
+
+
 
 import io.flutter.embedding.android.FlutterActivity
 
+
+
 class MainActivity : FlutterActivity()
+

@@ -2,18 +2,39 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-node",
+            "name": "Flutter: Launch Debug",
+            "type": "dart",
             "request": "launch",
-            "name": "Iniciar aplicación PequeLog",
-            "skipFiles": ["<node_internals>/**"],
-            "runtimeExecutable": "npm",
-            "runtimeArgs": ["run", "dev"],
+            "program": "lib/main.dart",
             "cwd": "${workspaceFolder}",
-            "console": "integratedTerminal",
-            "preLaunchTask": "npm: dev",
-            "env": {
-                "NODE_ENV": "development"
-            }
+            "flutterMode": "debug",
+            "toolArgs": [
+                "--track-widget-creation"
+            ],
+            "preLaunchTask": "flutter: pub get"
+        },
+        {
+            "name": "Flutter: Launch Profile",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "cwd": "${workspaceFolder}",
+            "flutterMode": "profile",
+            "preLaunchTask": "flutter: pub get"
+        },
+        {
+            "name": "Flutter: Attach",
+            "type": "dart",
+            "request": "attach",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Flutter: Integration Test",
+            "type": "dart",
+            "request": "launch",
+            "program": "integration_test/app_test.dart",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "flutter: pub get"
         }
     ]
 }

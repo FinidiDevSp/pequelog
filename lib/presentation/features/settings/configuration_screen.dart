@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pequelog/l10n/app_localizations.dart';
 
 /// Placeholder for the configuration hub.
 class ConfigurationScreen extends StatelessWidget {
@@ -7,13 +8,11 @@ class ConfigurationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Configuracion'),
-      ),
-      body: const Center(
-        child: Text('Aqui podras personalizar la app muy pronto.'),
-      ),
+      appBar: AppBar(title: Text(l10n.configurationTitle)),
+      body: Center(child: Text(l10n.configurationPlaceholder)),
     );
   }
 }

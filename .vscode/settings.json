@@ -1,15 +1,38 @@
 {
     "editor.formatOnSave": true,
+    "dart.lineLength": 100,
+    "dart.completeFunctionCalls": true,
+    "dart.previewFlutterUiGuides": true,
     "files.exclude": {
         "**/.DS_Store": true,
-        "**/node_modules": true,
-        "**/.next": true
+        "**/.dart_tool": true,
+        "**/build": true,
+        "**/.idea": true,
+        "ios/Pods": true,
+        "android/.gradle": true,
+        "coverage/": true
     },
     "search.exclude": {
-        "**/node_modules": true,
-        "**/.next": true
+        "**/.dart_tool": true,
+        "**/build": true,
+        "ios/Pods": true,
+        "android/.gradle": true,
+        "coverage/": true
     },
-    "typescript.tsdk": "node_modules/typescript/lib",
-    "eslint.format.enable": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "files.watcherExclude": {
+        "**/.dart_tool/**": true,
+        "**/build/**": true,
+        "coverage/**": true
+    },
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "Dart-Code.dart-code"
+    },
+    "[yaml]": {
+        "editor.defaultFormatter": "Dart-Code.dart-code"
+    },
+    "dart.analyzerAdditionalArgs": [
+        "--options",
+        "analysis_options.yaml"
+    ]
 }

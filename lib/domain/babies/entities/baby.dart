@@ -6,7 +6,7 @@ class Baby {
   const Baby({
     required this.id,
     required this.name,
-    required this.birthDate,
+    required this.birthDateTime,
     required this.sex,
     required this.birthLengthCm,
     required this.birthWeightKg,
@@ -19,8 +19,8 @@ class Baby {
   /// Display name used across the app.
   final String name;
 
-  /// Birth date of the baby.
-  final DateTime birthDate;
+  /// Birth instant of the baby including date and time.
+  final DateTime birthDateTime;
 
   /// Biological sex of the baby.
   final BabySex sex;

@@ -1,11 +1,11 @@
 {
-    "name": "pequelog",
-    "short_name": "pequelog",
+    "name": "PequeLog",
+    "short_name": "PequeLog",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#fbfbf1",
+    "theme_color": "#fbfbf1",
+    "description": "PequeLog: bitacora digital para el cuidado diario.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
@@ -33,3 +33,4 @@
         }
     ]
 }
+

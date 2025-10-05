@@ -2,15 +2,81 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "type": "npm",
-            "script": "dev",
-            "label": "npm: dev",
-            "detail": "Inicia el servidor de desarrollo de PequeLog",
+            "label": "flutter: pub get",
+            "type": "shell",
+            "command": "flutter pub get",
             "problemMatcher": [],
-            "isBackground": true,
             "presentation": {
                 "reveal": "always",
                 "panel": "dedicated"
+            }
+        },
+        {
+            "label": "flutter: analyze",
+            "type": "shell",
+            "command": "flutter analyze --options analysis_options.yaml",
+            "problemMatcher": [
+                "$dart-analyzer"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "flutter: analyze --watch",
+            "type": "shell",
+            "command": "flutter analyze --watch --options analysis_options.yaml",
+            "problemMatcher": [
+                "$dart-analyzer"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "flutter: test",
+            "type": "shell",
+            "command": "flutter test",
+            "problemMatcher": [
+                "$dart-test"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "flutter: test-coverage",
+            "type": "shell",
+            "command": "flutter test --coverage",
+            "problemMatcher": [
+                "$dart-test"
+            ],
+            "group": {
+                "kind": "test"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "flutter: integration-test",
+            "type": "shell",
+            "command": "flutter test integration_test",
+            "problemMatcher": [
+                "$dart-test"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
             }
         }
     ]
