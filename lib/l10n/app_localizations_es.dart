@@ -365,6 +365,54 @@ class AppLocalizationsEs extends AppLocalizations {
   String get configurationLanguageEnglish => 'Inglés';
 
   @override
+  String get configurationThemeModeLabel => 'Modo de tema';
+
+  @override
+  String get configurationThemeModeHint =>
+      'Elige cómo se adapta la app a la luz y oscuridad';
+
+  @override
+  String get configurationThemeModeSystem => 'Igual que el dispositivo';
+
+  @override
+  String get configurationThemeModeLight => 'Siempre claro';
+
+  @override
+  String get configurationThemeModeDark => 'Siempre oscuro';
+
+  @override
+  String get configurationPaletteLabel => 'Paleta de color';
+
+  @override
+  String get configurationPaletteHint =>
+      'Elige los tonos suaves que prefieras';
+
+  @override
+  String get configurationPaletteDawnBlush => 'Amanecer rosado';
+
+  @override
+  String get configurationPaletteMintWhisper => 'Brisa de menta';
+
+  @override
+  String get configurationPaletteSkyBreeze => 'Cielo suave';
+
+  @override
+  String get configurationPaletteLavenderField => 'Campo de lavanda';
+
+  @override
+  String get configurationPalettePreviewTitle => 'Vista previa de la paleta';
+
+  @override
+  String get configurationPalettePreviewLightLabel => 'Modo claro';
+
+  @override
+  String get configurationPalettePreviewDarkLabel => 'Modo oscuro';
+
+  @override
+  String get configurationPalettePreviewMockupLabel =>
+      'Vista previa en miniatura';
+
+  @override
   String get errorLoadingMessage => 'Ups, algo salió mal al cargar.';
 
   @override

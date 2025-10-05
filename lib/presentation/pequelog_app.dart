@@ -21,10 +21,8 @@ import 'package:pequelog/presentation/features/settings/configuration_screen.dar
 import 'package:pequelog/presentation/features/startup/baby_home_screen.dart';
 import 'package:pequelog/presentation/features/startup/baby_state.dart';
 import 'package:pequelog/presentation/features/startup/setup_screen.dart';
+import 'package:pequelog/presentation/theme/app_color_palettes.dart';
 import 'package:provider/provider.dart';
-
-const _appBackground = Color(0xFFFBFBF1);
-const _appAccent = Color(0xFF3F4C5A);
 
 /// Root widget that decides the initial route depending on stored babies.
 class PequeLogApp extends StatelessWidget {
@@ -118,7 +116,9 @@ class PequeLogApp extends StatelessWidget {
           return MaterialApp(
             onGenerateTitle: (context) =>
                 AppLocalizations.of(context)!.appTitle,
-            theme: _buildTheme(),
+            theme: _buildTheme(settings.palette, Brightness.light),
+            darkTheme: _buildTheme(settings.palette, Brightness.dark),
+            themeMode: settings.themeMode,
             locale: settings.locale,
             localizationsDelegates: const [
               AppLocalizations.delegate,
@@ -139,41 +139,70 @@ class PequeLogApp extends StatelessWidget {
   }
 }
 
-ThemeData _buildTheme() {
+ThemeData _buildTheme(AppColorPalette palette, Brightness brightness) {
+  final paletteColors = palette.colors;
+  final variant =
+      brightness == Brightness.dark ? paletteColors.dark : paletteColors.light;
+
   final baseScheme = ColorScheme.fromSeed(
-    seedColor: _appAccent,
-    background: _appBackground,
-    brightness: Brightness.light,
+    seedColor: paletteColors.seed,
+    brightness: brightness,
   );
 
   final colorScheme = baseScheme.copyWith(
-    surface: _appBackground,
-    onSurface: Colors.black87,
-    onBackground: Colors.black87,
-    primary: _appAccent,
-    onPrimary: Colors.white,
+    background: variant.background,
+    surface: variant.surface,
+    onSurface: variant.onSurface,
+    onBackground: variant.onBackground,
+    primary: variant.accent,
+    onPrimary: variant.onAccent,
+    secondary: variant.accent,
+    onSecondary: variant.onAccent,
   );
+
+  final borderColor = variant.onSurface.withOpacity(0.14);
 
   return ThemeData(
     useMaterial3: true,
+    brightness: brightness,
     colorScheme: colorScheme,
-    scaffoldBackgroundColor: _appBackground,
+    scaffoldBackgroundColor: variant.background,
     appBarTheme: AppBarTheme(
-      backgroundColor: _appBackground,
-      foregroundColor: colorScheme.onSurface,
+      backgroundColor: variant.surface,
+      foregroundColor: variant.onSurface,
       elevation: 0,
       centerTitle: true,
     ),
-    floatingActionButtonTheme: const FloatingActionButtonThemeData().copyWith(
-      backgroundColor: _appAccent,
-      foregroundColor: Colors.white,
+    cardColor: variant.surface,
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: variant.accent,
+      foregroundColor: variant.onAccent,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: _appAccent,
-        foregroundColor: Colors.white,
+        backgroundColor: variant.accent,
+        foregroundColor: variant.onAccent,
         textStyle: const TextStyle(fontWeight: FontWeight.w600),
       ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor:
+          brightness == Brightness.light ? variant.surface : variant.surface,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: borderColor),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: borderColor),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: variant.accent),
+      ),
+      labelStyle: TextStyle(color: variant.onSurface.withOpacity(0.8)),
+      helperStyle: TextStyle(color: variant.onSurface.withOpacity(0.7)),
     ),
   );
 }

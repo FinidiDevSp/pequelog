@@ -752,6 +752,96 @@ abstract class AppLocalizations {
   /// **'Inglés'**
   String get configurationLanguageEnglish;
 
+  /// No description provided for @configurationThemeModeLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Modo de tema'**
+  String get configurationThemeModeLabel;
+
+  /// No description provided for @configurationThemeModeHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige cómo se adapta la app a la luz y oscuridad'**
+  String get configurationThemeModeHint;
+
+  /// No description provided for @configurationThemeModeSystem.
+  ///
+  /// In es, this message translates to:
+  /// **'Igual que el dispositivo'**
+  String get configurationThemeModeSystem;
+
+  /// No description provided for @configurationThemeModeLight.
+  ///
+  /// In es, this message translates to:
+  /// **'Siempre claro'**
+  String get configurationThemeModeLight;
+
+  /// No description provided for @configurationThemeModeDark.
+  ///
+  /// In es, this message translates to:
+  /// **'Siempre oscuro'**
+  String get configurationThemeModeDark;
+
+  /// No description provided for @configurationPaletteLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Paleta de color'**
+  String get configurationPaletteLabel;
+
+  /// No description provided for @configurationPaletteHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige los tonos suaves que prefieras'**
+  String get configurationPaletteHint;
+
+  /// No description provided for @configurationPaletteDawnBlush.
+  ///
+  /// In es, this message translates to:
+  /// **'Amanecer rosado'**
+  String get configurationPaletteDawnBlush;
+
+  /// No description provided for @configurationPaletteMintWhisper.
+  ///
+  /// In es, this message translates to:
+  /// **'Brisa de menta'**
+  String get configurationPaletteMintWhisper;
+
+  /// No description provided for @configurationPaletteSkyBreeze.
+  ///
+  /// In es, this message translates to:
+  /// **'Cielo suave'**
+  String get configurationPaletteSkyBreeze;
+
+  /// No description provided for @configurationPaletteLavenderField.
+  ///
+  /// In es, this message translates to:
+  /// **'Campo de lavanda'**
+  String get configurationPaletteLavenderField;
+
+  /// No description provided for @configurationPalettePreviewTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Vista previa de la paleta'**
+  String get configurationPalettePreviewTitle;
+
+  /// No description provided for @configurationPalettePreviewLightLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Modo claro'**
+  String get configurationPalettePreviewLightLabel;
+
+  /// No description provided for @configurationPalettePreviewDarkLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Modo oscuro'**
+  String get configurationPalettePreviewDarkLabel;
+
+  /// No description provided for @configurationPalettePreviewMockupLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Vista previa en miniatura'**
+  String get configurationPalettePreviewMockupLabel;
+
   /// No description provided for @errorLoadingMessage.
   ///
   /// In es, this message translates to:
