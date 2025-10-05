@@ -352,6 +352,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String get configurationLanguageEnglish => 'English';
 
   @override
+  String get configurationThemeModeLabel => 'Theme mode';
+
+  @override
+  String get configurationThemeModeHint =>
+      'Choose how the app adapts to light and dark';
+
+  @override
+  String get configurationThemeModeSystem => 'Match device';
+
+  @override
+  String get configurationThemeModeLight => 'Always light';
+
+  @override
+  String get configurationThemeModeDark => 'Always dark';
+
+  @override
+  String get configurationPaletteLabel => 'Color palette';
+
+  @override
+  String get configurationPaletteHint =>
+      'Pick the pastel tones you enjoy the most';
+
+  @override
+  String get configurationPaletteDawnBlush => 'Blush sunrise';
+
+  @override
+  String get configurationPaletteMintWhisper => 'Mint whisper';
+
+  @override
+  String get configurationPaletteSkyBreeze => 'Sky breeze';
+
+  @override
+  String get configurationPaletteLavenderField => 'Lavender field';
+
+  @override
+  String get configurationPalettePreviewTitle => 'Palette preview';
+
+  @override
+  String get configurationPalettePreviewLightLabel => 'Light mode';
+
+  @override
+  String get configurationPalettePreviewDarkLabel => 'Dark mode';
+
+  @override
+  String get configurationPalettePreviewMockupLabel =>
+      'Miniature screen preview';
+
+  @override
   String get errorLoadingMessage => 'Oops, something went wrong while loading.';
 
   @override
