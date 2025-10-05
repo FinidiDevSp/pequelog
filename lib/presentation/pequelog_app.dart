@@ -1,6 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:pequelog/core/services/image_picker_service.dart';
 import 'package:pequelog/data/babies/sqlite_baby_repository.dart';
 import 'package:pequelog/domain/babies/repositories/baby_repository.dart';
 import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
@@ -8,17 +9,23 @@ import 'package:pequelog/presentation/features/settings/configuration_screen.dar
 import 'package:pequelog/presentation/features/startup/baby_home_screen.dart';
 import 'package:pequelog/presentation/features/startup/baby_state.dart';
 import 'package:pequelog/presentation/features/startup/setup_screen.dart';
+import 'package:provider/provider.dart';
 
 const _appBackground = Color(0xFFFBFBF1);
 const _appAccent = Color(0xFF3F4C5A);
 
 /// Root widget that decides the initial route depending on stored babies.
 class PequeLogApp extends StatelessWidget {
-  /// Builds the app with an optional [BabyRepository] override (useful in tests).
-  PequeLogApp({super.key, BabyRepository? repository})
-      : _repository = repository ?? SQLiteBabyRepository();
+  /// Builds the app with optional overrides that ease testing.
+  PequeLogApp({
+    super.key,
+    BabyRepository? repository,
+    ImagePickerService? imagePicker,
+  })  : _repository = repository ?? SQLiteBabyRepository(),
+        _imagePicker = imagePicker ?? DeviceImagePickerService();
 
   final BabyRepository _repository;
+  final ImagePickerService _imagePicker;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +34,7 @@ class PequeLogApp extends StatelessWidget {
       child: MaterialApp(
         title: 'PequeLog',
         theme: _buildTheme(),
-        home: const _StartupRouter(),
+        home: _StartupRouter(imagePicker: _imagePicker),
       ),
     );
   }
@@ -73,7 +80,9 @@ ThemeData _buildTheme() {
 }
 
 class _StartupRouter extends StatelessWidget {
-  const _StartupRouter();
+  const _StartupRouter({required this.imagePicker});
+
+  final ImagePickerService imagePicker;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +105,7 @@ class _StartupRouter extends StatelessWidget {
               onCreateBaby: () {
                 Navigator.of(context).push(
                   MaterialPageRoute<void>(
-                    builder: (_) => const NewBabyScreen(),
+                    builder: (_) => NewBabyScreen(imagePicker: imagePicker),
                   ),
                 );
               },

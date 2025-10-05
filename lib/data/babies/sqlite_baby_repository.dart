@@ -1,6 +1,7 @@
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 import 'package:pequelog/domain/babies/entities/baby.dart';
+import 'package:pequelog/domain/babies/entities/baby_draft.dart';
 import 'package:pequelog/domain/babies/entities/baby_sex.dart';
 import 'package:pequelog/domain/babies/repositories/baby_repository.dart';
 
@@ -45,6 +46,28 @@ class SQLiteBabyRepository implements BabyRepository {
     final database = await _db;
     final rows = await database.query('babies', orderBy: 'id ASC');
     return rows.map(_mapRow).toList(growable: false);
+  }
+
+  @override
+  Future<Baby> createBaby(BabyDraft draft) async {
+    final database = await _db;
+    final id = await database.insert('babies', {
+      'name': draft.name,
+      'birth_date': draft.birthDate.millisecondsSinceEpoch,
+      'sex': draft.sex.value,
+      'birth_length_cm': draft.birthLengthCm,
+      'birth_weight_kg': draft.birthWeightKg,
+      'photo_path': draft.photoPath,
+    });
+
+    final rows = await database.query(
+      'babies',
+      where: 'id = ?',
+      whereArgs: <Object>[id],
+      limit: 1,
+    );
+
+    return _mapRow(rows.first);
   }
 
   Baby _mapRow(Map<String, Object?> row) {

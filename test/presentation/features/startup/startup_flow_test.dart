@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pequelog/core/services/image_picker_service.dart';
 import 'package:pequelog/domain/babies/entities/baby.dart';
+import 'package:pequelog/domain/babies/entities/baby_draft.dart';
 import 'package:pequelog/domain/babies/entities/baby_sex.dart';
 import 'package:pequelog/domain/babies/repositories/baby_repository.dart';
 import 'package:pequelog/presentation/features/startup/baby_home_screen.dart';
@@ -14,6 +16,16 @@ class _FakeBabyRepository implements BabyRepository {
 
   @override
   Future<List<Baby>> fetchBabies() async => _babies;
+
+  @override
+  Future<Baby> createBaby(BabyDraft draft) async {
+    throw UnimplementedError();
+  }
+}
+
+class _FakeImagePickerService implements ImagePickerService {
+  @override
+  Future<String?> pickImage() async => null;
 }
 
 void main() {
@@ -41,7 +53,10 @@ void main() {
       final repository = _FakeBabyRepository(const <Baby>[]);
 
       await tester.pumpWidget(
-        PequeLogApp(repository: repository),
+        PequeLogApp(
+          repository: repository,
+          imagePicker: _FakeImagePickerService(),
+        ),
       );
 
       await tester.pump();
@@ -62,7 +77,10 @@ void main() {
       final repository = _FakeBabyRepository([baby]);
 
       await tester.pumpWidget(
-        PequeLogApp(repository: repository),
+        PequeLogApp(
+          repository: repository,
+          imagePicker: _FakeImagePickerService(),
+        ),
       );
 
       await tester.pump();
