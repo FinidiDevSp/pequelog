@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action.dart';
-import 'package:pequelog/domain/baby_actions/entities/feed_method.dart';
 import 'package:pequelog/domain/baby_actions/entities/stool_texture.dart';
 import 'package:pequelog/domain/baby_actions/entities/vomit_severity.dart';
 import 'package:pequelog/domain/baby_actions/usecases/get_recent_baby_actions.dart';
@@ -73,17 +72,17 @@ class BabyActionsState extends ChangeNotifier {
   /// Logs a feeding action and updates the in-memory list.
   Future<BabyAction> logFeed({
     required DateTime occurredAt,
-    required FeedMethod method,
     required double amountMl,
     String? notes,
+    Duration? duration,
   }) async {
     final id = _ensureBabyId();
     final action = await _logFeedAction(
       babyId: id,
       occurredAt: occurredAt,
-      method: method,
       amountMl: amountMl,
       notes: notes,
+      duration: duration,
     );
     _insertAction(action);
     return action;

@@ -189,19 +189,42 @@ class AppLocalizationsEs extends AppLocalizations {
   String get actionTimePickerHelp => 'Elige la hora de la actividad';
 
   @override
-  String get feedMethodLabel => 'Método de alimentación';
+  String get feedDaySelectorLabel => 'Día de la toma';
 
   @override
-  String get feedMethodError => 'Selecciona un método';
+  String get feedDayPrevious => 'Día anterior';
 
   @override
-  String get feedMethodBreast => 'Pecho';
+  String get feedDayNext => 'Día siguiente';
 
   @override
-  String get feedMethodBottle => 'Biberón';
+  String get feedTimePickerTooltip => 'Elegir hora';
 
   @override
-  String get feedMethodMixed => 'Mixto';
+  String get feedTimeRequired => 'Indica la hora de la toma';
+
+  @override
+  String get feedTimeInvalid => 'Usa el formato HH:MM (24 h)';
+
+  @override
+  String get feedTimerTitle => 'Cronómetro';
+
+  @override
+  String get feedTimerStart => 'Iniciar cronómetro';
+
+  @override
+  String feedTimerRunningLabel(Object elapsed) {
+    return 'Tiempo transcurrido: $elapsed';
+  }
+
+  @override
+  String get feedTimerPause => 'Pausar';
+
+  @override
+  String get feedTimerResume => 'Reanudar';
+
+  @override
+  String get feedTimerStop => 'Terminar toma';
 
   @override
   String get feedAmountLabel => 'Cantidad (ml)';
@@ -305,8 +328,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Aún no hay registros. Usa los accesos rápidos para comenzar.';
 
   @override
-  String recentActionFeed(Object amount, Object method, Object time) {
-    return '$time · $method · $amount';
+  String recentActionFeed(Object time, Object amount) {
+    return '$time · $amount';
+  }
+
+  @override
+  String recentActionFeedDuration(Object duration) {
+    return 'Duración: $duration';
   }
 
   @override

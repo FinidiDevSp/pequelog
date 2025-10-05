@@ -189,19 +189,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionTimePickerHelp => 'Pick the time of the activity';
 
   @override
-  String get feedMethodLabel => 'Feeding method';
+  String get feedDaySelectorLabel => 'Feeding day';
 
   @override
-  String get feedMethodError => 'Select a method';
+  String get feedDayPrevious => 'Previous day';
 
   @override
-  String get feedMethodBreast => 'Breast';
+  String get feedDayNext => 'Next day';
 
   @override
-  String get feedMethodBottle => 'Bottle';
+  String get feedTimePickerTooltip => 'Choose time';
 
   @override
-  String get feedMethodMixed => 'Mixed';
+  String get feedTimeRequired => 'Enter the feeding time';
+
+  @override
+  String get feedTimeInvalid => 'Use the HH:MM format (24 h)';
+
+  @override
+  String get feedTimerTitle => 'Timer';
+
+  @override
+  String get feedTimerStart => 'Start timer';
+
+  @override
+  String feedTimerRunningLabel(Object elapsed) {
+    return 'Elapsed time: $elapsed';
+  }
+
+  @override
+  String get feedTimerPause => 'Pause';
+
+  @override
+  String get feedTimerResume => 'Resume';
+
+  @override
+  String get feedTimerStop => 'Finish feed';
 
   @override
   String get feedAmountLabel => 'Amount (ml)';
@@ -301,8 +324,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'No actions yet. Use the shortcuts above to start logging.';
 
   @override
-  String recentActionFeed(Object amount, Object method, Object time) {
-    return '$time · $method · $amount';
+  String recentActionFeed(Object time, Object amount) {
+    return '$time · $amount';
+  }
+
+  @override
+  String recentActionFeedDuration(Object duration) {
+    return 'Duration: $duration';
   }
 
   @override

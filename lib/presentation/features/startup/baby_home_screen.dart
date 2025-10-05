@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pequelog/core/services/image_picker_service.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action_kind.dart';
-import 'package:pequelog/domain/baby_actions/entities/feed_method.dart';
 import 'package:pequelog/domain/baby_actions/entities/stool_texture.dart';
 import 'package:pequelog/domain/baby_actions/entities/vomit_severity.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action.dart';
@@ -187,23 +186,30 @@ class BabyHomeScreen extends StatelessWidget {
     BuildContext context,
     AppLocalizations l10n,
   ) {
+    final navigator = Navigator.of(context, rootNavigator: true);
     switch (option) {
       case _BabyHomeMenuOption.edit:
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => EditBabyScreen(
-              baby: baby,
-              imagePicker: imagePicker,
-              datePicker: datePicker,
-              timePicker: timePicker,
+        Future<void>.microtask(() {
+          navigator.push(
+            MaterialPageRoute<void>(
+              builder: (_) => EditBabyScreen(
+                baby: baby,
+                imagePicker: imagePicker,
+                datePicker: datePicker,
+                timePicker: timePicker,
+              ),
             ),
-          ),
-        );
+          );
+        });
         break;
       case _BabyHomeMenuOption.settings:
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(builder: (_) => const ConfigurationScreen()),
-        );
+        Future<void>.microtask(() {
+          navigator.push(
+            MaterialPageRoute<void>(
+              builder: (_) => const ConfigurationScreen(),
+            ),
+          );
+        });
         break;
     }
   }
@@ -211,8 +217,7 @@ class BabyHomeScreen extends StatelessWidget {
   Future<void> _openFeedAction(BuildContext context) async {
     final message = await Navigator.of(context).push<String>(
       MaterialPageRoute<String>(
-        builder: (_) =>
-            FeedActionScreen(datePicker: datePicker, timePicker: timePicker),
+        builder: (_) => FeedActionScreen(timePicker: timePicker),
       ),
     );
     _showResultSnack(context, message);
@@ -387,23 +392,26 @@ class _ActionSummary {
     switch (action.kind) {
       case BabyActionKind.feed:
         final details = action.details;
-        final methodName = details['method'] as String?;
         final amount = (details['amountMl'] as num?)?.toDouble() ?? 0;
-        final feedMethod = methodName != null
-            ? FeedMethod.values.firstWhere(
-                (method) => method.name == methodName,
-                orElse: () => FeedMethod.bottle,
-              )
-            : FeedMethod.bottle;
+        final durationSeconds = details['durationSeconds'] as int?;
         final numberFormat = NumberFormat('#.##', locale.toLanguageTag());
         final amountText = numberFormat.format(amount);
         final amountDisplay = '$amountText ml';
-        final description = l10n.recentActionFeed(
-          timeText,
-          _feedMethodLabel(feedMethod, l10n),
-          amountDisplay,
-        );
-        final subtitle = notes == null ? null : l10n.recentActionNotes(notes);
+        final description = l10n.recentActionFeed(timeText, amountDisplay);
+        final durationLabel = durationSeconds == null
+            ? null
+            : l10n.recentActionFeedDuration(
+                _formatDuration(Duration(seconds: durationSeconds)),
+              );
+        final subtitleParts = <String>[];
+        if (durationLabel != null) {
+          subtitleParts.add(durationLabel);
+        }
+        if (notes != null) {
+          subtitleParts.add(l10n.recentActionNotes(notes));
+        }
+        final subtitle =
+            subtitleParts.isEmpty ? null : subtitleParts.join('\n');
         return _ActionSummary(
           icon: Icons.local_drink_outlined,
           description: description,
@@ -471,17 +479,6 @@ class _ActionSummary {
   }
 }
 
-String _feedMethodLabel(FeedMethod method, AppLocalizations l10n) {
-  switch (method) {
-    case FeedMethod.breast:
-      return l10n.feedMethodBreast;
-    case FeedMethod.bottle:
-      return l10n.feedMethodBottle;
-    case FeedMethod.mixed:
-      return l10n.feedMethodMixed;
-  }
-}
-
 String _vomitSeverityLabel(VomitSeverity severity, AppLocalizations l10n) {
   switch (severity) {
     case VomitSeverity.mild:
@@ -491,6 +488,21 @@ String _vomitSeverityLabel(VomitSeverity severity, AppLocalizations l10n) {
     case VomitSeverity.intense:
       return l10n.vomitSeverityIntense;
   }
+}
+
+String _formatDuration(Duration duration) {
+  final hours = duration.inHours;
+  final minutes = duration.inMinutes.remainder(60);
+  final seconds = duration.inSeconds.remainder(60);
+  if (hours > 0) {
+    final hoursLabel = hours.toString().padLeft(2, '0');
+    final minutesLabel = minutes.toString().padLeft(2, '0');
+    final secondsLabel = seconds.toString().padLeft(2, '0');
+    return '$hoursLabel:$minutesLabel:$secondsLabel';
+  }
+  final minutesLabel = minutes.toString().padLeft(2, '0');
+  final secondsLabel = seconds.toString().padLeft(2, '0');
+  return '$minutesLabel:$secondsLabel';
 }
 
 String _diaperTextureLabel(StoolTexture texture, AppLocalizations l10n) {

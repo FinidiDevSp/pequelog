@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:pequelog/domain/baby_actions/entities/feed_method.dart';
 import 'package:pequelog/l10n/app_localizations.dart';
-import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
 import 'package:pequelog/presentation/features/baby_actions/action_pickers.dart';
+import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
 import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -11,12 +12,8 @@ class FeedActionScreen extends StatefulWidget {
   /// Creates the feed action form using the optional pickers.
   const FeedActionScreen({
     super.key,
-    this.datePicker,
     this.timePicker,
   });
-
-  /// Optional override for the date picker (used in tests).
-  final DatePickerLauncher? datePicker;
 
   /// Optional override for the time picker (used in tests).
   final TimePickerLauncher? timePicker;
@@ -27,16 +24,18 @@ class FeedActionScreen extends StatefulWidget {
 
 class _FeedActionScreenState extends State<FeedActionScreen> {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _dateController;
   late final TextEditingController _timeController;
   late final TextEditingController _amountController;
   late final TextEditingController _notesController;
 
   late DateTime _selectedDate;
   late TimeOfDay _selectedTime;
-  FeedMethod? _selectedMethod = FeedMethod.bottle;
-  bool _hydratedInitialFields = false;
   bool _isSaving = false;
+  Duration _timerElapsed = Duration.zero;
+  DateTime? _timerStart;
+  DateTime? _lastTick;
+  Timer? _ticker;
+  bool _isTimerRunning = false;
 
   @override
   void initState() {
@@ -44,7 +43,6 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
     final now = DateTime.now();
     _selectedDate = DateTime(now.year, now.month, now.day);
     _selectedTime = TimeOfDay.fromDateTime(now);
-    _dateController = TextEditingController();
     _timeController = TextEditingController();
     _amountController = TextEditingController();
     _notesController = TextEditingController();
@@ -53,39 +51,16 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_hydratedInitialFields) {
-      return;
-    }
-    final localizations = MaterialLocalizations.of(context);
-    _dateController.text = localizations.formatMediumDate(_selectedDate);
-    _timeController.text = localizations.formatTimeOfDay(
-      _selectedTime,
-      alwaysUse24HourFormat: true,
-    );
-    _hydratedInitialFields = true;
+    _hydrateInitialTimeLabel();
   }
 
   @override
   void dispose() {
-    _dateController.dispose();
     _timeController.dispose();
     _amountController.dispose();
     _notesController.dispose();
+    _ticker?.cancel();
     super.dispose();
-  }
-
-  Future<void> _pickDate() async {
-    FocusScope.of(context).unfocus();
-    final launcher = widget.datePicker ?? defaultActionDatePicker;
-    final picked = await launcher(context, _selectedDate);
-    if (!mounted || picked == null) {
-      return;
-    }
-    setState(() {
-      _selectedDate = DateTime(picked.year, picked.month, picked.day);
-      final material = MaterialLocalizations.of(context);
-      _dateController.text = material.formatMediumDate(_selectedDate);
-    });
   }
 
   Future<void> _pickTime() async {
@@ -97,26 +72,20 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
     }
     setState(() {
       _selectedTime = picked;
-      final material = MaterialLocalizations.of(context);
-      _timeController.text = material.formatTimeOfDay(
-        picked,
-        alwaysUse24HourFormat: true,
-      );
+      _updateTimeLabel();
     });
   }
 
-  Future<void> _submit() async {
+  Future<void> _submit({
+    DateTime? occurredAtOverride,
+    Duration? duration,
+  }) async {
     final form = _formKey.currentState;
     if (form == null || !form.validate()) {
       return;
     }
 
     final l10n = AppLocalizations.of(context)!;
-    final method = _selectedMethod;
-    if (method == null) {
-      _showError(l10n.feedMethodError);
-      return;
-    }
 
     final amount = double.tryParse(
       _amountController.text.trim().replaceAll(',', '.'),
@@ -126,23 +95,33 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
       return;
     }
 
-    final occurredAt = DateTime(
-      _selectedDate.year,
-      _selectedDate.month,
-      _selectedDate.day,
-      _selectedTime.hour,
-      _selectedTime.minute,
-    );
+    final timeText = _timeController.text.trim();
+    final parsedTime = _parseManualTime(timeText);
+    if (parsedTime == null) {
+      _showError(l10n.feedTimeInvalid);
+      return;
+    }
+
+    _selectedTime = parsedTime;
+
+    final occurredAt = occurredAtOverride ??
+        DateTime(
+          _selectedDate.year,
+          _selectedDate.month,
+          _selectedDate.day,
+          _selectedTime.hour,
+          _selectedTime.minute,
+        );
 
     setState(() => _isSaving = true);
     try {
       await context.read<BabyActionsState>().logFeed(
             occurredAt: occurredAt,
-            method: method,
             amountMl: amount,
             notes: _notesController.text.trim().isEmpty
                 ? null
                 : _notesController.text.trim(),
+            duration: duration,
           );
       if (!mounted) {
         return;
@@ -169,6 +148,8 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final material = MaterialLocalizations.of(context);
+    final dayLabel = material.formatMediumDate(_selectedDate);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.babyActionFeed)),
@@ -180,15 +161,46 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextFormField(
-                  key: const Key('feed_date'),
-                  controller: _dateController,
-                  decoration: InputDecoration(
-                    labelText: l10n.actionDateLabel,
-                    hintText: l10n.actionDateHint,
+                Text(
+                  l10n.feedDaySelectorLabel,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
                   ),
-                  readOnly: true,
-                  onTap: _pickDate,
+                ),
+                const SizedBox(height: 12),
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: theme.colorScheme.outlineVariant,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          key: const Key('feed_day_previous'),
+                          tooltip: l10n.feedDayPrevious,
+                          onPressed: () => _changeDay(-1),
+                          icon: const Icon(Icons.chevron_left),
+                        ),
+                        Expanded(
+                          child: Text(
+                            dayLabel,
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ),
+                        IconButton(
+                          key: const Key('feed_day_next'),
+                          tooltip: l10n.feedDayNext,
+                          onPressed: () => _changeDay(1),
+                          icon: const Icon(Icons.chevron_right),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -197,34 +209,22 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
                   decoration: InputDecoration(
                     labelText: l10n.actionTimeLabel,
                     hintText: l10n.actionTimeHint,
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.schedule),
+                      tooltip: l10n.feedTimePickerTooltip,
+                      onPressed: _pickTime,
+                    ),
                   ),
-                  readOnly: true,
-                  onTap: _pickTime,
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  l10n.feedMethodLabel,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Wrap(
-                  spacing: 12,
-                  children: FeedMethod.values
-                      .map(
-                        (method) => ChoiceChip(
-                          label: Text(_methodLabel(method, l10n)),
-                          selected: _selectedMethod == method,
-                          onSelected: (selected) {
-                            if (!selected) {
-                              return;
-                            }
-                            setState(() => _selectedMethod = method);
-                          },
-                        ),
-                      )
-                      .toList(),
+                  keyboardType: TextInputType.datetime,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return l10n.feedTimeRequired;
+                    }
+                    if (_parseManualTime(value.trim()) == null) {
+                      return l10n.feedTimeInvalid;
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
@@ -258,13 +258,14 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
                     hintText: l10n.actionNotesHint,
                   ),
                   minLines: 2,
-                  maxLines: 4,
+                  maxLines: 5,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
+                _buildTimerSection(l10n, theme),
+                const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    key: const Key('feed_submit'),
+                  child: FilledButton(
                     onPressed: _isSaving ? null : _submit,
                     child: _isSaving
                         ? const SizedBox(
@@ -283,14 +284,193 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
     );
   }
 
-  String _methodLabel(FeedMethod method, AppLocalizations l10n) {
-    switch (method) {
-      case FeedMethod.breast:
-        return l10n.feedMethodBreast;
-      case FeedMethod.bottle:
-        return l10n.feedMethodBottle;
-      case FeedMethod.mixed:
-        return l10n.feedMethodMixed;
+  Widget _buildTimerSection(AppLocalizations l10n, ThemeData theme) {
+    final isActive = _timerStart != null;
+    final textTheme = theme.textTheme;
+    final timerText = _formatDuration(_timerElapsed);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.feedTimerTitle,
+          style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 12),
+        if (!isActive)
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              key: const Key('feed_timer_start'),
+              onPressed: _startTimer,
+              icon: const Icon(Icons.play_arrow_rounded),
+              label: Text(l10n.feedTimerStart),
+            ),
+          )
+        else ...[
+          DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: theme.colorScheme.primaryContainer.withOpacity(0.24),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.feedTimerRunningLabel(timerText),
+                    style: textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          key: const Key('feed_timer_toggle'),
+                          onPressed: _isTimerRunning ? _pauseTimer : _resumeTimer,
+                          icon: Icon(
+                            _isTimerRunning
+                                ? Icons.pause_rounded
+                                : Icons.play_arrow_rounded,
+                          ),
+                          label: Text(
+                            _isTimerRunning
+                                ? l10n.feedTimerPause
+                                : l10n.feedTimerResume,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: FilledButton.icon(
+                          key: const Key('feed_timer_finish'),
+                          onPressed: _finishTimer,
+                          icon: const Icon(Icons.stop_rounded),
+                          label: Text(l10n.feedTimerStop),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  void _hydrateInitialTimeLabel() {
+    final material = MaterialLocalizations.of(context);
+    _timeController.text = material.formatTimeOfDay(
+      _selectedTime,
+      alwaysUse24HourFormat: true,
+    );
+  }
+
+  void _changeDay(int delta) {
+    setState(() {
+      _selectedDate = _selectedDate.add(Duration(days: delta));
+    });
+  }
+
+  void _updateTimeLabel() {
+    final material = MaterialLocalizations.of(context);
+    _timeController.text = material.formatTimeOfDay(
+      _selectedTime,
+      alwaysUse24HourFormat: true,
+    );
+  }
+
+  TimeOfDay? _parseManualTime(String value) {
+    final parts = value.split(':');
+    if (parts.length != 2) {
+      return null;
     }
+    final hour = int.tryParse(parts[0]);
+    final minute = int.tryParse(parts[1]);
+    if (hour == null || minute == null) {
+      return null;
+    }
+    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+      return null;
+    }
+    return TimeOfDay(hour: hour, minute: minute);
+  }
+
+  void _startTimer() {
+    final now = DateTime.now();
+    setState(() {
+      _timerStart = now;
+      _lastTick = now;
+      _timerElapsed = Duration.zero;
+      _isTimerRunning = true;
+      _selectedDate = DateTime(now.year, now.month, now.day);
+      _selectedTime = TimeOfDay.fromDateTime(now);
+      _updateTimeLabel();
+    });
+    _ticker?.cancel();
+    _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!_isTimerRunning) {
+        return;
+      }
+      final previousTick = _lastTick;
+      final nowTick = DateTime.now();
+      setState(() {
+        if (previousTick != null) {
+          _timerElapsed += nowTick.difference(previousTick);
+        }
+        _lastTick = nowTick;
+      });
+    });
+  }
+
+  void _pauseTimer() {
+    setState(() {
+      _isTimerRunning = false;
+      _lastTick = null;
+    });
+  }
+
+  void _resumeTimer() {
+    setState(() {
+      _isTimerRunning = true;
+      _lastTick = DateTime.now();
+    });
+  }
+
+  Future<void> _finishTimer() async {
+    final start = _timerStart;
+    final elapsed = _timerElapsed;
+    _ticker?.cancel();
+    setState(() {
+      _isTimerRunning = false;
+      _ticker = null;
+      _lastTick = null;
+    });
+    if (start == null) {
+      return;
+    }
+    await _submit(
+      occurredAtOverride: start,
+      duration: elapsed,
+    );
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _timerStart = null;
+      _timerElapsed = Duration.zero;
+    });
+  }
+
+  String _formatDuration(Duration duration) {
+    final totalSeconds = duration.inSeconds;
+    final minutes = (totalSeconds ~/ 60).toString().padLeft(2, '0');
+    final seconds = (totalSeconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
   }
 }

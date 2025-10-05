@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action_draft.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action_kind.dart';
-import 'package:pequelog/domain/baby_actions/entities/feed_method.dart';
 import 'package:pequelog/domain/baby_actions/repositories/baby_action_repository.dart';
 import 'package:pequelog/domain/baby_actions/usecases/get_recent_baby_actions.dart';
 import 'package:pequelog/domain/baby_actions/usecases/log_bath_action.dart';
@@ -86,13 +85,13 @@ void main() {
       final now = DateTime(2024, 7, 12, 9, 30);
       await state.logFeed(
         occurredAt: now,
-        method: FeedMethod.breast,
         amountMl: 120,
+        duration: const Duration(minutes: 5),
       );
 
       expect(state.recentActions, hasLength(1));
       expect(state.recentActions.first.details['amountMl'], 120);
-      expect(state.recentActions.first.details['method'], 'breast');
+      expect(state.recentActions.first.details['durationSeconds'], 300);
     });
   });
 }
