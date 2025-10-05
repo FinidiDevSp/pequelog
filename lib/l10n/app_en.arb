@@ -1,0 +1,78 @@
+﻿{
+  "@@locale": "en",
+  "appTitle": "PequeLog",
+  "onboardingLogoDescription": "PequeLog logo",
+  "onboardingDescription": "Your daily log for little ones. Track feeds, changes, and milestones in seconds.",
+  "onboardingCta": "Get started",
+  "setupSnackMessage": "Register a baby to begin",
+  "setupSubtitle": "Set up the app for your first log.",
+  "setupConfigure": "Configure App",
+  "setupNewBaby": "New baby",
+  "newBabyTitle": "New baby",
+  "newBabyNameLabel": "Name",
+  "newBabyNameError": "Enter a name",
+  "newBabyBirthDateLabel": "Birth date",
+  "newBabyBirthDateHint": "Pick it from the calendar",
+  "newBabyBirthDatePickerHelp": "Select the birth date",
+  "newBabyBirthDateError": "Select the birth date",
+  "newBabyBirthTimeLabel": "Birth time",
+  "newBabyBirthTimeHint": "Pick the time",
+  "newBabyBirthTimePickerHelp": "Select the birth time",
+  "newBabyBirthTimeError": "Select the birth time",
+  "newBabySexLabel": "Sex",
+  "newBabySexFemale": "Girl",
+  "newBabySexMale": "Boy",
+  "newBabySelectSexError": "Select a sex",
+  "newBabyLengthLabel": "Birth length (cm)",
+  "newBabyLengthError": "Enter the length",
+  "newBabyLengthInvalid": "Enter a valid number",
+  "newBabyWeightLabel": "Birth weight (kg)",
+  "newBabyWeightError": "Enter the weight",
+  "newBabyWeightInvalid": "Enter a valid number",
+  "newBabyPhotoButtonNoSelection": "Attach photo (optional)",
+  "newBabyPhotoButtonSelected": "Photo selected",
+  "newBabySave": "Save baby",
+  "newBabySaveError": "Could not save. Try again.",
+  "babyHomeUpcomingActionTitle": "Next action",
+  "babyHomeUpcomingActionDescription": "Soon you'll be able to log feeds, naps, and highlights right here.",
+  "babyHomeBirthSectionTitle": "Birth",
+  "babyHomeBirthSummary": "Born on {birthDate} at {birthTime}",
+  "@babyHomeBirthSummary": {
+    "placeholders": {
+      "birthDate": {},
+      "birthTime": {}
+    }
+  },
+  "babyHomeBirthStatsTitle": "Birth stats",
+  "babyHomeBirthWeight": "Weight: {weight} kg",
+  "@babyHomeBirthWeight": {
+    "placeholders": {
+      "weight": {}
+    }
+  },
+  "babyHomeBirthLength": "Length: {length} cm",
+  "@babyHomeBirthLength": {
+    "placeholders": {
+      "length": {}
+    }
+  },
+  "babyHomePhotoPlaceholder": "No photo",
+  "babyHomeActionsTitle": "Quick actions",
+  "babyHomeMenuEdit": "Edit baby",
+  "babyHomeMenuSettings": "Settings",
+  "babyActionFeed": "Log feed",
+  "babyActionBath": "Log bath",
+  "babyActionVomited": "Log spit up",
+  "babyActionDiaper": "Log diaper",
+  "babyActionPlaceholderDescription": "You'll be able to record this activity very soon.",
+  "editBabyPlaceholderTitle": "Edit baby",
+  "editBabyPlaceholderDescription": "You'll be able to update this info soon.",
+  "configurationTitle": "Settings",
+  "configurationPlaceholder": "You will be able to customize the app very soon.",
+  "configurationLanguageLabel": "App language",
+  "configurationLanguageHint": "Choose your preferred language",
+  "configurationLanguageSpanish": "Spanish",
+  "configurationLanguageEnglish": "English",
+  "errorLoadingMessage": "Oops, something went wrong while loading.",
+  "retryButton": "Retry"
+}

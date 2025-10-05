@@ -124,11 +124,71 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get babyHomeBirthStatsTitle => 'Datos de nacimiento';
+
+  @override
+  String babyHomeBirthWeight(Object weight) {
+    return 'Peso: $weight kg';
+  }
+
+  @override
+  String babyHomeBirthLength(Object length) {
+    return 'Estatura: $length cm';
+  }
+
+  @override
+  String get babyHomePhotoPlaceholder => 'Sin foto';
+
+  @override
+  String get babyHomeActionsTitle => 'Acciones rápidas';
+
+  @override
+  String get babyHomeMenuEdit => 'Editar bebé';
+
+  @override
+  String get babyHomeMenuSettings => 'Configuración';
+
+  @override
+  String get babyActionFeed => 'Registrar toma';
+
+  @override
+  String get babyActionBath => 'Registrar baño';
+
+  @override
+  String get babyActionVomited => 'Registrar vómito';
+
+  @override
+  String get babyActionDiaper => 'Registrar caca';
+
+  @override
+  String get babyActionPlaceholderDescription =>
+      'Muy pronto podrás registrar esta actividad con todo detalle.';
+
+  @override
+  String get editBabyPlaceholderTitle => 'Editar bebé';
+
+  @override
+  String get editBabyPlaceholderDescription =>
+      'Podrás actualizar los datos muy pronto.';
+
+  @override
   String get configurationTitle => 'Configuración';
 
   @override
   String get configurationPlaceholder =>
       'Aquí podrás personalizar la app muy pronto.';
+
+  @override
+  String get configurationLanguageLabel => 'Idioma de la aplicación';
+
+  @override
+  String get configurationLanguageHint => 'Selecciona tu idioma preferido';
+
+  @override
+  String get configurationLanguageSpanish => 'Español';
+
+  @override
+  String get configurationLanguageEnglish => 'Inglés';
 
   @override
   String get errorLoadingMessage => 'Ups, algo salió mal al cargar.';

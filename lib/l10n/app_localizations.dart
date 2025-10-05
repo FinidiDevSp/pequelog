@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 
 // ignore_for_file: type=lint
@@ -92,7 +93,10 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('es')];
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('es'),
+    Locale('en'),
+  ];
 
   /// No description provided for @appTitle.
   ///
@@ -316,6 +320,90 @@ abstract class AppLocalizations {
   /// **'Nació el {birthDate} a las {birthTime}'**
   String babyHomeBirthSummary(Object birthDate, Object birthTime);
 
+  /// No description provided for @babyHomeBirthStatsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos de nacimiento'**
+  String get babyHomeBirthStatsTitle;
+
+  /// No description provided for @babyHomeBirthWeight.
+  ///
+  /// In es, this message translates to:
+  /// **'Peso: {weight} kg'**
+  String babyHomeBirthWeight(Object weight);
+
+  /// No description provided for @babyHomeBirthLength.
+  ///
+  /// In es, this message translates to:
+  /// **'Estatura: {length} cm'**
+  String babyHomeBirthLength(Object length);
+
+  /// No description provided for @babyHomePhotoPlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin foto'**
+  String get babyHomePhotoPlaceholder;
+
+  /// No description provided for @babyHomeActionsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Acciones rápidas'**
+  String get babyHomeActionsTitle;
+
+  /// No description provided for @babyHomeMenuEdit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar bebé'**
+  String get babyHomeMenuEdit;
+
+  /// No description provided for @babyHomeMenuSettings.
+  ///
+  /// In es, this message translates to:
+  /// **'Configuración'**
+  String get babyHomeMenuSettings;
+
+  /// No description provided for @babyActionFeed.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar toma'**
+  String get babyActionFeed;
+
+  /// No description provided for @babyActionBath.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar baño'**
+  String get babyActionBath;
+
+  /// No description provided for @babyActionVomited.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar vómito'**
+  String get babyActionVomited;
+
+  /// No description provided for @babyActionDiaper.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar caca'**
+  String get babyActionDiaper;
+
+  /// No description provided for @babyActionPlaceholderDescription.
+  ///
+  /// In es, this message translates to:
+  /// **'Muy pronto podrás registrar esta actividad con todo detalle.'**
+  String get babyActionPlaceholderDescription;
+
+  /// No description provided for @editBabyPlaceholderTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar bebé'**
+  String get editBabyPlaceholderTitle;
+
+  /// No description provided for @editBabyPlaceholderDescription.
+  ///
+  /// In es, this message translates to:
+  /// **'Podrás actualizar los datos muy pronto.'**
+  String get editBabyPlaceholderDescription;
+
   /// No description provided for @configurationTitle.
   ///
   /// In es, this message translates to:
@@ -327,6 +415,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Aquí podrás personalizar la app muy pronto.'**
   String get configurationPlaceholder;
+
+  /// No description provided for @configurationLanguageLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Idioma de la aplicación'**
+  String get configurationLanguageLabel;
+
+  /// No description provided for @configurationLanguageHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona tu idioma preferido'**
+  String get configurationLanguageHint;
+
+  /// No description provided for @configurationLanguageSpanish.
+  ///
+  /// In es, this message translates to:
+  /// **'Español'**
+  String get configurationLanguageSpanish;
+
+  /// No description provided for @configurationLanguageEnglish.
+  ///
+  /// In es, this message translates to:
+  /// **'Inglés'**
+  String get configurationLanguageEnglish;
 
   /// No description provided for @errorLoadingMessage.
   ///
@@ -352,7 +464,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['es'].contains(locale.languageCode);
+      <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -361,6 +473,8 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'en':
+      return AppLocalizationsEn();
     case 'es':
       return AppLocalizationsEs();
   }

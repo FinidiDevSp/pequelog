@@ -6,6 +6,7 @@ import 'package:pequelog/core/services/image_picker_service.dart';
 import 'package:pequelog/data/babies/sqlite_baby_repository.dart';
 import 'package:pequelog/domain/babies/repositories/baby_repository.dart';
 import 'package:pequelog/l10n/app_localizations.dart';
+import 'package:pequelog/presentation/app_settings.dart';
 import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
 import 'package:pequelog/presentation/features/settings/configuration_screen.dart';
 import 'package:pequelog/presentation/features/startup/baby_home_screen.dart';
@@ -25,36 +26,52 @@ class PequeLogApp extends StatelessWidget {
     ImagePickerService? imagePicker,
     DatePickerLauncher? datePicker,
     TimePickerLauncher? timePicker,
+    AppSettings? settings,
   }) : _repository = repository ?? SQLiteBabyRepository(),
        _imagePicker = imagePicker ?? DeviceImagePickerService(),
        _datePicker = datePicker,
-       _timePicker = timePicker;
+       _timePicker = timePicker,
+       _settingsOverride = settings;
 
   final BabyRepository _repository;
   final ImagePickerService _imagePicker;
   final DatePickerLauncher? _datePicker;
   final TimePickerLauncher? _timePicker;
+  final AppSettings? _settingsOverride;
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => BabyState(repository: _repository)..load(),
-      child: MaterialApp(
-        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-        theme: _buildTheme(),
-        locale: const Locale('es'),
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: _StartupRouter(
-          imagePicker: _imagePicker,
-          datePicker: _datePicker,
-          timePicker: _timePicker,
+    return MultiProvider(
+      providers: [
+        if (_settingsOverride != null)
+          ChangeNotifierProvider<AppSettings>.value(value: _settingsOverride!)
+        else
+          ChangeNotifierProvider<AppSettings>(create: (_) => AppSettings()),
+        ChangeNotifierProvider<BabyState>(
+          create: (_) => BabyState(repository: _repository)..load(),
         ),
+      ],
+      child: Consumer<AppSettings>(
+        builder: (context, settings, _) {
+          return MaterialApp(
+            onGenerateTitle: (context) =>
+                AppLocalizations.of(context)!.appTitle,
+            theme: _buildTheme(),
+            locale: settings.locale,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: _StartupRouter(
+              imagePicker: _imagePicker,
+              datePicker: _datePicker,
+              timePicker: _timePicker,
+            ),
+          );
+        },
       ),
     );
   }

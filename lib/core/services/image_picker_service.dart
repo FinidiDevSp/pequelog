@@ -13,7 +13,8 @@ abstract class ImagePickerService {
 /// Default implementation backed by the platform image picker.
 class DeviceImagePickerService implements ImagePickerService {
   /// Creates the service using the provided [ImagePicker] or a default instance.
-  DeviceImagePickerService({ImagePicker? picker}) : _picker = picker ?? ImagePicker();
+  DeviceImagePickerService({ImagePicker? picker})
+    : _picker = picker ?? ImagePicker();
 
   final ImagePicker _picker;
 

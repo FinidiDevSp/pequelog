@@ -43,8 +43,36 @@
       "birthTime": {}
     }
   },
+  "babyHomeBirthStatsTitle": "Datos de nacimiento",
+  "babyHomeBirthWeight": "Peso: {weight} kg",
+  "@babyHomeBirthWeight": {
+    "placeholders": {
+      "weight": {}
+    }
+  },
+  "babyHomeBirthLength": "Estatura: {length} cm",
+  "@babyHomeBirthLength": {
+    "placeholders": {
+      "length": {}
+    }
+  },
+  "babyHomePhotoPlaceholder": "Sin foto",
+  "babyHomeActionsTitle": "Acciones rápidas",
+  "babyHomeMenuEdit": "Editar bebé",
+  "babyHomeMenuSettings": "Configuración",
+  "babyActionFeed": "Registrar toma",
+  "babyActionBath": "Registrar baño",
+  "babyActionVomited": "Registrar vómito",
+  "babyActionDiaper": "Registrar caca",
+  "babyActionPlaceholderDescription": "Muy pronto podrás registrar esta actividad con todo detalle.",
+  "editBabyPlaceholderTitle": "Editar bebé",
+  "editBabyPlaceholderDescription": "Podrás actualizar los datos muy pronto.",
   "configurationTitle": "Configuración",
   "configurationPlaceholder": "Aquí podrás personalizar la app muy pronto.",
+  "configurationLanguageLabel": "Idioma de la aplicación",
+  "configurationLanguageHint": "Selecciona tu idioma preferido",
+  "configurationLanguageSpanish": "Español",
+  "configurationLanguageEnglish": "Inglés",
   "errorLoadingMessage": "Ups, algo salió mal al cargar.",
   "retryButton": "Reintentar"
 }

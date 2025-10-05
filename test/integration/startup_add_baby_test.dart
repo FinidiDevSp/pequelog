@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pequelog/core/services/image_picker_service.dart';
 import 'package:pequelog/domain/babies/entities/baby.dart';
@@ -43,9 +43,7 @@ class _FakeImagePickerService implements ImagePickerService {
 }
 
 void main() {
-  testWidgets('user can register a baby and return to home flow', (
-    tester,
-  ) async {
+  testWidgets('user can register a baby and open quick actions', (tester) async {
     await tester.binding.setSurfaceSize(const Size(430, 930));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -109,13 +107,27 @@ void main() {
     expect(storedBaby.birthDateTime, DateTime(2023, 6, 12, 9, 30));
     expect(pickedDate, isNotNull);
     expect(pickedTime, isNotNull);
+    expect(find.text('Peso: 3.40 kg'), findsOneWidget);
+    expect(find.text('Estatura: 52.5 cm'), findsOneWidget);
+    expect(find.text('Sin foto'), findsOneWidget);
+
+    final feedAction = find.byTooltip('Registrar toma');
+    await tester.tap(feedAction);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Registrar toma'), findsOneWidget);
+    expect(
+      find.text('Muy pronto podrás registrar esta actividad con todo detalle.'),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
 
     final context = tester.element(find.byType(BabyHomeScreen));
     final l10n = AppLocalizations.of(context)!;
     final materialLocalizations = MaterialLocalizations.of(context);
-    final birthDateText = materialLocalizations.formatMediumDate(
-      storedBaby.birthDateTime,
-    );
+    final birthDateText = materialLocalizations.formatMediumDate(storedBaby.birthDateTime);
     final birthTimeText = materialLocalizations.formatTimeOfDay(
       TimeOfDay.fromDateTime(storedBaby.birthDateTime),
       alwaysUse24HourFormat: true,
