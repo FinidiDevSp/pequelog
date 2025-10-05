@@ -384,8 +384,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get configurationPaletteLabel => 'Paleta de color';
 
   @override
-  String get configurationPaletteHint =>
-      'Elige los tonos suaves que prefieras';
+  String get configurationPaletteHint => 'Elige los tonos suaves que prefieras';
 
   @override
   String get configurationPaletteDawnBlush => 'Amanecer rosado';

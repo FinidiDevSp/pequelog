@@ -1,4 +1,5 @@
-﻿import 'dart:io';
+import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,9 @@ class BabyHomeScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final materialLocalizations = MaterialLocalizations.of(context);
 
-    final birthDate = materialLocalizations.formatMediumDate(baby.birthDateTime);
+    final birthDate = materialLocalizations.formatMediumDate(
+      baby.birthDateTime,
+    );
     final birthTime = materialLocalizations.formatTimeOfDay(
       TimeOfDay.fromDateTime(baby.birthDateTime),
       alwaysUse24HourFormat: true,
@@ -75,7 +78,9 @@ class BabyHomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
               color: theme.colorScheme.surface,
               elevation: 0,
               child: Padding(
@@ -97,7 +102,9 @@ class BabyHomeScreen extends StatelessWidget {
                             children: [
                               Text(
                                 l10n.babyHomeBirthSectionTitle,
-                                style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                               const SizedBox(height: 4),
                               Text(
@@ -107,15 +114,21 @@ class BabyHomeScreen extends StatelessWidget {
                               const SizedBox(height: 12),
                               Text(
                                 l10n.babyHomeBirthStatsTitle,
-                                style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+                                style: theme.textTheme.labelLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                l10n.babyHomeBirthWeight(baby.birthWeightKg.toStringAsFixed(2)),
+                                l10n.babyHomeBirthWeight(
+                                  baby.birthWeightKg.toStringAsFixed(2),
+                                ),
                                 style: theme.textTheme.bodyMedium,
                               ),
                               Text(
-                                l10n.babyHomeBirthLength(baby.birthLengthCm.toStringAsFixed(1)),
+                                l10n.babyHomeBirthLength(
+                                  baby.birthLengthCm.toStringAsFixed(1),
+                                ),
                                 style: theme.textTheme.bodyMedium,
                               ),
                             ],
@@ -130,7 +143,9 @@ class BabyHomeScreen extends StatelessWidget {
             const SizedBox(height: 24),
             Text(
               l10n.babyHomeActionsTitle,
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 16),
             Wrap(
@@ -187,9 +202,7 @@ class BabyHomeScreen extends StatelessWidget {
         break;
       case _BabyHomeMenuOption.settings:
         Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => const ConfigurationScreen(),
-          ),
+          MaterialPageRoute<void>(builder: (_) => const ConfigurationScreen()),
         );
         break;
     }
@@ -198,10 +211,8 @@ class BabyHomeScreen extends StatelessWidget {
   Future<void> _openFeedAction(BuildContext context) async {
     final message = await Navigator.of(context).push<String>(
       MaterialPageRoute<String>(
-        builder: (_) => FeedActionScreen(
-          datePicker: datePicker,
-          timePicker: timePicker,
-        ),
+        builder: (_) =>
+            FeedActionScreen(datePicker: datePicker, timePicker: timePicker),
       ),
     );
     _showResultSnack(context, message);
@@ -210,10 +221,8 @@ class BabyHomeScreen extends StatelessWidget {
   Future<void> _openBathAction(BuildContext context) async {
     final message = await Navigator.of(context).push<String>(
       MaterialPageRoute<String>(
-        builder: (_) => BathActionScreen(
-          datePicker: datePicker,
-          timePicker: timePicker,
-        ),
+        builder: (_) =>
+            BathActionScreen(datePicker: datePicker, timePicker: timePicker),
       ),
     );
     _showResultSnack(context, message);
@@ -222,10 +231,8 @@ class BabyHomeScreen extends StatelessWidget {
   Future<void> _openVomitAction(BuildContext context) async {
     final message = await Navigator.of(context).push<String>(
       MaterialPageRoute<String>(
-        builder: (_) => VomitActionScreen(
-          datePicker: datePicker,
-          timePicker: timePicker,
-        ),
+        builder: (_) =>
+            VomitActionScreen(datePicker: datePicker, timePicker: timePicker),
       ),
     );
     _showResultSnack(context, message);
@@ -234,10 +241,8 @@ class BabyHomeScreen extends StatelessWidget {
   Future<void> _openDiaperAction(BuildContext context) async {
     final message = await Navigator.of(context).push<String>(
       MaterialPageRoute<String>(
-        builder: (_) => DiaperActionScreen(
-          datePicker: datePicker,
-          timePicker: timePicker,
-        ),
+        builder: (_) =>
+            DiaperActionScreen(datePicker: datePicker, timePicker: timePicker),
       ),
     );
     _showResultSnack(context, message);
@@ -265,7 +270,9 @@ class _RecentActionsSection extends StatelessWidget {
       builder: (context, state, _) {
         final title = Text(
           l10n.recentActionsTitle,
-          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         );
 
         if (state.isLoading && state.recentActions.isEmpty) {
@@ -304,7 +311,9 @@ class _RecentActionsSection extends StatelessWidget {
             title,
             const SizedBox(height: 12),
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
               color: theme.colorScheme.surface,
               elevation: 0,
               child: ListView.separated(
@@ -321,13 +330,17 @@ class _RecentActionsSection extends StatelessWidget {
                   );
                   return ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+                      backgroundColor: theme.colorScheme.primary.withOpacity(
+                        0.1,
+                      ),
                       foregroundColor: theme.colorScheme.primary,
                       child: Icon(summary.icon),
                     ),
                     title: Text(
                       summary.description,
-                      style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     subtitle: summary.subtitle == null
                         ? Text(summary.dateLabel)
@@ -540,12 +553,7 @@ class _BabyPhoto extends StatelessWidget {
       if (file.existsSync()) {
         avatar = ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          child: Image.file(
-            file,
-            width: 88,
-            height: 88,
-            fit: BoxFit.cover,
-          ),
+          child: Image.file(file, width: 88, height: 88, fit: BoxFit.cover),
         );
       } else {
         avatar = _PlaceholderBox(placeholder: placeholder, theme: theme);
