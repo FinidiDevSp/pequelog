@@ -440,35 +440,77 @@ abstract class AppLocalizations {
   /// **'Elige la hora de la actividad'**
   String get actionTimePickerHelp;
 
-  /// No description provided for @feedMethodLabel.
+  /// No description provided for @feedDaySelectorLabel.
   ///
   /// In es, this message translates to:
-  /// **'Método de alimentación'**
-  String get feedMethodLabel;
+  /// **'Día de la toma'**
+  String get feedDaySelectorLabel;
 
-  /// No description provided for @feedMethodError.
+  /// No description provided for @feedDayPrevious.
   ///
   /// In es, this message translates to:
-  /// **'Selecciona un método'**
-  String get feedMethodError;
+  /// **'Día anterior'**
+  String get feedDayPrevious;
 
-  /// No description provided for @feedMethodBreast.
+  /// No description provided for @feedDayNext.
   ///
   /// In es, this message translates to:
-  /// **'Pecho'**
-  String get feedMethodBreast;
+  /// **'Día siguiente'**
+  String get feedDayNext;
 
-  /// No description provided for @feedMethodBottle.
+  /// No description provided for @feedTimePickerTooltip.
   ///
   /// In es, this message translates to:
-  /// **'Biberón'**
-  String get feedMethodBottle;
+  /// **'Elegir hora'**
+  String get feedTimePickerTooltip;
 
-  /// No description provided for @feedMethodMixed.
+  /// No description provided for @feedTimeRequired.
   ///
   /// In es, this message translates to:
-  /// **'Mixto'**
-  String get feedMethodMixed;
+  /// **'Indica la hora de la toma'**
+  String get feedTimeRequired;
+
+  /// No description provided for @feedTimeInvalid.
+  ///
+  /// In es, this message translates to:
+  /// **'Usa el formato HH:MM (24 h)'**
+  String get feedTimeInvalid;
+
+  /// No description provided for @feedTimerTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Cronómetro'**
+  String get feedTimerTitle;
+
+  /// No description provided for @feedTimerStart.
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciar cronómetro'**
+  String get feedTimerStart;
+
+  /// No description provided for @feedTimerRunningLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Tiempo transcurrido: {elapsed}'**
+  String feedTimerRunningLabel(Object elapsed);
+
+  /// No description provided for @feedTimerPause.
+  ///
+  /// In es, this message translates to:
+  /// **'Pausar'**
+  String get feedTimerPause;
+
+  /// No description provided for @feedTimerResume.
+  ///
+  /// In es, this message translates to:
+  /// **'Reanudar'**
+  String get feedTimerResume;
+
+  /// No description provided for @feedTimerStop.
+  ///
+  /// In es, this message translates to:
+  /// **'Terminar toma'**
+  String get feedTimerStop;
 
   /// No description provided for @feedAmountLabel.
   ///
@@ -665,8 +707,14 @@ abstract class AppLocalizations {
   /// No description provided for @recentActionFeed.
   ///
   /// In es, this message translates to:
-  /// **'{time} · {method} · {amount}'**
-  String recentActionFeed(Object amount, Object method, Object time);
+  /// **'{time} · {amount}'**
+  String recentActionFeed(Object time, Object amount);
+
+  /// No description provided for @recentActionFeedDuration.
+  ///
+  /// In es, this message translates to:
+  /// **'Duración: {duration}'**
+  String recentActionFeedDuration(Object duration);
 
   /// No description provided for @recentActionBath.
   ///

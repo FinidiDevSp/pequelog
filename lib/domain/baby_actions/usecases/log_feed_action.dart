@@ -1,7 +1,6 @@
 import '../entities/baby_action.dart';
 import '../entities/baby_action_draft.dart';
 import '../entities/baby_action_kind.dart';
-import '../entities/feed_method.dart';
 import '../repositories/baby_action_repository.dart';
 
 /// Use case that records a feeding session with structured details.
@@ -16,9 +15,9 @@ class LogFeedAction {
   Future<BabyAction> call({
     required int babyId,
     required DateTime occurredAt,
-    required FeedMethod method,
     required double amountMl,
     String? notes,
+    Duration? duration,
   }) {
     final draft = BabyActionDraft(
       babyId: babyId,
@@ -26,8 +25,8 @@ class LogFeedAction {
       occurredAt: occurredAt,
       notes: notes,
       details: <String, Object?>{
-        'method': method.name,
         'amountMl': amountMl,
+        if (duration != null) 'durationSeconds': duration.inSeconds,
       },
     );
     return _repository.logAction(draft);
