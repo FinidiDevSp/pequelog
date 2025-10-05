@@ -198,6 +198,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get feedDayNext => 'Next day';
 
   @override
+  String get feedDayPickerTooltip => 'Pick day';
+
+  @override
   String get feedTimePickerTooltip => 'Choose time';
 
   @override
@@ -210,7 +213,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get feedTimerTitle => 'Timer';
 
   @override
-  String get feedTimerStart => 'Start timer';
+  String get feedTimerStart => 'Start feed';
+
+  @override
+  String feedTimerRecordedDuration(Object duration) {
+    return 'Recorded duration: $duration';
+  }
 
   @override
   String feedTimerRunningLabel(Object elapsed) {
@@ -242,10 +250,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get feedActionSubmit => 'Save feed';
 
   @override
+  String get feedActionUpdate => 'Update feed';
+
+  @override
   String get feedActionSuccess => 'Feed saved';
 
   @override
+  String get feedActionUpdateSuccess => 'Feed updated';
+
+  @override
   String get feedActionError => 'We couldn\'t save the feed. Try again.';
+
+  @override
+  String get feedActionEditTitle => 'Edit feed';
 
   @override
   String get bathDurationLabel => 'Bath duration';
@@ -324,6 +341,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'No actions yet. Use the shortcuts above to start logging.';
 
   @override
+  String get recentActionDeleteLabel => 'Delete';
+
+  @override
+  String get recentActionEditLabel => 'Edit';
+
+  @override
   String recentActionFeed(Object time, Object amount) {
     return '$time · $amount';
   }
@@ -331,6 +354,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String recentActionFeedDuration(Object duration) {
     return 'Duration: $duration';
+  }
+
+  @override
+  String get recentActionFeedInProgressTitle => 'Feed in progress';
+
+  @override
+  String recentActionFeedInProgressSubtitle(Object elapsed) {
+    return 'Elapsed time: $elapsed';
   }
 
   @override
@@ -362,6 +393,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String recentActionNotes(Object notes) {
     return 'Notes: $notes';
   }
+
+  @override
+  String get recentActionDeleteConfirmTitle => 'Delete entry';
+
+  @override
+  String get recentActionDeleteConfirmMessage =>
+      'Are you sure you want to delete this action?';
+
+  @override
+  String get recentActionDeleteConfirmCancel => 'Cancel';
+
+  @override
+  String get recentActionDeleteConfirmAccept => 'Delete';
+
+  @override
+  String get recentActionDeleteSuccess => 'Entry removed';
+
+  @override
+  String get recentActionDeleteError =>
+      "We couldn't delete the action. Try again.";
+
+  @override
+  String get recentActionEditUnsupported =>
+      "This action can't be edited yet.";
 
   @override
   String get editBabyTitle => 'Edit baby';

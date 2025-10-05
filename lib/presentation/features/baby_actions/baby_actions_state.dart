@@ -4,11 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action.dart';
 import 'package:pequelog/domain/baby_actions/entities/stool_texture.dart';
 import 'package:pequelog/domain/baby_actions/entities/vomit_severity.dart';
+import 'package:pequelog/domain/baby_actions/usecases/delete_baby_action.dart';
 import 'package:pequelog/domain/baby_actions/usecases/get_recent_baby_actions.dart';
 import 'package:pequelog/domain/baby_actions/usecases/log_bath_action.dart';
 import 'package:pequelog/domain/baby_actions/usecases/log_diaper_action.dart';
 import 'package:pequelog/domain/baby_actions/usecases/log_feed_action.dart';
 import 'package:pequelog/domain/baby_actions/usecases/log_vomit_action.dart';
+import 'package:pequelog/domain/baby_actions/usecases/update_feed_action.dart';
 
 /// Holds quick actions for the currently selected baby.
 class BabyActionsState extends ChangeNotifier {
@@ -19,18 +21,24 @@ class BabyActionsState extends ChangeNotifier {
     required LogBathAction logBathAction,
     required LogVomitAction logVomitAction,
     required LogDiaperAction logDiaperAction,
+    required UpdateFeedAction updateFeedAction,
+    required DeleteBabyAction deleteBabyAction,
     this.maxRecentActions = 6,
   })  : _getRecentActions = getRecentActions,
         _logFeedAction = logFeedAction,
         _logBathAction = logBathAction,
         _logVomitAction = logVomitAction,
-        _logDiaperAction = logDiaperAction;
+        _logDiaperAction = logDiaperAction,
+        _updateFeedAction = updateFeedAction,
+        _deleteBabyAction = deleteBabyAction;
 
   final GetRecentBabyActions _getRecentActions;
   final LogFeedAction _logFeedAction;
   final LogBathAction _logBathAction;
   final LogVomitAction _logVomitAction;
   final LogDiaperAction _logDiaperAction;
+  final UpdateFeedAction _updateFeedAction;
+  final DeleteBabyAction _deleteBabyAction;
 
   /// Maximum amount of actions kept in the in-memory list.
   final int maxRecentActions;
@@ -88,6 +96,25 @@ class BabyActionsState extends ChangeNotifier {
     return action;
   }
 
+  /// Updates an existing feed action with the provided values.
+  Future<BabyAction> updateFeed({
+    required int actionId,
+    required DateTime occurredAt,
+    required double amountMl,
+    String? notes,
+    Duration? duration,
+  }) async {
+    final updated = await _updateFeedAction(
+      actionId: actionId,
+      occurredAt: occurredAt,
+      amountMl: amountMl,
+      notes: notes,
+      duration: duration,
+    );
+    _replaceAction(updated);
+    return updated;
+  }
+
   /// Logs a bath action.
   Future<BabyAction> logBath({
     required DateTime occurredAt,
@@ -141,6 +168,15 @@ class BabyActionsState extends ChangeNotifier {
     return action;
   }
 
+  /// Deletes an action from persistence and removes it locally.
+  Future<void> deleteAction(int id) async {
+    await _deleteBabyAction(id);
+    final updated = List<BabyAction>.from(_recentActions)
+      ..removeWhere((action) => action.id == id);
+    _recentActions = List<BabyAction>.unmodifiable(updated);
+    notifyListeners();
+  }
+
   int _ensureBabyId() {
     final id = _babyId;
     if (id == null) {
@@ -182,6 +218,16 @@ class BabyActionsState extends ChangeNotifier {
     if (updated.length > maxRecentActions) {
       updated.removeRange(maxRecentActions, updated.length);
     }
+    _recentActions = List<BabyAction>.unmodifiable(updated);
+    _error = null;
+    notifyListeners();
+  }
+
+  void _replaceAction(BabyAction action) {
+    final updated = _recentActions
+        .map((existing) => existing.id == action.id ? action : existing)
+        .toList();
+    updated.sort((a, b) => b.occurredAt.compareTo(a.occurredAt));
     _recentActions = List<BabyAction>.unmodifiable(updated);
     _error = null;
     notifyListeners();

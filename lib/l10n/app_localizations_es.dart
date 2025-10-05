@@ -198,6 +198,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get feedDayNext => 'Día siguiente';
 
   @override
+  String get feedDayPickerTooltip => 'Elegir día';
+
+  @override
   String get feedTimePickerTooltip => 'Elegir hora';
 
   @override
@@ -210,7 +213,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get feedTimerTitle => 'Cronómetro';
 
   @override
-  String get feedTimerStart => 'Iniciar cronómetro';
+  String get feedTimerStart => 'Iniciar toma';
+
+  @override
+  String feedTimerRecordedDuration(Object duration) {
+    return 'Duración registrada: $duration';
+  }
 
   @override
   String feedTimerRunningLabel(Object elapsed) {
@@ -242,11 +250,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get feedActionSubmit => 'Guardar toma';
 
   @override
+  String get feedActionUpdate => 'Actualizar toma';
+
+  @override
   String get feedActionSuccess => 'Toma guardada';
+
+  @override
+  String get feedActionUpdateSuccess => 'Toma actualizada';
 
   @override
   String get feedActionError =>
       'No pudimos guardar la toma. Inténtalo de nuevo.';
+
+  @override
+  String get feedActionEditTitle => 'Editar toma';
 
   @override
   String get bathDurationLabel => 'Duración del baño';
@@ -328,6 +345,12 @@ class AppLocalizationsEs extends AppLocalizations {
       'Aún no hay registros. Usa los accesos rápidos para comenzar.';
 
   @override
+  String get recentActionDeleteLabel => 'Eliminar';
+
+  @override
+  String get recentActionEditLabel => 'Editar';
+
+  @override
   String recentActionFeed(Object time, Object amount) {
     return '$time · $amount';
   }
@@ -335,6 +358,14 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String recentActionFeedDuration(Object duration) {
     return 'Duración: $duration';
+  }
+
+  @override
+  String get recentActionFeedInProgressTitle => 'Toma en curso';
+
+  @override
+  String recentActionFeedInProgressSubtitle(Object elapsed) {
+    return 'Tiempo transcurrido: $elapsed';
   }
 
   @override
@@ -366,6 +397,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String recentActionNotes(Object notes) {
     return 'Notas: $notes';
   }
+
+  @override
+  String get recentActionDeleteConfirmTitle => 'Eliminar registro';
+
+  @override
+  String get recentActionDeleteConfirmMessage =>
+      '¿Seguro que quieres eliminar esta acción?';
+
+  @override
+  String get recentActionDeleteConfirmCancel => 'Cancelar';
+
+  @override
+  String get recentActionDeleteConfirmAccept => 'Eliminar';
+
+  @override
+  String get recentActionDeleteSuccess => 'Registro eliminado';
+
+  @override
+  String get recentActionDeleteError =>
+      'No pudimos eliminar la acción. Inténtalo de nuevo.';
+
+  @override
+  String get recentActionEditUnsupported =>
+      'Esta acción todavía no se puede editar.';
 
   @override
   String get editBabyTitle => 'Editar bebé';

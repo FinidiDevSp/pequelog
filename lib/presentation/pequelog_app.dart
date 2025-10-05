@@ -7,15 +7,18 @@ import 'package:pequelog/data/babies/sqlite_baby_repository.dart';
 import 'package:pequelog/data/baby_actions/sqlite_baby_action_repository.dart';
 import 'package:pequelog/data/sqlite_database.dart';
 import 'package:pequelog/domain/baby_actions/repositories/baby_action_repository.dart';
+import 'package:pequelog/domain/baby_actions/usecases/delete_baby_action.dart';
 import 'package:pequelog/domain/baby_actions/usecases/get_recent_baby_actions.dart';
 import 'package:pequelog/domain/baby_actions/usecases/log_bath_action.dart';
 import 'package:pequelog/domain/baby_actions/usecases/log_diaper_action.dart';
 import 'package:pequelog/domain/baby_actions/usecases/log_feed_action.dart';
 import 'package:pequelog/domain/baby_actions/usecases/log_vomit_action.dart';
+import 'package:pequelog/domain/baby_actions/usecases/update_feed_action.dart';
 import 'package:pequelog/domain/babies/repositories/baby_repository.dart';
 import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/app_settings.dart';
 import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
+import 'package:pequelog/presentation/features/baby_actions/feed_timer_state.dart';
 import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
 import 'package:pequelog/presentation/features/settings/configuration_screen.dart';
 import 'package:pequelog/presentation/features/startup/baby_home_screen.dart';
@@ -88,6 +91,8 @@ class PequeLogApp extends StatelessWidget {
       logBathAction: LogBathAction(repository: _actionRepository),
       logVomitAction: LogVomitAction(repository: _actionRepository),
       logDiaperAction: LogDiaperAction(repository: _actionRepository),
+      updateFeedAction: UpdateFeedAction(repository: _actionRepository),
+      deleteBabyAction: DeleteBabyAction(repository: _actionRepository),
     );
   }
 
@@ -101,6 +106,14 @@ class PequeLogApp extends StatelessWidget {
           ChangeNotifierProvider<AppSettings>(create: (_) => AppSettings()),
         ChangeNotifierProvider<BabyState>(
           create: (_) => BabyState(repository: _repository)..load(),
+        ),
+        ChangeNotifierProxyProvider<BabyState, FeedTimerState>(
+          create: (_) => FeedTimerState(),
+          update: (_, babyState, timerState) {
+            timerState ??= FeedTimerState();
+            timerState.updateActiveBaby(babyState.selectedBaby?.id);
+            return timerState;
+          },
         ),
         ChangeNotifierProxyProvider<BabyState, BabyActionsState>(
           create: (_) => _createActionsState(),
