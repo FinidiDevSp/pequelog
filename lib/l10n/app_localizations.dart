@@ -708,7 +708,7 @@ abstract class AppLocalizations {
   ///
   /// In es, this message translates to:
   /// **'{time} · {amount}'**
-  String recentActionFeed(Object time, Object amount);
+  String recentActionFeed(Object amount, Object time);
 
   /// No description provided for @recentActionFeedDuration.
   ///

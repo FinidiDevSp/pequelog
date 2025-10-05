@@ -324,7 +324,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'No actions yet. Use the shortcuts above to start logging.';
 
   @override
-  String recentActionFeed(Object time, Object amount) {
+  String recentActionFeed(Object amount, Object time) {
     return '$time · $amount';
   }
 

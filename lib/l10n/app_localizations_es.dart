@@ -328,7 +328,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Aún no hay registros. Usa los accesos rápidos para comenzar.';
 
   @override
-  String recentActionFeed(Object time, Object amount) {
+  String recentActionFeed(Object amount, Object time) {
     return '$time · $amount';
   }
 
