@@ -165,12 +165,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Muy pronto podrás registrar esta actividad con todo detalle.';
 
   @override
-  String get editBabyTitle => 'Editar bebé';
-
-  @override
-  String get editBabySave => 'Guardar cambios';
-
-  @override
   String get actionDateLabel => 'Fecha';
 
   @override
@@ -311,30 +305,45 @@ class AppLocalizationsEs extends AppLocalizations {
       'Aún no hay registros. Usa los accesos rápidos para comenzar.';
 
   @override
-  String recentActionFeed(String time, String method, String amount) =>
-      '$time · $method · $amount';
+  String recentActionFeed(Object amount, Object method, Object time) {
+    return '$time · $method · $amount';
+  }
 
   @override
-  String recentActionBath(String time) => '$time · Baño';
+  String recentActionBath(Object time) {
+    return '$time · Baño';
+  }
 
   @override
-  String recentActionBathWithDuration(String time, String duration) =>
-      '$time · Baño de $duration';
+  String recentActionBathWithDuration(Object duration, Object time) {
+    return '$time · Baño de $duration';
+  }
 
   @override
-  String recentActionVomit(String time, String severity) =>
-      '$time · Vómito $severity';
+  String recentActionVomit(Object severity, Object time) {
+    return '$time · Vómito $severity';
+  }
 
   @override
-  String recentActionDiaper(String time, String texture) =>
-      '$time · $texture';
+  String recentActionDiaper(Object texture, Object time) {
+    return '$time · $texture';
+  }
 
   @override
-  String recentActionDiaperWithPee(String time, String texture, String pee) =>
-      '$time · $texture · $pee';
+  String recentActionDiaperWithPee(Object pee, Object texture, Object time) {
+    return '$time · $texture · $pee';
+  }
 
   @override
-  String recentActionNotes(String notes) => 'Notas: $notes';
+  String recentActionNotes(Object notes) {
+    return 'Notas: $notes';
+  }
+
+  @override
+  String get editBabyTitle => 'Editar bebé';
+
+  @override
+  String get editBabySave => 'Guardar cambios';
 
   @override
   String get configurationTitle => 'Configuración';

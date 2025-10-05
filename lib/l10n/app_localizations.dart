@@ -666,43 +666,43 @@ abstract class AppLocalizations {
   ///
   /// In es, this message translates to:
   /// **'{time} · {method} · {amount}'**
-  String recentActionFeed(String time, String method, String amount);
+  String recentActionFeed(Object amount, Object method, Object time);
 
   /// No description provided for @recentActionBath.
   ///
   /// In es, this message translates to:
   /// **'{time} · Baño'**
-  String recentActionBath(String time);
+  String recentActionBath(Object time);
 
   /// No description provided for @recentActionBathWithDuration.
   ///
   /// In es, this message translates to:
   /// **'{time} · Baño de {duration}'**
-  String recentActionBathWithDuration(String time, String duration);
+  String recentActionBathWithDuration(Object duration, Object time);
 
   /// No description provided for @recentActionVomit.
   ///
   /// In es, this message translates to:
   /// **'{time} · Vómito {severity}'**
-  String recentActionVomit(String time, String severity);
+  String recentActionVomit(Object severity, Object time);
 
   /// No description provided for @recentActionDiaper.
   ///
   /// In es, this message translates to:
   /// **'{time} · {texture}'**
-  String recentActionDiaper(String time, String texture);
+  String recentActionDiaper(Object texture, Object time);
 
   /// No description provided for @recentActionDiaperWithPee.
   ///
   /// In es, this message translates to:
   /// **'{time} · {texture} · {pee}'**
-  String recentActionDiaperWithPee(String time, String texture, String pee);
+  String recentActionDiaperWithPee(Object pee, Object texture, Object time);
 
   /// No description provided for @recentActionNotes.
   ///
   /// In es, this message translates to:
   /// **'Notas: {notes}'**
-  String recentActionNotes(String notes);
+  String recentActionNotes(Object notes);
 
   /// No description provided for @editBabyTitle.
   ///

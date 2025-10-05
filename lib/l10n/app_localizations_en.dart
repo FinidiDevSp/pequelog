@@ -165,12 +165,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'You\'ll be able to record this activity very soon.';
 
   @override
-  String get editBabyTitle => 'Edit baby';
-
-  @override
-  String get editBabySave => 'Save changes';
-
-  @override
   String get actionDateLabel => 'Date';
 
   @override
@@ -228,7 +222,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get feedActionSuccess => 'Feed saved';
 
   @override
-  String get feedActionError => "We couldn't save the feed. Try again.";
+  String get feedActionError => 'We couldn\'t save the feed. Try again.';
 
   @override
   String get bathDurationLabel => 'Bath duration';
@@ -237,7 +231,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bathDurationHint => 'Minutes';
 
   @override
-  String get bathDurationHelper => "Leave empty if you don't want to track it";
+  String get bathDurationHelper => 'Leave empty if you don\'t want to track it';
 
   @override
   String get bathDurationError => 'Use whole minutes greater than zero';
@@ -249,7 +243,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bathActionSuccess => 'Bath saved';
 
   @override
-  String get bathActionError => "We couldn't save the bath. Try again.";
+  String get bathActionError => 'We couldn\'t save the bath. Try again.';
 
   @override
   String get vomitSeverityLabel => 'Severity';
@@ -270,7 +264,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vomitActionSuccess => 'Vomit saved';
 
   @override
-  String get vomitActionError => "We couldn't save the vomit. Try again.";
+  String get vomitActionError => 'We couldn\'t save the vomit. Try again.';
 
   @override
   String get diaperTextureLabel => 'Texture';
@@ -297,7 +291,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get diaperActionSuccess => 'Diaper saved';
 
   @override
-  String get diaperActionError => "We couldn't save the diaper. Try again.";
+  String get diaperActionError => 'We couldn\'t save the diaper. Try again.';
 
   @override
   String get recentActionsTitle => 'Latest actions';
@@ -307,30 +301,45 @@ class AppLocalizationsEn extends AppLocalizations {
       'No actions yet. Use the shortcuts above to start logging.';
 
   @override
-  String recentActionFeed(String time, String method, String amount) =>
-      '$time · $method · $amount';
+  String recentActionFeed(Object amount, Object method, Object time) {
+    return '$time · $method · $amount';
+  }
 
   @override
-  String recentActionBath(String time) => '$time · Bath';
+  String recentActionBath(Object time) {
+    return '$time · Bath';
+  }
 
   @override
-  String recentActionBathWithDuration(String time, String duration) =>
-      '$time · Bath of $duration';
+  String recentActionBathWithDuration(Object duration, Object time) {
+    return '$time · Bath of $duration';
+  }
 
   @override
-  String recentActionVomit(String time, String severity) =>
-      '$time · $severity vomit';
+  String recentActionVomit(Object severity, Object time) {
+    return '$time · $severity vomit';
+  }
 
   @override
-  String recentActionDiaper(String time, String texture) =>
-      '$time · $texture';
+  String recentActionDiaper(Object texture, Object time) {
+    return '$time · $texture';
+  }
 
   @override
-  String recentActionDiaperWithPee(String time, String texture, String pee) =>
-      '$time · $texture · $pee';
+  String recentActionDiaperWithPee(Object pee, Object texture, Object time) {
+    return '$time · $texture · $pee';
+  }
 
   @override
-  String recentActionNotes(String notes) => 'Notes: $notes';
+  String recentActionNotes(Object notes) {
+    return 'Notes: $notes';
+  }
+
+  @override
+  String get editBabyTitle => 'Edit baby';
+
+  @override
+  String get editBabySave => 'Save changes';
 
   @override
   String get configurationTitle => 'Settings';

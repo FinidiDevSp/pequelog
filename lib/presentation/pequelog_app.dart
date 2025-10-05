@@ -29,8 +29,8 @@ const _appAccent = Color(0xFF3F4C5A);
 /// Root widget that decides the initial route depending on stored babies.
 class PequeLogApp extends StatelessWidget {
   /// Builds the app with optional overrides that ease testing.
-  PequeLogApp({
-    super.key,
+  factory PequeLogApp({
+    Key? key,
     BabyRepository? repository,
     BabyActionRepository? actionRepository,
     SQLiteDatabaseProvider? databaseProvider,
@@ -38,15 +38,42 @@ class PequeLogApp extends StatelessWidget {
     DatePickerLauncher? datePicker,
     TimePickerLauncher? timePicker,
     AppSettings? settings,
-  })  : _databaseProvider = databaseProvider ?? SQLiteDatabaseProvider(),
-        _repository =
-            repository ?? SQLiteBabyRepository(database: _databaseProvider),
-        _actionRepository = actionRepository ??
-            SQLiteBabyActionRepository(database: _databaseProvider),
-        _imagePicker = imagePicker ?? DeviceImagePickerService(),
-        _datePicker = datePicker,
-        _timePicker = timePicker,
-        _settingsOverride = settings;
+  }) {
+    final dbProvider = databaseProvider ?? SQLiteDatabaseProvider();
+    final resolvedRepository =
+        repository ?? SQLiteBabyRepository(database: dbProvider);
+    final resolvedActionRepository =
+        actionRepository ?? SQLiteBabyActionRepository(database: dbProvider);
+    final resolvedImagePicker = imagePicker ?? DeviceImagePickerService();
+
+    return PequeLogApp._(
+      key: key,
+      databaseProvider: dbProvider,
+      repository: resolvedRepository,
+      actionRepository: resolvedActionRepository,
+      imagePicker: resolvedImagePicker,
+      datePicker: datePicker,
+      timePicker: timePicker,
+      settings: settings,
+    );
+  }
+
+  const PequeLogApp._({
+    super.key,
+    required SQLiteDatabaseProvider databaseProvider,
+    required BabyRepository repository,
+    required BabyActionRepository actionRepository,
+    required ImagePickerService imagePicker,
+    DatePickerLauncher? datePicker,
+    TimePickerLauncher? timePicker,
+    AppSettings? settings,
+  }) : _databaseProvider = databaseProvider,
+       _repository = repository,
+       _actionRepository = actionRepository,
+       _imagePicker = imagePicker,
+       _datePicker = datePicker,
+       _timePicker = timePicker,
+       _settingsOverride = settings;
 
   final SQLiteDatabaseProvider _databaseProvider;
   final BabyRepository _repository;
