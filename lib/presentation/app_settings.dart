@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/theme/app_color_palettes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -171,7 +172,8 @@ class SharedPreferencesAppSettingsStore implements AppSettingsStore {
       if (localeTag == null || localeTag.isEmpty) {
         return null;
       }
-      return _parseLocale(localeTag);
+      final parsed = _parseLocale(localeTag);
+      return _matchSupportedLocale(parsed);
     } catch (_) {
       return null;
     }
@@ -256,6 +258,27 @@ class SharedPreferencesAppSettingsStore implements AppSettingsStore {
       scriptCode: scriptCode,
       countryCode: countryCode,
     );
+  }
+
+  Locale? _matchSupportedLocale(Locale? locale) {
+    if (locale == null) {
+      return null;
+    }
+
+    for (final supported in AppLocalizations.supportedLocales) {
+      if (supported == locale) {
+        return supported;
+      }
+    }
+
+    final targetLanguage = locale.languageCode.toLowerCase();
+    for (final supported in AppLocalizations.supportedLocales) {
+      if (supported.languageCode.toLowerCase() == targetLanguage) {
+        return supported;
+      }
+    }
+
+    return null;
   }
 
   String _toTag(Locale locale) {
