@@ -52,6 +52,49 @@ class SQLiteBabyActionRepository implements BabyActionRepository {
     return _mapRow(rows.first);
   }
 
+  @override
+  Future<BabyAction> updateAction({
+    required int id,
+    required DateTime occurredAt,
+    String? notes,
+    required Map<String, Object?> details,
+  }) async {
+    final database = await _db;
+    await database.update(
+      'baby_actions',
+      {
+        'occurred_at': occurredAt.millisecondsSinceEpoch,
+        'notes': notes,
+        'details': jsonEncode(details),
+      },
+      where: 'id = ?',
+      whereArgs: <Object>[id],
+    );
+
+    final rows = await database.query(
+      'baby_actions',
+      where: 'id = ?',
+      whereArgs: <Object>[id],
+      limit: 1,
+    );
+
+    if (rows.isEmpty) {
+      throw StateError('Unable to find baby action with id $id');
+    }
+
+    return _mapRow(rows.first);
+  }
+
+  @override
+  Future<void> deleteAction(int id) async {
+    final database = await _db;
+    await database.delete(
+      'baby_actions',
+      where: 'id = ?',
+      whereArgs: <Object>[id],
+    );
+  }
+
   BabyAction _mapRow(Map<String, Object?> row) {
     final detailsRaw = row['details'] as String?;
     final Map<String, Object?> details;

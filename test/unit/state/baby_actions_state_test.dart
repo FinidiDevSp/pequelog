@@ -3,11 +3,13 @@ import 'package:pequelog/domain/baby_actions/entities/baby_action.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action_draft.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action_kind.dart';
 import 'package:pequelog/domain/baby_actions/repositories/baby_action_repository.dart';
+import 'package:pequelog/domain/baby_actions/usecases/delete_baby_action.dart';
 import 'package:pequelog/domain/baby_actions/usecases/get_recent_baby_actions.dart';
 import 'package:pequelog/domain/baby_actions/usecases/log_bath_action.dart';
 import 'package:pequelog/domain/baby_actions/usecases/log_diaper_action.dart';
 import 'package:pequelog/domain/baby_actions/usecases/log_feed_action.dart';
 import 'package:pequelog/domain/baby_actions/usecases/log_vomit_action.dart';
+import 'package:pequelog/domain/baby_actions/usecases/update_feed_action.dart';
 import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
 
 class _InMemoryBabyActionRepository implements BabyActionRepository {
@@ -39,6 +41,34 @@ class _InMemoryBabyActionRepository implements BabyActionRepository {
     _actions.add(action);
     return action;
   }
+
+  @override
+  Future<BabyAction> updateAction({
+    required int id,
+    required DateTime occurredAt,
+    String? notes,
+    required Map<String, Object?> details,
+  }) async {
+    final index = _actions.indexWhere((action) => action.id == id);
+    if (index == -1) {
+      throw StateError('Missing action with id $id');
+    }
+    final updated = BabyAction(
+      id: id,
+      babyId: _actions[index].babyId,
+      kind: _actions[index].kind,
+      occurredAt: occurredAt,
+      notes: notes,
+      details: details,
+    );
+    _actions[index] = updated;
+    return updated;
+  }
+
+  @override
+  Future<void> deleteAction(int id) async {
+    _actions.removeWhere((action) => action.id == id);
+  }
 }
 
 void main() {
@@ -60,6 +90,8 @@ void main() {
         logBathAction: LogBathAction(repository: repository),
         logVomitAction: LogVomitAction(repository: repository),
         logDiaperAction: LogDiaperAction(repository: repository),
+        updateFeedAction: UpdateFeedAction(repository: repository),
+        deleteBabyAction: DeleteBabyAction(repository: repository),
       );
 
       state.updateBabyId(1);
@@ -77,6 +109,8 @@ void main() {
         logBathAction: LogBathAction(repository: repository),
         logVomitAction: LogVomitAction(repository: repository),
         logDiaperAction: LogDiaperAction(repository: repository),
+        updateFeedAction: UpdateFeedAction(repository: repository),
+        deleteBabyAction: DeleteBabyAction(repository: repository),
       );
 
       state.updateBabyId(7);
@@ -92,6 +126,61 @@ void main() {
       expect(state.recentActions, hasLength(1));
       expect(state.recentActions.first.details['amountMl'], 120);
       expect(state.recentActions.first.details['durationSeconds'], 300);
+    });
+
+    test('updateFeed replaces the existing entry', () async {
+      final repository = _InMemoryBabyActionRepository();
+      final state = BabyActionsState(
+        getRecentActions: GetRecentBabyActions(repository: repository),
+        logFeedAction: LogFeedAction(repository: repository),
+        logBathAction: LogBathAction(repository: repository),
+        logVomitAction: LogVomitAction(repository: repository),
+        logDiaperAction: LogDiaperAction(repository: repository),
+        updateFeedAction: UpdateFeedAction(repository: repository),
+        deleteBabyAction: DeleteBabyAction(repository: repository),
+      );
+
+      state.updateBabyId(1);
+      final original = await state.logFeed(
+        occurredAt: DateTime(2024, 7, 12, 9, 30),
+        amountMl: 90,
+      );
+
+      final updated = await state.updateFeed(
+        actionId: original.id,
+        occurredAt: DateTime(2024, 7, 12, 10, 0),
+        amountMl: 110,
+        duration: const Duration(minutes: 4),
+      );
+
+      expect(updated.details['amountMl'], 110);
+      expect(state.recentActions.single.id, original.id);
+      expect(state.recentActions.single.details['durationSeconds'], 240);
+    });
+
+    test('deleteAction removes the entry from the list', () async {
+      final repository = _InMemoryBabyActionRepository();
+      final state = BabyActionsState(
+        getRecentActions: GetRecentBabyActions(repository: repository),
+        logFeedAction: LogFeedAction(repository: repository),
+        logBathAction: LogBathAction(repository: repository),
+        logVomitAction: LogVomitAction(repository: repository),
+        logDiaperAction: LogDiaperAction(repository: repository),
+        updateFeedAction: UpdateFeedAction(repository: repository),
+        deleteBabyAction: DeleteBabyAction(repository: repository),
+      );
+
+      state.updateBabyId(3);
+      final action = await state.logFeed(
+        occurredAt: DateTime(2024, 7, 12, 9, 30),
+        amountMl: 120,
+      );
+
+      expect(state.recentActions, isNotEmpty);
+
+      await state.deleteAction(action.id);
+
+      expect(state.recentActions, isEmpty);
     });
   });
 }

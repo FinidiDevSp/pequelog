@@ -458,6 +458,12 @@ abstract class AppLocalizations {
   /// **'Día siguiente'**
   String get feedDayNext;
 
+  /// No description provided for @feedDayPickerTooltip.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir día'**
+  String get feedDayPickerTooltip;
+
   /// No description provided for @feedTimePickerTooltip.
   ///
   /// In es, this message translates to:
@@ -485,8 +491,14 @@ abstract class AppLocalizations {
   /// No description provided for @feedTimerStart.
   ///
   /// In es, this message translates to:
-  /// **'Iniciar cronómetro'**
+  /// **'Iniciar toma'**
   String get feedTimerStart;
+
+  /// No description provided for @feedTimerRecordedDuration.
+  ///
+  /// In es, this message translates to:
+  /// **'Duración registrada: {duration}'**
+  String feedTimerRecordedDuration(Object duration);
 
   /// No description provided for @feedTimerRunningLabel.
   ///
@@ -542,17 +554,35 @@ abstract class AppLocalizations {
   /// **'Guardar toma'**
   String get feedActionSubmit;
 
+  /// No description provided for @feedActionUpdate.
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizar toma'**
+  String get feedActionUpdate;
+
   /// No description provided for @feedActionSuccess.
   ///
   /// In es, this message translates to:
   /// **'Toma guardada'**
   String get feedActionSuccess;
 
+  /// No description provided for @feedActionUpdateSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Toma actualizada'**
+  String get feedActionUpdateSuccess;
+
   /// No description provided for @feedActionError.
   ///
   /// In es, this message translates to:
   /// **'No pudimos guardar la toma. Inténtalo de nuevo.'**
   String get feedActionError;
+
+  /// No description provided for @feedActionEditTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar toma'**
+  String get feedActionEditTitle;
 
   /// No description provided for @bathDurationLabel.
   ///
@@ -704,6 +734,18 @@ abstract class AppLocalizations {
   /// **'Aún no hay registros. Usa los accesos rápidos para comenzar.'**
   String get recentActionsEmpty;
 
+  /// No description provided for @recentActionDeleteLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar'**
+  String get recentActionDeleteLabel;
+
+  /// No description provided for @recentActionEditLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar'**
+  String get recentActionEditLabel;
+
   /// No description provided for @recentActionFeed.
   ///
   /// In es, this message translates to:
@@ -715,6 +757,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Duración: {duration}'**
   String recentActionFeedDuration(Object duration);
+
+  /// No description provided for @recentActionFeedInProgressTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Toma en curso'**
+  String get recentActionFeedInProgressTitle;
+
+  /// No description provided for @recentActionFeedInProgressSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tiempo transcurrido: {elapsed}'**
+  String recentActionFeedInProgressSubtitle(Object elapsed);
 
   /// No description provided for @recentActionBath.
   ///
@@ -751,6 +805,48 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Notas: {notes}'**
   String recentActionNotes(Object notes);
+
+  /// No description provided for @recentActionDeleteConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar registro'**
+  String get recentActionDeleteConfirmTitle;
+
+  /// No description provided for @recentActionDeleteConfirmMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Seguro que quieres eliminar esta acción?'**
+  String get recentActionDeleteConfirmMessage;
+
+  /// No description provided for @recentActionDeleteConfirmCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get recentActionDeleteConfirmCancel;
+
+  /// No description provided for @recentActionDeleteConfirmAccept.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar'**
+  String get recentActionDeleteConfirmAccept;
+
+  /// No description provided for @recentActionDeleteSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Registro eliminado'**
+  String get recentActionDeleteSuccess;
+
+  /// No description provided for @recentActionDeleteError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos eliminar la acción. Inténtalo de nuevo.'**
+  String get recentActionDeleteError;
+
+  /// No description provided for @recentActionEditUnsupported.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta acción todavía no se puede editar.'**
+  String get recentActionEditUnsupported;
 
   /// No description provided for @editBabyTitle.
   ///

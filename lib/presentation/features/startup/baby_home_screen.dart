@@ -12,6 +12,7 @@ import 'package:pequelog/domain/baby_actions/entities/baby_action.dart';
 import 'package:pequelog/domain/babies/entities/baby.dart';
 import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
+import 'package:pequelog/presentation/features/baby_actions/feed_timer_state.dart';
 import 'package:pequelog/presentation/features/babies/actions/bath_action_screen.dart';
 import 'package:pequelog/presentation/features/babies/actions/diaper_action_screen.dart';
 import 'package:pequelog/presentation/features/babies/actions/feed_action_screen.dart';
@@ -174,7 +175,10 @@ class BabyHomeScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 32),
-            const _RecentActionsSection(),
+            _RecentActionsSection(
+              datePicker: datePicker,
+              timePicker: timePicker,
+            ),
           ],
         ),
       ),
@@ -217,7 +221,10 @@ class BabyHomeScreen extends StatelessWidget {
   Future<void> _openFeedAction(BuildContext context) async {
     final message = await Navigator.of(context).push<String>(
       MaterialPageRoute<String>(
-        builder: (_) => FeedActionScreen(timePicker: timePicker),
+        builder: (_) => FeedActionScreen(
+          timePicker: timePicker,
+          datePicker: datePicker,
+        ),
       ),
     );
     _showResultSnack(context, message);
@@ -264,15 +271,18 @@ class BabyHomeScreen extends StatelessWidget {
 }
 
 class _RecentActionsSection extends StatelessWidget {
-  const _RecentActionsSection();
+  const _RecentActionsSection({this.datePicker, this.timePicker});
+
+  final DatePickerLauncher? datePicker;
+  final TimePickerLauncher? timePicker;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    return Consumer<BabyActionsState>(
-      builder: (context, state, _) {
+    return Consumer2<BabyActionsState, FeedTimerState>(
+      builder: (context, state, timerState, _) {
         final title = Text(
           l10n.recentActionsTitle,
           style: theme.textTheme.titleMedium?.copyWith(
@@ -280,7 +290,10 @@ class _RecentActionsSection extends StatelessWidget {
           ),
         );
 
-        if (state.isLoading && state.recentActions.isEmpty) {
+        final actions = state.recentActions;
+        final hasTimer = timerState.isVisible;
+
+        if (state.isLoading && actions.isEmpty && !hasTimer) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -291,7 +304,7 @@ class _RecentActionsSection extends StatelessWidget {
           );
         }
 
-        if (state.recentActions.isEmpty) {
+        if (!hasTimer && actions.isEmpty) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -309,6 +322,7 @@ class _RecentActionsSection extends StatelessWidget {
 
         final locale = Localizations.localeOf(context);
         final material = MaterialLocalizations.of(context);
+        final itemCount = actions.length + (hasTimer ? 1 : 0);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -321,45 +335,240 @@ class _RecentActionsSection extends StatelessWidget {
               ),
               color: theme.colorScheme.surface,
               elevation: 0,
+              clipBehavior: Clip.antiAlias,
               child: ListView.separated(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  final action = state.recentActions[index];
+                  if (hasTimer && index == 0) {
+                    return _buildActiveTimerTile(
+                      context,
+                      l10n,
+                      theme,
+                      timerState,
+                    );
+                  }
+
+                  final actionIndex = hasTimer ? index - 1 : index;
+                  final action = actions[actionIndex];
                   final summary = _ActionSummary.fromAction(
                     action,
                     l10n,
                     material,
                     locale,
                   );
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: theme.colorScheme.primary.withOpacity(
-                        0.1,
-                      ),
-                      foregroundColor: theme.colorScheme.primary,
-                      child: Icon(summary.icon),
+
+                  return Dismissible(
+                    key: ValueKey<int>(action.id),
+                    background: _buildDismissBackground(
+                      color: theme.colorScheme.errorContainer,
+                      foreground: theme.colorScheme.onErrorContainer,
+                      icon: Icons.delete_outline,
+                      label: l10n.recentActionDeleteLabel,
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(left: 24),
                     ),
-                    title: Text(
-                      summary.description,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                    secondaryBackground: _buildDismissBackground(
+                      color: theme.colorScheme.primaryContainer,
+                      foreground: theme.colorScheme.onPrimaryContainer,
+                      icon: Icons.edit_outlined,
+                      label: l10n.recentActionEditLabel,
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 24),
                     ),
-                    subtitle: summary.subtitle == null
-                        ? Text(summary.dateLabel)
-                        : Text('${summary.dateLabel}\n${summary.subtitle}'),
+                    confirmDismiss: (direction) => _handleDismiss(
+                      context,
+                      action,
+                      direction,
+                      l10n,
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor:
+                            theme.colorScheme.primary.withOpacity(0.1),
+                        foregroundColor: theme.colorScheme.primary,
+                        child: Icon(summary.icon),
+                      ),
+                      title: Text(
+                        summary.description,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      subtitle: summary.subtitle == null
+                          ? Text(summary.dateLabel)
+                          : Text('${summary.dateLabel}\n${summary.subtitle}'),
+                    ),
                   );
                 },
                 separatorBuilder: (_, __) => const Divider(height: 1),
-                itemCount: state.recentActions.length,
+                itemCount: itemCount,
               ),
             ),
           ],
         );
       },
     );
+  }
+
+  Widget _buildActiveTimerTile(
+    BuildContext context,
+    AppLocalizations l10n,
+    ThemeData theme,
+    FeedTimerState timerState,
+  ) {
+    final elapsed = _formatDuration(timerState.elapsed);
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+        foregroundColor: theme.colorScheme.primary,
+        child: const Icon(Icons.timer_outlined),
+      ),
+      title: Text(
+        l10n.recentActionFeedInProgressTitle,
+        style: theme.textTheme.titleSmall?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      subtitle: Text(l10n.recentActionFeedInProgressSubtitle(elapsed)),
+      onTap: () => _openActiveFeed(context),
+    );
+  }
+
+  Widget _buildDismissBackground({
+    required Color color,
+    required Color foreground,
+    required IconData icon,
+    required String label,
+    required AlignmentGeometry alignment,
+    EdgeInsetsGeometry padding = EdgeInsets.zero,
+  }) {
+    return Container(
+      alignment: alignment,
+      padding: padding,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: foreground),
+          const SizedBox(width: 8),
+          Text(
+            label,
+            style: TextStyle(
+              color: foreground,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<bool> _handleDismiss(
+    BuildContext context,
+    BabyAction action,
+    DismissDirection direction,
+    AppLocalizations l10n,
+  ) async {
+    if (direction == DismissDirection.startToEnd) {
+      final confirmed = await _confirmDeletion(context, l10n);
+      if (!confirmed) {
+        return false;
+      }
+      try {
+        await context.read<BabyActionsState>().deleteAction(action.id);
+        if (!context.mounted) {
+          return true;
+        }
+        _showSnack(context, l10n.recentActionDeleteSuccess);
+        return true;
+      } catch (_) {
+        if (context.mounted) {
+          _showSnack(context, l10n.recentActionDeleteError);
+        }
+        return false;
+      }
+    } else {
+      await _openEditAction(context, action);
+      return false;
+    }
+  }
+
+  Future<bool> _confirmDeletion(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(l10n.recentActionDeleteConfirmTitle),
+          content: Text(l10n.recentActionDeleteConfirmMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(l10n.recentActionDeleteConfirmCancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(l10n.recentActionDeleteConfirmAccept),
+            ),
+          ],
+        );
+      },
+    );
+    return result ?? false;
+  }
+
+  Future<void> _openEditAction(BuildContext context, BabyAction action) async {
+    final l10n = AppLocalizations.of(context)!;
+    switch (action.kind) {
+      case BabyActionKind.feed:
+        final message = await Navigator.of(context).push<String>(
+          MaterialPageRoute<String>(
+            builder: (_) => FeedActionScreen(
+              timePicker: timePicker,
+              datePicker: datePicker,
+              initialAction: action,
+            ),
+          ),
+        );
+        if (!context.mounted) {
+          return;
+        }
+        _showSnack(context, message);
+        break;
+      default:
+        _showSnack(context, l10n.recentActionEditUnsupported);
+    }
+  }
+
+  Future<void> _openActiveFeed(BuildContext context) async {
+    final message = await Navigator.of(context).push<String>(
+      MaterialPageRoute<String>(
+        builder: (_) => FeedActionScreen(
+          timePicker: timePicker,
+          datePicker: datePicker,
+        ),
+      ),
+    );
+    if (!context.mounted) {
+      return;
+    }
+    _showSnack(context, message);
+  }
+
+  void _showSnack(BuildContext context, String? message) {
+    if (message == null || !context.mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 }
 
