@@ -148,32 +148,19 @@ class BabyHomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: [
-                _ActionButton(
-                  icon: Icons.local_drink_outlined,
-                  tooltip: l10n.babyActionFeed,
-                  onTap: () => _openFeedAction(context),
-                ),
-                _ActionButton(
-                  icon: Icons.bathtub_outlined,
-                  tooltip: l10n.babyActionBath,
-                  onTap: () => _openBathAction(context),
-                ),
-                _ActionButton(
-                  icon: Icons.sick_outlined,
-                  tooltip: l10n.babyActionVomited,
-                  onTap: () => _openVomitAction(context),
-                ),
-                _ActionButton(
-                  icon: Icons.baby_changing_station,
-                  tooltip: l10n.babyActionDiaper,
-                  onTap: () => _openDiaperAction(context),
-                ),
-              ],
+            _ActionsCarousel(
+              onFeed: () => _openFeedAction(context),
+              onBath: () => _openBathAction(context),
+              onVomit: () => _openVomitAction(context),
+              onDiaper: () => _openDiaperAction(context),
+              onHistory: () => _openHistory(context),
+              onStatistics: () => _openStatistics(context),
+              onAskPediatrician: () => _openAskPediatrician(context),
+              onMedicalAgenda: () => _openMedicalAgenda(context),
+              onGrowth: () => _openGrowth(context),
             ),
+            const SizedBox(height: 24),
+            const _LatestEventsOverview(),
             const SizedBox(height: 32),
             _RecentActionsSection(
               datePicker: datePicker,
@@ -260,6 +247,36 @@ class BabyHomeScreen extends StatelessWidget {
     _showResultSnack(context, message);
   }
 
+  void _openHistory(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    _openFeatureComingSoon(context, l10n.babyActionHistory);
+  }
+
+  void _openStatistics(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    _openFeatureComingSoon(context, l10n.babyActionStatistics);
+  }
+
+  void _openAskPediatrician(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    _openFeatureComingSoon(context, l10n.babyActionAskPediatrician);
+  }
+
+  void _openMedicalAgenda(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    _openFeatureComingSoon(context, l10n.babyActionMedicalAgenda);
+  }
+
+  void _openGrowth(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    _openFeatureComingSoon(context, l10n.babyActionGrowth);
+  }
+
+  void _openFeatureComingSoon(BuildContext context, String feature) {
+    final l10n = AppLocalizations.of(context)!;
+    _showSnack(context, l10n.babyHomeFeatureComingSoon(feature));
+  }
+
   void _showResultSnack(BuildContext context, String? message) {
     if (message == null || !context.mounted) {
       return;
@@ -268,6 +285,188 @@ class BabyHomeScreen extends StatelessWidget {
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(message)));
   }
+}
+
+class _LatestEventsOverview extends StatelessWidget {
+  const _LatestEventsOverview();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return Consumer<BabyActionsState>(
+      builder: (context, state, _) {
+        final material = MaterialLocalizations.of(context);
+        final now = DateTime.now();
+
+        final entries = <_HighlightEntry>[
+          _HighlightEntry(
+            icon: Icons.local_drink_outlined,
+            label: l10n.babyHomeHighlightsFeed,
+            action: _findLatestAction(state.recentActions, BabyActionKind.feed),
+          ),
+          _HighlightEntry(
+            icon: Icons.baby_changing_station,
+            label: l10n.babyHomeHighlightsDiaper,
+            action: _findLatestAction(state.recentActions, BabyActionKind.diaper),
+          ),
+          _HighlightEntry(
+            icon: Icons.bathtub_outlined,
+            label: l10n.babyHomeHighlightsBath,
+            action: _findLatestAction(state.recentActions, BabyActionKind.bath),
+          ),
+          _HighlightEntry(
+            icon: Icons.sick_outlined,
+            label: l10n.babyHomeHighlightsVomit,
+            action: _findLatestAction(state.recentActions, BabyActionKind.vomit),
+          ),
+        ];
+
+        final hasData = entries.any((entry) => entry.action != null);
+
+        if (state.isLoading && !hasData) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.babyHomeHighlightsTitle,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Center(child: CircularProgressIndicator()),
+            ],
+          );
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.babyHomeHighlightsTitle,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              color: theme.colorScheme.surface,
+              elevation: 0,
+              clipBehavior: Clip.antiAlias,
+              child: ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                itemCount: entries.length,
+                itemBuilder: (context, index) {
+                  final entry = entries[index];
+                  return _buildHighlightTile(
+                    entry,
+                    theme,
+                    l10n,
+                    material,
+                    now,
+                  );
+                },
+                separatorBuilder: (_, __) => const Divider(height: 1),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildHighlightTile(
+    _HighlightEntry entry,
+    ThemeData theme,
+    AppLocalizations l10n,
+    MaterialLocalizations material,
+    DateTime reference,
+  ) {
+    final action = entry.action;
+    final subtitle = action == null
+        ? l10n.babyHomeHighlightsNoData
+        : l10n.babyHomeHighlightsEntry(
+            material.formatMediumDate(action.occurredAt),
+            material.formatTimeOfDay(
+              TimeOfDay.fromDateTime(action.occurredAt),
+              alwaysUse24HourFormat: true,
+            ),
+            _formatElapsedSince(action.occurredAt, reference),
+          );
+
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+        foregroundColor: theme.colorScheme.primary,
+        child: Icon(entry.icon),
+      ),
+      title: Text(
+        entry.label,
+        style: theme.textTheme.titleSmall?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      subtitle: Text(subtitle),
+    );
+  }
+}
+
+class _HighlightEntry {
+  const _HighlightEntry({
+    required this.icon,
+    required this.label,
+    this.action,
+  });
+
+  final IconData icon;
+  final String label;
+  final BabyAction? action;
+}
+
+BabyAction? _findLatestAction(
+  Iterable<BabyAction> actions,
+  BabyActionKind kind,
+) {
+  for (final action in actions) {
+    if (action.kind == kind) {
+      return action;
+    }
+  }
+  return null;
+}
+
+String _formatElapsedSince(DateTime occurredAt, DateTime reference) {
+  final difference = reference.difference(occurredAt);
+  if (difference.isNegative) {
+    return '0s';
+  }
+  final days = difference.inDays;
+  final hours = difference.inHours.remainder(24);
+  final minutes = difference.inMinutes.remainder(60);
+  final seconds = difference.inSeconds.remainder(60);
+
+  final parts = <String>[];
+  if (days > 0) {
+    parts.add('${days}d');
+  }
+  if (hours > 0) {
+    parts.add('${hours}h');
+  }
+  if (minutes > 0) {
+    parts.add('${minutes}m');
+  }
+  if (parts.isEmpty) {
+    parts.add('${seconds}s');
+  }
+
+  return parts.join(' ');
 }
 
 class _RecentActionsSection extends StatelessWidget {
@@ -723,6 +922,113 @@ String _diaperTextureLabel(StoolTexture texture, AppLocalizations l10n) {
     case StoolTexture.solid:
       return l10n.diaperTextureSolid;
   }
+}
+
+class _ActionsCarousel extends StatelessWidget {
+  const _ActionsCarousel({
+    required this.onFeed,
+    required this.onBath,
+    required this.onVomit,
+    required this.onDiaper,
+    required this.onHistory,
+    required this.onStatistics,
+    required this.onAskPediatrician,
+    required this.onMedicalAgenda,
+    required this.onGrowth,
+  });
+
+  final VoidCallback onFeed;
+  final VoidCallback onBath;
+  final VoidCallback onVomit;
+  final VoidCallback onDiaper;
+  final VoidCallback onHistory;
+  final VoidCallback onStatistics;
+  final VoidCallback onAskPediatrician;
+  final VoidCallback onMedicalAgenda;
+  final VoidCallback onGrowth;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    final actions = <_CarouselAction>[
+      _CarouselAction(
+        icon: Icons.local_drink_outlined,
+        tooltip: l10n.babyActionFeed,
+        onTap: onFeed,
+      ),
+      _CarouselAction(
+        icon: Icons.bathtub_outlined,
+        tooltip: l10n.babyActionBath,
+        onTap: onBath,
+      ),
+      _CarouselAction(
+        icon: Icons.sick_outlined,
+        tooltip: l10n.babyActionVomited,
+        onTap: onVomit,
+      ),
+      _CarouselAction(
+        icon: Icons.baby_changing_station,
+        tooltip: l10n.babyActionDiaper,
+        onTap: onDiaper,
+      ),
+      _CarouselAction(
+        icon: Icons.history_toggle_off,
+        tooltip: l10n.babyActionHistory,
+        onTap: onHistory,
+      ),
+      _CarouselAction(
+        icon: Icons.bar_chart_outlined,
+        tooltip: l10n.babyActionStatistics,
+        onTap: onStatistics,
+      ),
+      _CarouselAction(
+        icon: Icons.contact_support_outlined,
+        tooltip: l10n.babyActionAskPediatrician,
+        onTap: onAskPediatrician,
+      ),
+      _CarouselAction(
+        icon: Icons.event_note_outlined,
+        tooltip: l10n.babyActionMedicalAgenda,
+        onTap: onMedicalAgenda,
+      ),
+      _CarouselAction(
+        icon: Icons.show_chart_outlined,
+        tooltip: l10n.babyActionGrowth,
+        onTap: onGrowth,
+      ),
+    ];
+
+    return SizedBox(
+      height: 80,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        itemBuilder: (context, index) {
+          final action = actions[index];
+          return _ActionButton(
+            icon: action.icon,
+            tooltip: action.tooltip,
+            onTap: action.onTap,
+          );
+        },
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemCount: actions.length,
+      ),
+    );
+  }
+}
+
+class _CarouselAction {
+  const _CarouselAction({
+    required this.icon,
+    required this.tooltip,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback onTap;
 }
 
 class _ActionButton extends StatelessWidget {

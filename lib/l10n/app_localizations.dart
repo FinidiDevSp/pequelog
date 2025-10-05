@@ -350,6 +350,48 @@ abstract class AppLocalizations {
   /// **'Acciones rápidas'**
   String get babyHomeActionsTitle;
 
+  /// No description provided for @babyHomeHighlightsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Últimos momentos clave'**
+  String get babyHomeHighlightsTitle;
+
+  /// No description provided for @babyHomeHighlightsFeed.
+  ///
+  /// In es, this message translates to:
+  /// **'Último biberón'**
+  String get babyHomeHighlightsFeed;
+
+  /// No description provided for @babyHomeHighlightsDiaper.
+  ///
+  /// In es, this message translates to:
+  /// **'Última caca'**
+  String get babyHomeHighlightsDiaper;
+
+  /// No description provided for @babyHomeHighlightsBath.
+  ///
+  /// In es, this message translates to:
+  /// **'Último baño'**
+  String get babyHomeHighlightsBath;
+
+  /// No description provided for @babyHomeHighlightsVomit.
+  ///
+  /// In es, this message translates to:
+  /// **'Último vómito'**
+  String get babyHomeHighlightsVomit;
+
+  /// No description provided for @babyHomeHighlightsNoData.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin registros aún'**
+  String get babyHomeHighlightsNoData;
+
+  /// No description provided for @babyHomeHighlightsEntry.
+  ///
+  /// In es, this message translates to:
+  /// **'{date} a las {time} · hace {elapsed}'**
+  String babyHomeHighlightsEntry(Object date, Object time, Object elapsed);
+
   /// No description provided for @babyHomeMenuEdit.
   ///
   /// In es, this message translates to:
@@ -385,6 +427,42 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Registrar caca'**
   String get babyActionDiaper;
+
+  /// No description provided for @babyActionHistory.
+  ///
+  /// In es, this message translates to:
+  /// **'Historial'**
+  String get babyActionHistory;
+
+  /// No description provided for @babyActionStatistics.
+  ///
+  /// In es, this message translates to:
+  /// **'Estadísticas'**
+  String get babyActionStatistics;
+
+  /// No description provided for @babyActionAskPediatrician.
+  ///
+  /// In es, this message translates to:
+  /// **'Preguntas al pediatra'**
+  String get babyActionAskPediatrician;
+
+  /// No description provided for @babyActionMedicalAgenda.
+  ///
+  /// In es, this message translates to:
+  /// **'Agenda médica'**
+  String get babyActionMedicalAgenda;
+
+  /// No description provided for @babyActionGrowth.
+  ///
+  /// In es, this message translates to:
+  /// **'Crecimiento'**
+  String get babyActionGrowth;
+
+  /// No description provided for @babyHomeFeatureComingSoon.
+  ///
+  /// In es, this message translates to:
+  /// **'La sección {feature} estará disponible pronto.'**
+  String babyHomeFeatureComingSoon(Object feature);
 
   /// No description provided for @babyActionPlaceholderDescription.
   ///
