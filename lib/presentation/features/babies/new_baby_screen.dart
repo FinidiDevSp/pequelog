@@ -11,7 +11,7 @@ typedef DatePickerLauncher =
 typedef TimePickerLauncher =
     Future<TimeOfDay?> Function(BuildContext context, TimeOfDay initialTime);
 
-Future<DateTime?> _defaultDatePicker(
+Future<DateTime?> defaultBabyDatePicker(
   BuildContext context,
   DateTime initialDate,
 ) {
@@ -28,7 +28,7 @@ Future<DateTime?> _defaultDatePicker(
   );
 }
 
-Future<TimeOfDay?> _defaultTimePicker(
+Future<TimeOfDay?> defaultBabyTimePicker(
   BuildContext context,
   TimeOfDay initialTime,
 ) {
@@ -54,8 +54,8 @@ class NewBabyScreen extends StatelessWidget {
     required this.imagePicker,
     DatePickerLauncher? datePicker,
     TimePickerLauncher? timePicker,
-  }) : datePicker = datePicker ?? _defaultDatePicker,
-       timePicker = timePicker ?? _defaultTimePicker;
+  }) : datePicker = datePicker ?? defaultBabyDatePicker,
+       timePicker = timePicker ?? defaultBabyTimePicker;
 
   /// Service in charge of picking and storing the photo locally.
   final ImagePickerService imagePicker;

@@ -165,11 +165,176 @@ class AppLocalizationsEs extends AppLocalizations {
       'Muy pronto podrás registrar esta actividad con todo detalle.';
 
   @override
-  String get editBabyPlaceholderTitle => 'Editar bebé';
+  String get editBabyTitle => 'Editar bebé';
 
   @override
-  String get editBabyPlaceholderDescription =>
-      'Podrás actualizar los datos muy pronto.';
+  String get editBabySave => 'Guardar cambios';
+
+  @override
+  String get actionDateLabel => 'Fecha';
+
+  @override
+  String get actionDateHint => 'Selecciona el día';
+
+  @override
+  String get actionTimeLabel => 'Hora';
+
+  @override
+  String get actionTimeHint => 'Selecciona la hora';
+
+  @override
+  String get actionNotesLabel => 'Notas';
+
+  @override
+  String get actionNotesHint => 'Agrega detalles u observaciones';
+
+  @override
+  String get actionDatePickerHelp => 'Elige el día de la actividad';
+
+  @override
+  String get actionTimePickerHelp => 'Elige la hora de la actividad';
+
+  @override
+  String get feedMethodLabel => 'Método de alimentación';
+
+  @override
+  String get feedMethodError => 'Selecciona un método';
+
+  @override
+  String get feedMethodBreast => 'Pecho';
+
+  @override
+  String get feedMethodBottle => 'Biberón';
+
+  @override
+  String get feedMethodMixed => 'Mixto';
+
+  @override
+  String get feedAmountLabel => 'Cantidad (ml)';
+
+  @override
+  String get feedAmountHint => 'Ejemplo: 120';
+
+  @override
+  String get feedAmountRequired => 'Ingresa una cantidad';
+
+  @override
+  String get feedAmountError => 'Usa una cantidad válida mayor a cero';
+
+  @override
+  String get feedActionSubmit => 'Guardar toma';
+
+  @override
+  String get feedActionSuccess => 'Toma guardada';
+
+  @override
+  String get feedActionError =>
+      'No pudimos guardar la toma. Inténtalo de nuevo.';
+
+  @override
+  String get bathDurationLabel => 'Duración del baño';
+
+  @override
+  String get bathDurationHint => 'Minutos';
+
+  @override
+  String get bathDurationHelper => 'Déjalo vacío si no quieres registrarlo';
+
+  @override
+  String get bathDurationError => 'Usa minutos enteros mayores a cero';
+
+  @override
+  String get bathActionSubmit => 'Guardar baño';
+
+  @override
+  String get bathActionSuccess => 'Baño guardado';
+
+  @override
+  String get bathActionError =>
+      'No pudimos guardar el baño. Inténtalo de nuevo.';
+
+  @override
+  String get vomitSeverityLabel => 'Intensidad';
+
+  @override
+  String get vomitSeverityMild => 'Leve';
+
+  @override
+  String get vomitSeverityModerate => 'Moderada';
+
+  @override
+  String get vomitSeverityIntense => 'Intensa';
+
+  @override
+  String get vomitActionSubmit => 'Guardar vómito';
+
+  @override
+  String get vomitActionSuccess => 'Vómito guardado';
+
+  @override
+  String get vomitActionError =>
+      'No pudimos guardar el vómito. Inténtalo de nuevo.';
+
+  @override
+  String get diaperTextureLabel => 'Textura';
+
+  @override
+  String get diaperTextureLiquid => 'Líquida';
+
+  @override
+  String get diaperTextureSoft => 'Blanda';
+
+  @override
+  String get diaperTextureSolid => 'Firme';
+
+  @override
+  String get diaperPeeLabel => 'También hubo pipí';
+
+  @override
+  String get diaperPeeTag => 'con pipí';
+
+  @override
+  String get diaperActionSubmit => 'Guardar cambio';
+
+  @override
+  String get diaperActionSuccess => 'Cambio guardado';
+
+  @override
+  String get diaperActionError =>
+      'No pudimos guardar el cambio. Inténtalo de nuevo.';
+
+  @override
+  String get recentActionsTitle => 'Últimas acciones';
+
+  @override
+  String get recentActionsEmpty =>
+      'Aún no hay registros. Usa los accesos rápidos para comenzar.';
+
+  @override
+  String recentActionFeed(String time, String method, String amount) =>
+      '$time · $method · $amount';
+
+  @override
+  String recentActionBath(String time) => '$time · Baño';
+
+  @override
+  String recentActionBathWithDuration(String time, String duration) =>
+      '$time · Baño de $duration';
+
+  @override
+  String recentActionVomit(String time, String severity) =>
+      '$time · Vómito $severity';
+
+  @override
+  String recentActionDiaper(String time, String texture) =>
+      '$time · $texture';
+
+  @override
+  String recentActionDiaperWithPee(String time, String texture, String pee) =>
+      '$time · $texture · $pee';
+
+  @override
+  String recentActionNotes(String notes) => 'Notas: $notes';
 
   @override
   String get configurationTitle => 'Configuración';

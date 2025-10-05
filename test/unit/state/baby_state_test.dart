@@ -35,6 +35,25 @@ class _FakeBabyRepository implements BabyRepository {
     _babies.add(baby);
     return baby;
   }
+
+  @override
+  Future<Baby> updateBaby(int id, BabyDraft draft) async {
+    final index = _babies.indexWhere((baby) => baby.id == id);
+    if (index == -1) {
+      throw StateError('Baby not found');
+    }
+    final updated = Baby(
+      id: id,
+      name: draft.name,
+      birthDateTime: draft.birthDateTime,
+      sex: draft.sex,
+      birthLengthCm: draft.birthLengthCm,
+      birthWeightKg: draft.birthWeightKg,
+      photoPath: draft.photoPath,
+    );
+    _babies[index] = updated;
+    return updated;
+  }
 }
 
 void main() {
@@ -93,6 +112,40 @@ void main() {
       expect(state.selectedBaby?.birthDateTime.hour, 3);
       expect(state.babies.length, 1);
       expect(state.babies.first.photoPath, 'photo.png');
+    });
+
+    test('updateBaby persists the changes and refreshes selection', () async {
+      final initial = Baby(
+        id: 1,
+        name: 'Ines',
+        birthDateTime: DateTime(2024, 2, 10, 14, 0),
+        sex: BabySex.female,
+        birthLengthCm: 49.0,
+        birthWeightKg: 3.1,
+        photoPath: 'photo.png',
+      );
+      final repository = _FakeBabyRepository(initialBabies: [initial]);
+      final state = BabyState(repository: repository);
+
+      await state.load();
+      expect(state.selectedBaby?.name, 'Ines');
+
+      await state.updateBaby(
+        initial,
+        BabyDraft(
+          name: 'Inés Renata',
+          birthDateTime: DateTime(2024, 2, 10, 16, 30),
+          sex: BabySex.female,
+          birthLengthCm: 50.0,
+          birthWeightKg: 3.2,
+          photoPath: 'updated.png',
+        ),
+      );
+
+      expect(state.selectedBaby?.name, 'Inés Renata');
+      expect(state.selectedBaby?.photoPath, 'updated.png');
+      expect(state.babies, hasLength(1));
+      expect(state.babies.first.birthDateTime.hour, 16);
     });
   });
 }

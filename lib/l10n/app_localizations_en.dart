@@ -165,11 +165,172 @@ class AppLocalizationsEn extends AppLocalizations {
       'You\'ll be able to record this activity very soon.';
 
   @override
-  String get editBabyPlaceholderTitle => 'Edit baby';
+  String get editBabyTitle => 'Edit baby';
 
   @override
-  String get editBabyPlaceholderDescription =>
-      'You\'ll be able to update this info soon.';
+  String get editBabySave => 'Save changes';
+
+  @override
+  String get actionDateLabel => 'Date';
+
+  @override
+  String get actionDateHint => 'Select the day';
+
+  @override
+  String get actionTimeLabel => 'Time';
+
+  @override
+  String get actionTimeHint => 'Select the time';
+
+  @override
+  String get actionNotesLabel => 'Notes';
+
+  @override
+  String get actionNotesHint => 'Add details or observations';
+
+  @override
+  String get actionDatePickerHelp => 'Pick the day of the activity';
+
+  @override
+  String get actionTimePickerHelp => 'Pick the time of the activity';
+
+  @override
+  String get feedMethodLabel => 'Feeding method';
+
+  @override
+  String get feedMethodError => 'Select a method';
+
+  @override
+  String get feedMethodBreast => 'Breast';
+
+  @override
+  String get feedMethodBottle => 'Bottle';
+
+  @override
+  String get feedMethodMixed => 'Mixed';
+
+  @override
+  String get feedAmountLabel => 'Amount (ml)';
+
+  @override
+  String get feedAmountHint => 'Example: 120';
+
+  @override
+  String get feedAmountRequired => 'Enter an amount';
+
+  @override
+  String get feedAmountError => 'Use a valid amount greater than zero';
+
+  @override
+  String get feedActionSubmit => 'Save feed';
+
+  @override
+  String get feedActionSuccess => 'Feed saved';
+
+  @override
+  String get feedActionError => "We couldn't save the feed. Try again.";
+
+  @override
+  String get bathDurationLabel => 'Bath duration';
+
+  @override
+  String get bathDurationHint => 'Minutes';
+
+  @override
+  String get bathDurationHelper => "Leave empty if you don't want to track it";
+
+  @override
+  String get bathDurationError => 'Use whole minutes greater than zero';
+
+  @override
+  String get bathActionSubmit => 'Save bath';
+
+  @override
+  String get bathActionSuccess => 'Bath saved';
+
+  @override
+  String get bathActionError => "We couldn't save the bath. Try again.";
+
+  @override
+  String get vomitSeverityLabel => 'Severity';
+
+  @override
+  String get vomitSeverityMild => 'Mild';
+
+  @override
+  String get vomitSeverityModerate => 'Moderate';
+
+  @override
+  String get vomitSeverityIntense => 'Intense';
+
+  @override
+  String get vomitActionSubmit => 'Save vomit';
+
+  @override
+  String get vomitActionSuccess => 'Vomit saved';
+
+  @override
+  String get vomitActionError => "We couldn't save the vomit. Try again.";
+
+  @override
+  String get diaperTextureLabel => 'Texture';
+
+  @override
+  String get diaperTextureLiquid => 'Liquid';
+
+  @override
+  String get diaperTextureSoft => 'Soft';
+
+  @override
+  String get diaperTextureSolid => 'Firm';
+
+  @override
+  String get diaperPeeLabel => 'Also had pee';
+
+  @override
+  String get diaperPeeTag => 'with pee';
+
+  @override
+  String get diaperActionSubmit => 'Save diaper';
+
+  @override
+  String get diaperActionSuccess => 'Diaper saved';
+
+  @override
+  String get diaperActionError => "We couldn't save the diaper. Try again.";
+
+  @override
+  String get recentActionsTitle => 'Latest actions';
+
+  @override
+  String get recentActionsEmpty =>
+      'No actions yet. Use the shortcuts above to start logging.';
+
+  @override
+  String recentActionFeed(String time, String method, String amount) =>
+      '$time · $method · $amount';
+
+  @override
+  String recentActionBath(String time) => '$time · Bath';
+
+  @override
+  String recentActionBathWithDuration(String time, String duration) =>
+      '$time · Bath of $duration';
+
+  @override
+  String recentActionVomit(String time, String severity) =>
+      '$time · $severity vomit';
+
+  @override
+  String recentActionDiaper(String time, String texture) =>
+      '$time · $texture';
+
+  @override
+  String recentActionDiaperWithPee(String time, String texture, String pee) =>
+      '$time · $texture · $pee';
+
+  @override
+  String recentActionNotes(String notes) => 'Notes: $notes';
 
   @override
   String get configurationTitle => 'Settings';

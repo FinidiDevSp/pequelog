@@ -4,9 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pequelog/core/services/image_picker_service.dart';
 import 'package:pequelog/data/babies/sqlite_baby_repository.dart';
+import 'package:pequelog/data/baby_actions/sqlite_baby_action_repository.dart';
+import 'package:pequelog/data/sqlite_database.dart';
+import 'package:pequelog/domain/baby_actions/repositories/baby_action_repository.dart';
+import 'package:pequelog/domain/baby_actions/usecases/get_recent_baby_actions.dart';
+import 'package:pequelog/domain/baby_actions/usecases/log_bath_action.dart';
+import 'package:pequelog/domain/baby_actions/usecases/log_diaper_action.dart';
+import 'package:pequelog/domain/baby_actions/usecases/log_feed_action.dart';
+import 'package:pequelog/domain/baby_actions/usecases/log_vomit_action.dart';
 import 'package:pequelog/domain/babies/repositories/baby_repository.dart';
 import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/app_settings.dart';
+import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
 import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
 import 'package:pequelog/presentation/features/settings/configuration_screen.dart';
 import 'package:pequelog/presentation/features/startup/baby_home_screen.dart';
@@ -23,21 +32,39 @@ class PequeLogApp extends StatelessWidget {
   PequeLogApp({
     super.key,
     BabyRepository? repository,
+    BabyActionRepository? actionRepository,
+    SQLiteDatabaseProvider? databaseProvider,
     ImagePickerService? imagePicker,
     DatePickerLauncher? datePicker,
     TimePickerLauncher? timePicker,
     AppSettings? settings,
-  }) : _repository = repository ?? SQLiteBabyRepository(),
-       _imagePicker = imagePicker ?? DeviceImagePickerService(),
-       _datePicker = datePicker,
-       _timePicker = timePicker,
-       _settingsOverride = settings;
+  })  : _databaseProvider = databaseProvider ?? SQLiteDatabaseProvider(),
+        _repository =
+            repository ?? SQLiteBabyRepository(database: _databaseProvider),
+        _actionRepository = actionRepository ??
+            SQLiteBabyActionRepository(database: _databaseProvider),
+        _imagePicker = imagePicker ?? DeviceImagePickerService(),
+        _datePicker = datePicker,
+        _timePicker = timePicker,
+        _settingsOverride = settings;
 
+  final SQLiteDatabaseProvider _databaseProvider;
   final BabyRepository _repository;
+  final BabyActionRepository _actionRepository;
   final ImagePickerService _imagePicker;
   final DatePickerLauncher? _datePicker;
   final TimePickerLauncher? _timePicker;
   final AppSettings? _settingsOverride;
+
+  BabyActionsState _createActionsState() {
+    return BabyActionsState(
+      getRecentActions: GetRecentBabyActions(repository: _actionRepository),
+      logFeedAction: LogFeedAction(repository: _actionRepository),
+      logBathAction: LogBathAction(repository: _actionRepository),
+      logVomitAction: LogVomitAction(repository: _actionRepository),
+      logDiaperAction: LogDiaperAction(repository: _actionRepository),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +76,14 @@ class PequeLogApp extends StatelessWidget {
           ChangeNotifierProvider<AppSettings>(create: (_) => AppSettings()),
         ChangeNotifierProvider<BabyState>(
           create: (_) => BabyState(repository: _repository)..load(),
+        ),
+        ChangeNotifierProxyProvider<BabyState, BabyActionsState>(
+          create: (_) => _createActionsState(),
+          update: (_, babyState, actionsState) {
+            actionsState ??= _createActionsState();
+            actionsState.updateBabyId(babyState.selectedBaby?.id);
+            return actionsState;
+          },
         ),
       ],
       child: Consumer<AppSettings>(
@@ -162,7 +197,12 @@ class _StartupRouter extends StatelessWidget {
             if (baby == null) {
               return _ErrorScreen(onRetry: state.load);
             }
-            return BabyHomeScreen(baby: baby);
+            return BabyHomeScreen(
+              baby: baby,
+              imagePicker: imagePicker,
+              datePicker: datePicker,
+              timePicker: timePicker,
+            );
         }
       },
     );

@@ -15,6 +15,7 @@ class NewBabyForm extends StatefulWidget {
     required this.timePicker,
     required this.onSubmit,
     this.initialDraft,
+    this.submitButtonLabel,
   });
 
   /// Service used to pick a photo from the device.
@@ -31,6 +32,9 @@ class NewBabyForm extends StatefulWidget {
 
   /// Optional initial values when editing a baby.
   final BabyDraft? initialDraft;
+
+  /// Optional text to override the submit button label.
+  final String? submitButtonLabel;
 
   @override
   State<NewBabyForm> createState() => _NewBabyFormState();
@@ -382,7 +386,7 @@ class _NewBabyFormState extends State<NewBabyForm> {
                     width: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : Text(l10n.newBabySave),
+                : Text(widget.submitButtonLabel ?? l10n.newBabySave),
           ),
         ],
       ),
