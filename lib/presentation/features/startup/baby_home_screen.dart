@@ -442,7 +442,9 @@ class _RecentActionsSection extends StatelessWidget {
           ),
         );
 
-        final actions = state.recentActions;
+        // Sort actions by occurredAt descending (most recent first)
+        final actions = List<BabyAction>.from(state.recentActions)
+          ..sort((a, b) => b.occurredAt.compareTo(a.occurredAt));
         final hasTimer = timerState.isVisible;
 
         if (state.isLoading && actions.isEmpty && !hasTimer) {

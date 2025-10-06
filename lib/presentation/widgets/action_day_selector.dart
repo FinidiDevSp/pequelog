@@ -141,6 +141,7 @@ class ActionDaySelector extends StatelessWidget {
     if (difference == -1) {
       return l10n.actionDayYesterday;
     }
-    return material.formatMediumDate(selectedDate);
+    return material.formatMediumDate(selectedDate).toUpperCase();
   }
 }
+

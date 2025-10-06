@@ -207,6 +207,7 @@
   "configurationThemeModeDark": "Always dark",
   "configurationPaletteLabel": "Color palette",
   "configurationPaletteHint": "Pick the pastel tones you enjoy the most",
+  "configurationChangeConfirmation": "Updated",
   "configurationPaletteDawnBlush": "Blush sunrise",
   "configurationPaletteMintWhisper": "Mint whisper",
   "configurationPaletteSkyBreeze": "Sky breeze",

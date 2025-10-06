@@ -207,6 +207,7 @@
   "configurationThemeModeDark": "Siempre oscuro",
   "configurationPaletteLabel": "Paleta de color",
   "configurationPaletteHint": "Elige los tonos suaves que prefieras",
+  "configurationChangeConfirmation": "Actualizado",
   "configurationPaletteDawnBlush": "Amanecer rosado",
   "configurationPaletteMintWhisper": "Brisa de menta",
   "configurationPaletteSkyBreeze": "Cielo suave",

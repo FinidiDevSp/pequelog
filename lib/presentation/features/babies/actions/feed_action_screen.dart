@@ -256,7 +256,7 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ActionDaySelector(
-                  label: l10n.feedDaySelectorLabel,
+                  label: '', // Removed redundant label
                   selectedDate: _selectedDate,
                   onPickDay: _pickDate,
                   onPreviousDay: () => _changeDay(-1),

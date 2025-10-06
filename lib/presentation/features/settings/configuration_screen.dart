@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/app_settings.dart';
 import 'package:pequelog/presentation/theme/app_color_palettes.dart';
@@ -26,6 +27,27 @@ class ConfigurationScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
+                  l10n.configurationThemeModeLabel,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _ThemeModeSegmentedButton(
+                  currentMode: settings.themeMode,
+                  onModeChanged: (mode) {
+                    HapticFeedback.selectionClick();
+                    settings.setThemeMode(mode);
+                    final modeName = mode == ThemeMode.light
+                        ? l10n.configurationThemeModeLight
+                        : mode == ThemeMode.dark
+                            ? l10n.configurationThemeModeDark
+                            : l10n.configurationThemeModeSystem;
+                    _showChangeSnackBar(context, modeName);
+                  },
+                ),
+                const SizedBox(height: 32),
+                Text(
                   l10n.configurationLanguageLabel,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
@@ -36,14 +58,22 @@ class ConfigurationScreen extends StatelessWidget {
                   title: l10n.configurationLanguageSpanish,
                   locale: const Locale('es'),
                   isSelected: settings.locale.languageCode == 'es',
-                  onTap: () => settings.setLocale(const Locale('es')),
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    settings.setLocale(const Locale('es'));
+                    _showChangeSnackBar(context, l10n.configurationLanguageSpanish);
+                  },
                 ),
                 const SizedBox(height: 8),
                 _LanguageOption(
                   title: l10n.configurationLanguageEnglish,
                   locale: const Locale('en'),
                   isSelected: settings.locale.languageCode == 'en',
-                  onTap: () => settings.setLocale(const Locale('en')),
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    settings.setLocale(const Locale('en'));
+                    _showChangeSnackBar(context, l10n.configurationLanguageEnglish);
+                  },
                 ),
                 const SizedBox(height: 16),
                 _LanguagePreviewCard(locale: settings.locale),
@@ -59,28 +89,44 @@ class ConfigurationScreen extends StatelessWidget {
                   title: l10n.configurationPaletteDawnBlush,
                   palette: AppColorPalette.dawnBlush,
                   isSelected: settings.palette == AppColorPalette.dawnBlush,
-                  onTap: () => settings.setPalette(AppColorPalette.dawnBlush),
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    settings.setPalette(AppColorPalette.dawnBlush);
+                    _showChangeSnackBar(context, l10n.configurationPaletteDawnBlush);
+                  },
                 ),
                 const SizedBox(height: 8),
                 _PaletteOption(
                   title: l10n.configurationPaletteMintWhisper,
                   palette: AppColorPalette.mintWhisper,
                   isSelected: settings.palette == AppColorPalette.mintWhisper,
-                  onTap: () => settings.setPalette(AppColorPalette.mintWhisper),
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    settings.setPalette(AppColorPalette.mintWhisper);
+                    _showChangeSnackBar(context, l10n.configurationPaletteMintWhisper);
+                  },
                 ),
                 const SizedBox(height: 8),
                 _PaletteOption(
                   title: l10n.configurationPaletteSkyBreeze,
                   palette: AppColorPalette.skyBreeze,
                   isSelected: settings.palette == AppColorPalette.skyBreeze,
-                  onTap: () => settings.setPalette(AppColorPalette.skyBreeze),
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    settings.setPalette(AppColorPalette.skyBreeze);
+                    _showChangeSnackBar(context, l10n.configurationPaletteSkyBreeze);
+                  },
                 ),
                 const SizedBox(height: 8),
                 _PaletteOption(
                   title: l10n.configurationPaletteLavenderField,
                   palette: AppColorPalette.lavenderField,
                   isSelected: settings.palette == AppColorPalette.lavenderField,
-                  onTap: () => settings.setPalette(AppColorPalette.lavenderField),
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    settings.setPalette(AppColorPalette.lavenderField);
+                    _showChangeSnackBar(context, l10n.configurationPaletteLavenderField);
+                  },
                 ),
               ],
             ),
@@ -343,4 +389,97 @@ class _LanguagePreviewCard extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Segmented button for theme mode selection with animated icons.
+class _ThemeModeSegmentedButton extends StatelessWidget {
+  const _ThemeModeSegmentedButton({
+    required this.currentMode,
+    required this.onModeChanged,
+  });
+
+  final ThemeMode currentMode;
+  final ValueChanged<ThemeMode> onModeChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return SegmentedButton<ThemeMode>(
+      segments: [
+        ButtonSegment(
+          value: ThemeMode.light,
+          label: Text(l10n.configurationThemeModeLight),
+          icon: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: Icon(
+              Icons.wb_sunny_rounded,
+              key: const ValueKey('sun'),
+              color: currentMode == ThemeMode.light
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.onSurface.withOpacity(0.6),
+            ),
+          ),
+        ),
+        ButtonSegment(
+          value: ThemeMode.system,
+          label: Text(l10n.configurationThemeModeSystem),
+          icon: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: Icon(
+              Icons.brightness_auto_rounded,
+              key: const ValueKey('auto'),
+              color: currentMode == ThemeMode.system
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.onSurface.withOpacity(0.6),
+            ),
+          ),
+        ),
+        ButtonSegment(
+          value: ThemeMode.dark,
+          label: Text(l10n.configurationThemeModeDark),
+          icon: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: Icon(
+              Icons.nights_stay_rounded,
+              key: const ValueKey('moon'),
+              color: currentMode == ThemeMode.dark
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.onSurface.withOpacity(0.6),
+            ),
+          ),
+        ),
+      ],
+      selected: {currentMode},
+      onSelectionChanged: (Set<ThemeMode> selected) {
+        onModeChanged(selected.first);
+      },
+      style: ButtonStyle(
+        visualDensity: VisualDensity.comfortable,
+      ),
+    );
+  }
+}
+
+/// Shows a brief SnackBar to confirm the change with the theme color.
+void _showChangeSnackBar(BuildContext context, String changeName) {
+  final theme = Theme.of(context);
+  final l10n = AppLocalizations.of(context)!;
+  
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        '${l10n.configurationChangeConfirmation}: $changeName',
+        style: TextStyle(color: theme.colorScheme.onPrimary),
+      ),
+      backgroundColor: theme.colorScheme.primary,
+      duration: const Duration(seconds: 2),
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    ),
+  );
 }
