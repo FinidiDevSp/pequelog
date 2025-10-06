@@ -208,6 +208,19 @@
   "configurationPaletteLabel": "Color palette",
   "configurationPaletteHint": "Pick the pastel tones you enjoy the most",
   "configurationChangeConfirmation": "Updated",
+  "configurationImportLegacyButton": "Import legacy CSV",
+  "configurationImportLegacyLoading": "Importing records...",
+  "configurationImportNoBaby": "Select a baby before importing.",
+  "configurationImportEmpty": "We couldn't find compatible records in the file.",
+  "configurationImportSuccess": "{count, plural, =0{No records were imported.} =1{1 record imported.} other{{count} records imported.}}",
+  "@configurationImportSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "configurationImportFailure": "We couldn't import the file. Check the format and try again.",
   "configurationPaletteDawnBlush": "Blush sunrise",
   "configurationPaletteMintWhisper": "Mint whisper",
   "configurationPaletteSkyBreeze": "Sky breeze",

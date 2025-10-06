@@ -1088,6 +1088,42 @@ abstract class AppLocalizations {
   /// **'Actualizado'**
   String get configurationChangeConfirmation;
 
+  /// No description provided for @configurationImportLegacyButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar CSV legado'**
+  String get configurationImportLegacyButton;
+
+  /// No description provided for @configurationImportLegacyLoading.
+  ///
+  /// In es, this message translates to:
+  /// **'Importando registros...'**
+  String get configurationImportLegacyLoading;
+
+  /// No description provided for @configurationImportNoBaby.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona un bebé antes de importar.'**
+  String get configurationImportNoBaby;
+
+  /// No description provided for @configurationImportEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos registros válidos en el archivo.'**
+  String get configurationImportEmpty;
+
+  /// No description provided for @configurationImportSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =0{No se importaron registros.} =1{Se importó 1 registro.} other{Se importaron {count} registros.}}'**
+  String configurationImportSuccess(int count);
+
+  /// No description provided for @configurationImportFailure.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo importar el archivo. Revisa el formato e inténtalo de nuevo.'**
+  String get configurationImportFailure;
+
   /// No description provided for @configurationPaletteDawnBlush.
   ///
   /// In es, this message translates to:

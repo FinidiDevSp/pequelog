@@ -551,6 +551,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get configurationChangeConfirmation => 'Updated';
 
   @override
+  String get configurationImportLegacyButton => 'Import legacy CSV';
+
+  @override
+  String get configurationImportLegacyLoading => 'Importing records...';
+
+  @override
+  String get configurationImportNoBaby =>
+      'Select a baby before importing.';
+
+  @override
+  String get configurationImportEmpty =>
+      "We couldn't find compatible records in the file.";
+
+  @override
+  String configurationImportSuccess(int count) {
+    return intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      zero: 'No records were imported.',
+      one: '1 record imported.',
+      other: '$count records imported.',
+    );
+  }
+
+  @override
+  String get configurationImportFailure =>
+      "We couldn't import the file. Check the format and try again.";
+
+  @override
   String get configurationPaletteDawnBlush => 'Blush sunrise';
 
   @override

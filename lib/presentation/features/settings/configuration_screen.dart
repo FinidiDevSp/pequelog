@@ -1,14 +1,29 @@
-﻿import 'package:flutter/material.dart';
+import 'dart:convert';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pequelog/data/baby_actions/legacy_action_csv_parser.dart';
+import 'package:pequelog/domain/baby_actions/entities/stool_texture.dart';
+import 'package:pequelog/domain/baby_actions/entities/vomit_severity.dart';
 import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/app_settings.dart';
+import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
+import 'package:pequelog/presentation/features/startup/baby_state.dart';
 import 'package:pequelog/presentation/theme/app_color_palettes.dart';
 import 'package:provider/provider.dart';
 
 /// Simple configuration screen for language and color palette selection.
-class ConfigurationScreen extends StatelessWidget {
+class ConfigurationScreen extends StatefulWidget {
   /// Creates the configuration screen.
   const ConfigurationScreen({super.key});
+
+  @override
+  State<ConfigurationScreen> createState() => _ConfigurationScreenState();
+}
+
+class _ConfigurationScreenState extends State<ConfigurationScreen> {
+  bool _isImporting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +41,36 @@ class ConfigurationScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                FilledButton.icon(
+                  onPressed: () {
+                    if (_isImporting) {
+                      return;
+                    }
+                    _importLegacyCsv(context);
+                  },
+                  icon: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: _isImporting
+                        ? SizedBox(
+                            key: const ValueKey('loading'),
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                theme.colorScheme.onPrimary,
+                              ),
+                            ),
+                          )
+                        : const Icon(Icons.upload_file_outlined),
+                  ),
+                  label: Text(
+                    _isImporting
+                        ? l10n.configurationImportLegacyLoading
+                        : l10n.configurationImportLegacyButton,
+                  ),
+                ),
+                const SizedBox(height: 32),
                 Text(
                   l10n.configurationThemeModeLabel,
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -61,7 +106,10 @@ class ConfigurationScreen extends StatelessWidget {
                   onTap: () {
                     HapticFeedback.selectionClick();
                     settings.setLocale(const Locale('es'));
-                    _showChangeSnackBar(context, l10n.configurationLanguageSpanish);
+                    _showChangeSnackBar(
+                      context,
+                      l10n.configurationLanguageSpanish,
+                    );
                   },
                 ),
                 const SizedBox(height: 8),
@@ -72,11 +120,12 @@ class ConfigurationScreen extends StatelessWidget {
                   onTap: () {
                     HapticFeedback.selectionClick();
                     settings.setLocale(const Locale('en'));
-                    _showChangeSnackBar(context, l10n.configurationLanguageEnglish);
+                    _showChangeSnackBar(
+                      context,
+                      l10n.configurationLanguageEnglish,
+                    );
                   },
                 ),
-                const SizedBox(height: 16),
-                _LanguagePreviewCard(locale: settings.locale),
                 const SizedBox(height: 32),
                 Text(
                   l10n.configurationPaletteLabel,
@@ -92,7 +141,10 @@ class ConfigurationScreen extends StatelessWidget {
                   onTap: () {
                     HapticFeedback.selectionClick();
                     settings.setPalette(AppColorPalette.dawnBlush);
-                    _showChangeSnackBar(context, l10n.configurationPaletteDawnBlush);
+                    _showChangeSnackBar(
+                      context,
+                      l10n.configurationPaletteDawnBlush,
+                    );
                   },
                 ),
                 const SizedBox(height: 8),
@@ -103,7 +155,10 @@ class ConfigurationScreen extends StatelessWidget {
                   onTap: () {
                     HapticFeedback.selectionClick();
                     settings.setPalette(AppColorPalette.mintWhisper);
-                    _showChangeSnackBar(context, l10n.configurationPaletteMintWhisper);
+                    _showChangeSnackBar(
+                      context,
+                      l10n.configurationPaletteMintWhisper,
+                    );
                   },
                 ),
                 const SizedBox(height: 8),
@@ -114,7 +169,10 @@ class ConfigurationScreen extends StatelessWidget {
                   onTap: () {
                     HapticFeedback.selectionClick();
                     settings.setPalette(AppColorPalette.skyBreeze);
-                    _showChangeSnackBar(context, l10n.configurationPaletteSkyBreeze);
+                    _showChangeSnackBar(
+                      context,
+                      l10n.configurationPaletteSkyBreeze,
+                    );
                   },
                 ),
                 const SizedBox(height: 8),
@@ -125,13 +183,155 @@ class ConfigurationScreen extends StatelessWidget {
                   onTap: () {
                     HapticFeedback.selectionClick();
                     settings.setPalette(AppColorPalette.lavenderField);
-                    _showChangeSnackBar(context, l10n.configurationPaletteLavenderField);
+                    _showChangeSnackBar(
+                      context,
+                      l10n.configurationPaletteLavenderField,
+                    );
                   },
                 ),
               ],
             ),
           );
         },
+      ),
+    );
+  }
+
+  Future<void> _importLegacyCsv(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    final babyState = context.read<BabyState>();
+    final baby = babyState.selectedBaby;
+    if (baby == null) {
+      _showImportSnackBar(context, l10n.configurationImportNoBaby, isError: true);
+      return;
+    }
+
+    setState(() {
+      _isImporting = true;
+    });
+
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: const <String>['csv'],
+        withData: true,
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      if (result == null || result.files.isEmpty) {
+        return;
+      }
+
+      final file = result.files.first;
+      final bytes = file.bytes;
+      if (bytes == null) {
+        _showImportSnackBar(
+          context,
+          l10n.configurationImportFailure,
+          isError: true,
+        );
+        return;
+      }
+
+      final parser = LegacyActionCsvParser();
+      final records = parser.parse(utf8.decode(bytes));
+      if (records.isEmpty) {
+        _showImportSnackBar(
+          context,
+          l10n.configurationImportEmpty,
+          isError: true,
+        );
+        return;
+      }
+
+      final actionsState = context.read<BabyActionsState>();
+      var inserted = 0;
+      for (final record in records) {
+        if (!mounted) {
+          return;
+        }
+        if (record.feedAmountMl != null) {
+          await actionsState.logFeed(
+            occurredAt: record.occurredAt,
+            amountMl: record.feedAmountMl!,
+          );
+          inserted++;
+        }
+        if (record.didPoop) {
+          await actionsState.logDiaper(
+            occurredAt: record.occurredAt,
+            texture: StoolTexture.soft,
+          );
+          inserted++;
+        }
+        if (record.didVomit) {
+          await actionsState.logVomit(
+            occurredAt: record.occurredAt,
+            severity: VomitSeverity.mild,
+          );
+          inserted++;
+        }
+        if (record.didBath) {
+          await actionsState.logBath(
+            occurredAt: record.occurredAt,
+          );
+          inserted++;
+        }
+      }
+
+      if (!mounted) {
+        return;
+      }
+
+      _showImportSnackBar(
+        context,
+        l10n.configurationImportSuccess(inserted),
+      );
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      _showImportSnackBar(
+        context,
+        l10n.configurationImportFailure,
+        isError: true,
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isImporting = false;
+        });
+      }
+    }
+  }
+
+  void _showImportSnackBar(
+    BuildContext context,
+    String message, {
+    bool isError = false,
+  }) {
+    final theme = Theme.of(context);
+    final backgroundColor =
+        isError ? theme.colorScheme.error : theme.colorScheme.primary;
+    final foregroundColor =
+        isError ? theme.colorScheme.onError : theme.colorScheme.onPrimary;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(color: foregroundColor),
+        ),
+        backgroundColor: backgroundColor,
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
       ),
     );
   }
@@ -250,45 +450,45 @@ class _PaletteOption extends StatelessWidget {
             child: InkWell(
               onTap: onTap,
               borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Icon(
-                isSelected
-                    ? Icons.radio_button_checked
-                    : Icons.radio_button_unchecked,
-                color: isSelected
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurface.withOpacity(0.6),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  title,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight:
-                        isSelected ? FontWeight.w600 : FontWeight.normal,
-                    color: isSelected
-                        ? theme.colorScheme.onSurface
-                        : theme.colorScheme.onSurface.withOpacity(0.87),
-                  ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Icon(
+                      isSelected
+                          ? Icons.radio_button_checked
+                          : Icons.radio_button_unchecked,
+                      color: isSelected
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurface.withOpacity(0.6),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.normal,
+                          color: isSelected
+                              ? theme.colorScheme.onSurface
+                              : theme.colorScheme.onSurface.withOpacity(0.87),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _ColorDot(color: colors.background),
+                        const SizedBox(width: 6),
+                        _ColorDot(color: colors.surface),
+                        const SizedBox(width: 6),
+                        _ColorDot(color: colors.accent),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 16),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _ColorDot(color: colors.background),
-                  const SizedBox(width: 6),
-                  _ColorDot(color: colors.surface),
-                  const SizedBox(width: 6),
-                  _ColorDot(color: colors.accent),
-                ],
-              ),
-            ],
-          ),
-        ),
             ),
           ),
         ),
@@ -319,78 +519,6 @@ class _ColorDot extends StatelessWidget {
   }
 }
 
-/// Preview card showing example text in the selected language.
-class _LanguagePreviewCard extends StatelessWidget {
-  const _LanguagePreviewCard({required this.locale});
-
-  final Locale locale;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isSpanish = locale.languageCode == 'es';
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.2),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.translate_rounded,
-                size: 18,
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                isSpanish ? 'Vista previa' : 'Preview',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.primary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            isSpanish ? '¡Hola! Bienvenido a PequeLog' : 'Hello! Welcome to PequeLog',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            isSpanish
-                ? 'Registra las actividades diarias de tu bebé'
-                : 'Track your baby\'s daily activities',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            isSpanish
-                ? 'Comida, pañales, baños y más'
-                : 'Feeding, diapers, baths and more',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 /// Segmented button for theme mode selection with animated icons.
 class _ThemeModeSegmentedButton extends StatelessWidget {
   const _ThemeModeSegmentedButton({
@@ -410,53 +538,47 @@ class _ThemeModeSegmentedButton extends StatelessWidget {
       segments: [
         ButtonSegment(
           value: ThemeMode.light,
-          label: Text(l10n.configurationThemeModeLight),
-          icon: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: Icon(
-              Icons.wb_sunny_rounded,
-              key: const ValueKey('sun'),
-              color: currentMode == ThemeMode.light
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurface.withOpacity(0.6),
-            ),
+          label: const SizedBox.shrink(),
+          icon: Icon(
+            Icons.wb_sunny_rounded,
+            color: currentMode == ThemeMode.light
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurface.withOpacity(0.6),
           ),
+          tooltip: l10n.configurationThemeModeLight,
         ),
         ButtonSegment(
           value: ThemeMode.system,
-          label: Text(l10n.configurationThemeModeSystem),
-          icon: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: Icon(
-              Icons.brightness_auto_rounded,
-              key: const ValueKey('auto'),
-              color: currentMode == ThemeMode.system
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurface.withOpacity(0.6),
-            ),
+          label: const SizedBox.shrink(),
+          icon: Icon(
+            Icons.brightness_auto_rounded,
+            color: currentMode == ThemeMode.system
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurface.withOpacity(0.6),
           ),
+          tooltip: l10n.configurationThemeModeSystem,
         ),
         ButtonSegment(
           value: ThemeMode.dark,
-          label: Text(l10n.configurationThemeModeDark),
-          icon: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: Icon(
-              Icons.nights_stay_rounded,
-              key: const ValueKey('moon'),
-              color: currentMode == ThemeMode.dark
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurface.withOpacity(0.6),
-            ),
+          label: const SizedBox.shrink(),
+          icon: Icon(
+            Icons.nights_stay_rounded,
+            color: currentMode == ThemeMode.dark
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurface.withOpacity(0.6),
           ),
+          tooltip: l10n.configurationThemeModeDark,
         ),
       ],
       selected: {currentMode},
       onSelectionChanged: (Set<ThemeMode> selected) {
         onModeChanged(selected.first);
       },
-      style: ButtonStyle(
+      style: const ButtonStyle(
         visualDensity: VisualDensity.comfortable,
+        padding: MaterialStatePropertyAll<EdgeInsets>(
+          EdgeInsets.symmetric(horizontal: 12),
+        ),
       ),
     );
   }
@@ -466,7 +588,7 @@ class _ThemeModeSegmentedButton extends StatelessWidget {
 void _showChangeSnackBar(BuildContext context, String changeName) {
   final theme = Theme.of(context);
   final l10n = AppLocalizations.of(context)!;
-  
+
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(
