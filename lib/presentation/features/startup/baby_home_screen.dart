@@ -237,8 +237,7 @@ class BabyHomeScreen extends StatelessWidget {
   }
 
   void _openStatistics(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    _openFeatureComingSoon(context, l10n.babyActionStatistics);
+    context.goToStatistics();
   }
 
   void _openAskPediatrician(BuildContext context) {
