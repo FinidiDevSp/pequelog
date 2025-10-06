@@ -555,6 +555,35 @@ class AppLocalizationsEs extends AppLocalizations {
   String get configurationChangeConfirmation => 'Actualizado';
 
   @override
+  String get configurationImportLegacyButton => 'Importar CSV legado';
+
+  @override
+  String get configurationImportLegacyLoading => 'Importando registros...';
+
+  @override
+  String get configurationImportNoBaby =>
+      'Selecciona un bebé antes de importar.';
+
+  @override
+  String get configurationImportEmpty =>
+      'No encontramos registros válidos en el archivo.';
+
+  @override
+  String configurationImportSuccess(int count) {
+    return intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      zero: 'No se importaron registros.',
+      one: 'Se importó 1 registro.',
+      other: 'Se importaron $count registros.',
+    );
+  }
+
+  @override
+  String get configurationImportFailure =>
+      'No se pudo importar el archivo. Revisa el formato e inténtalo de nuevo.';
+
+  @override
   String get configurationPaletteDawnBlush => 'Amanecer rosado';
 
   @override
