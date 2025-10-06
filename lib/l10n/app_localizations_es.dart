@@ -259,11 +259,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get feedTimerStart => 'Iniciar toma';
 
   @override
-  String feedTimerRecordedDuration(Object duration) {
-    return 'Duración registrada: $duration';
-  }
-
-  @override
   String feedTimerRunningLabel(Object elapsed) {
     return 'Tiempo transcurrido: $elapsed';
   }
@@ -276,6 +271,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get feedTimerStop => 'Terminar toma';
+
+  @override
+  String feedTimerRecordedDuration(Object duration) {
+    return 'Duración registrada: $duration';
+  }
 
   @override
   String get feedAmountLabel => 'Cantidad (ml)';
@@ -394,7 +394,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get recentActionEditLabel => 'Editar';
 
   @override
-  String recentActionFeed(Object time, Object amount) {
+  String recentActionFeed(Object amount, Object time) {
     return '$time · $amount';
   }
 

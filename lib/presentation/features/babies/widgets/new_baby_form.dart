@@ -3,8 +3,7 @@ import 'package:pequelog/core/services/image_picker_service.dart';
 import 'package:pequelog/domain/babies/entities/baby_draft.dart';
 import 'package:pequelog/domain/babies/entities/baby_sex.dart';
 import 'package:pequelog/l10n/app_localizations.dart';
-
-import '../new_baby_screen.dart';
+import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
 
 /// Reusable form that gathers the data required to create or edit a baby.
 class NewBabyForm extends StatefulWidget {

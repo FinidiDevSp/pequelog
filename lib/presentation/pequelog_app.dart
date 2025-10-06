@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:pequelog/core/routing/app_router.dart';
+import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
 import 'package:pequelog/core/services/image_picker_service.dart';
 import 'package:pequelog/data/babies/sqlite_baby_repository.dart';
 import 'package:pequelog/data/baby_actions/sqlite_baby_action_repository.dart';
@@ -19,9 +21,6 @@ import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/app_settings.dart';
 import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
 import 'package:pequelog/presentation/features/baby_actions/feed_timer_state.dart';
-import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
-import 'package:pequelog/presentation/features/settings/configuration_screen.dart';
-import 'package:pequelog/presentation/features/startup/baby_home_screen.dart';
 import 'package:pequelog/presentation/features/startup/baby_state.dart';
 import 'package:pequelog/presentation/features/startup/setup_screen.dart';
 import 'package:pequelog/presentation/theme/app_color_palettes.dart';
@@ -124,9 +123,19 @@ class PequeLogApp extends StatelessWidget {
           },
         ),
       ],
-      child: Consumer<AppSettings>(
-        builder: (context, settings, _) {
-          return MaterialApp(
+      child: Consumer2<AppSettings, BabyState>(
+        builder: (context, settings, babyState, _) {
+          final navigatorKey = GlobalKey<NavigatorState>();
+          final router = createAppRouter(
+            selectedBaby: babyState.selectedBaby,
+            imagePicker: _imagePicker,
+            datePicker: _datePicker,
+            timePicker: _timePicker,
+            navigatorKey: navigatorKey,
+          );
+
+          return MaterialApp.router(
+            routerConfig: router,
             onGenerateTitle: (context) =>
                 AppLocalizations.of(context)!.appTitle,
             theme: _buildTheme(settings.palette, Brightness.light),
@@ -140,11 +149,14 @@ class PequeLogApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: AppLocalizations.supportedLocales,
-            home: _StartupRouter(
-              imagePicker: _imagePicker,
-              datePicker: _datePicker,
-              timePicker: _timePicker,
-            ),
+            builder: (context, child) {
+              return _StartupRouterWrapper(
+                imagePicker: _imagePicker,
+                datePicker: _datePicker,
+                timePicker: _timePicker,
+                child: child ?? const SizedBox.shrink(),
+              );
+            },
           );
         },
       ),
@@ -220,16 +232,18 @@ ThemeData _buildTheme(AppColorPalette palette, Brightness brightness) {
   );
 }
 
-class _StartupRouter extends StatelessWidget {
-  const _StartupRouter({
+class _StartupRouterWrapper extends StatelessWidget {
+  const _StartupRouterWrapper({
     required this.imagePicker,
     required this.datePicker,
     required this.timePicker,
+    required this.child,
   });
 
   final ImagePickerService imagePicker;
   final DatePickerLauncher? datePicker;
   final TimePickerLauncher? timePicker;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -242,36 +256,11 @@ class _StartupRouter extends StatelessWidget {
             return _ErrorScreen(onRetry: state.load);
           case BabyStatus.missingBaby:
             return SetupScreen(
-              onConfigure: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const ConfigurationScreen(),
-                  ),
-                );
-              },
-              onCreateBaby: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => NewBabyScreen(
-                      imagePicker: imagePicker,
-                      datePicker: datePicker,
-                      timePicker: timePicker,
-                    ),
-                  ),
-                );
-              },
+              onConfigure: () => context.goToSettings(),
+              onCreateBaby: () => context.goToNewBaby(),
             );
           case BabyStatus.ready:
-            final baby = state.selectedBaby;
-            if (baby == null) {
-              return _ErrorScreen(onRetry: state.load);
-            }
-            return BabyHomeScreen(
-              baby: baby,
-              imagePicker: imagePicker,
-              datePicker: datePicker,
-              timePicker: timePicker,
-            );
+            return child;
         }
       },
     );

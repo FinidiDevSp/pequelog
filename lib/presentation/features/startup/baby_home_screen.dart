@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pequelog/core/routing/app_router.dart';
+import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
 import 'package:pequelog/core/services/image_picker_service.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action_kind.dart';
 import 'package:pequelog/domain/baby_actions/entities/stool_texture.dart';
@@ -13,13 +15,7 @@ import 'package:pequelog/domain/babies/entities/baby.dart';
 import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
 import 'package:pequelog/presentation/features/baby_actions/feed_timer_state.dart';
-import 'package:pequelog/presentation/features/babies/actions/bath_action_screen.dart';
-import 'package:pequelog/presentation/features/babies/actions/diaper_action_screen.dart';
-import 'package:pequelog/presentation/features/babies/actions/feed_action_screen.dart';
-import 'package:pequelog/presentation/features/babies/actions/vomit_action_screen.dart';
-import 'package:pequelog/presentation/features/babies/edit_baby_screen.dart';
-import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
-import 'package:pequelog/presentation/features/settings/configuration_screen.dart';
+
 import 'package:provider/provider.dart';
 
 /// Placeholder screen that will host the primary baby dashboard.
@@ -72,101 +68,103 @@ class BabyHomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              color: theme.colorScheme.surface,
-              elevation: 0,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        _BabyPhoto(
-                          path: baby.photoPath,
-                          placeholder: l10n.babyHomePhotoPlaceholder,
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                l10n.babyHomeBirthSectionTitle,
-                                style: theme.textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                l10n.babyHomeBirthSummary(birthDate, birthTime),
-                                style: theme.textTheme.bodyMedium,
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                l10n.babyHomeBirthStatsTitle,
-                                style: theme.textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                l10n.babyHomeBirthWeight(
-                                  baby.birthWeightKg.toStringAsFixed(2),
-                                ),
-                                style: theme.textTheme.bodyMedium,
-                              ),
-                              Text(
-                                l10n.babyHomeBirthLength(
-                                  baby.birthLengthCm.toStringAsFixed(1),
-                                ),
-                                style: theme.textTheme.bodyMedium,
-                              ),
-                            ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                color: theme.colorScheme.surface,
+                elevation: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          _BabyPhoto(
+                            path: baby.photoPath,
+                            placeholder: l10n.babyHomePhotoPlaceholder,
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  l10n.babyHomeBirthSectionTitle,
+                                  style: theme.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${birthDate} · ${birthTime}',
+                                  style: theme.textTheme.bodyMedium,
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  l10n.babyHomeBirthStatsTitle,
+                                  style: theme.textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  l10n.babyHomeBirthWeight(
+                                    baby.birthWeightKg.toStringAsFixed(2),
+                                  ),
+                                  style: theme.textTheme.bodyMedium,
+                                ),
+                                Text(
+                                  l10n.babyHomeBirthLength(
+                                    baby.birthLengthCm.toStringAsFixed(1),
+                                  ),
+                                  style: theme.textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              l10n.babyHomeActionsTitle,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+              const SizedBox(height: 24),
+              Text(
+                l10n.babyHomeActionsTitle,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            _ActionsCarousel(
-              onFeed: () => _openFeedAction(context),
-              onBath: () => _openBathAction(context),
-              onVomit: () => _openVomitAction(context),
-              onDiaper: () => _openDiaperAction(context),
-              onHistory: () => _openHistory(context),
-              onStatistics: () => _openStatistics(context),
-              onAskPediatrician: () => _openAskPediatrician(context),
-              onMedicalAgenda: () => _openMedicalAgenda(context),
-              onGrowth: () => _openGrowth(context),
-            ),
-            const SizedBox(height: 24),
-            const _LatestEventsOverview(),
-            const SizedBox(height: 32),
-            _RecentActionsSection(
-              datePicker: datePicker,
-              timePicker: timePicker,
-            ),
-          ],
+              const SizedBox(height: 16),
+              _ActionsCarousel(
+                onFeed: () => _openFeedAction(context),
+                onBath: () => _openBathAction(context),
+                onVomit: () => _openVomitAction(context),
+                onDiaper: () => _openDiaperAction(context),
+                onHistory: () => _openHistory(context),
+                onStatistics: () => _openStatistics(context),
+                onAskPediatrician: () => _openAskPediatrician(context),
+                onMedicalAgenda: () => _openMedicalAgenda(context),
+                onGrowth: () => _openGrowth(context),
+              ),
+              const SizedBox(height: 24),
+              const _LatestEventsOverview(),
+              const SizedBox(height: 32),
+              _RecentActionsSection(
+                datePicker: datePicker,
+                timePicker: timePicker,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -177,73 +175,37 @@ class BabyHomeScreen extends StatelessWidget {
     BuildContext context,
     AppLocalizations l10n,
   ) {
-    final navigator = Navigator.of(context, rootNavigator: true);
     switch (option) {
       case _BabyHomeMenuOption.edit:
-        Future<void>.microtask(() {
-          navigator.push(
-            MaterialPageRoute<void>(
-              builder: (_) => EditBabyScreen(
-                baby: baby,
-                imagePicker: imagePicker,
-                datePicker: datePicker,
-                timePicker: timePicker,
-              ),
-            ),
-          );
-        });
+        context.goToEditBaby();
         break;
       case _BabyHomeMenuOption.settings:
-        Future<void>.microtask(() {
-          navigator.push(
-            MaterialPageRoute<void>(
-              builder: (_) => const ConfigurationScreen(),
-            ),
-          );
-        });
+        context.goToSettings();
         break;
     }
   }
 
   Future<void> _openFeedAction(BuildContext context) async {
-    final message = await Navigator.of(context).push<String>(
-      MaterialPageRoute<String>(
-        builder: (_) => FeedActionScreen(
-          timePicker: timePicker,
-          datePicker: datePicker,
-        ),
-      ),
-    );
+    final message = await context.goToFeedAction();
+    if (!context.mounted) return;
     _showResultSnack(context, message);
   }
 
   Future<void> _openBathAction(BuildContext context) async {
-    final message = await Navigator.of(context).push<String>(
-      MaterialPageRoute<String>(
-        builder: (_) =>
-            BathActionScreen(datePicker: datePicker, timePicker: timePicker),
-      ),
-    );
+    final message = await context.goToBathAction();
+    if (!context.mounted) return;
     _showResultSnack(context, message);
   }
 
   Future<void> _openVomitAction(BuildContext context) async {
-    final message = await Navigator.of(context).push<String>(
-      MaterialPageRoute<String>(
-        builder: (_) =>
-            VomitActionScreen(datePicker: datePicker, timePicker: timePicker),
-      ),
-    );
+    final message = await context.goToVomitAction();
+    if (!context.mounted) return;
     _showResultSnack(context, message);
   }
 
   Future<void> _openDiaperAction(BuildContext context) async {
-    final message = await Navigator.of(context).push<String>(
-      MaterialPageRoute<String>(
-        builder: (_) =>
-            DiaperActionScreen(datePicker: datePicker, timePicker: timePicker),
-      ),
-    );
+    final message = await context.goToDiaperAction();
+    if (!context.mounted) return;
     _showResultSnack(context, message);
   }
 
@@ -278,12 +240,7 @@ class BabyHomeScreen extends StatelessWidget {
   }
 
   void _showResultSnack(BuildContext context, String? message) {
-    if (message == null || !context.mounted) {
-      return;
-    }
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
+    _showSnack(context, message);
   }
 }
 
@@ -309,7 +266,10 @@ class _LatestEventsOverview extends StatelessWidget {
           _HighlightEntry(
             icon: Icons.baby_changing_station,
             label: l10n.babyHomeHighlightsDiaper,
-            action: _findLatestAction(state.recentActions, BabyActionKind.diaper),
+            action: _findLatestAction(
+              state.recentActions,
+              BabyActionKind.diaper,
+            ),
           ),
           _HighlightEntry(
             icon: Icons.bathtub_outlined,
@@ -319,7 +279,10 @@ class _LatestEventsOverview extends StatelessWidget {
           _HighlightEntry(
             icon: Icons.sick_outlined,
             label: l10n.babyHomeHighlightsVomit,
-            action: _findLatestAction(state.recentActions, BabyActionKind.vomit),
+            action: _findLatestAction(
+              state.recentActions,
+              BabyActionKind.vomit,
+            ),
           ),
         ];
 
@@ -365,13 +328,7 @@ class _LatestEventsOverview extends StatelessWidget {
                 itemCount: entries.length,
                 itemBuilder: (context, index) {
                   final entry = entries[index];
-                  return _buildHighlightTile(
-                    entry,
-                    theme,
-                    l10n,
-                    material,
-                    now,
-                  );
+                  return _buildHighlightTile(entry, theme, l10n, material, now);
                 },
                 separatorBuilder: (_, __) => const Divider(height: 1),
               ),
@@ -419,11 +376,7 @@ class _LatestEventsOverview extends StatelessWidget {
 }
 
 class _HighlightEntry {
-  const _HighlightEntry({
-    required this.icon,
-    required this.label,
-    this.action,
-  });
+  const _HighlightEntry({required this.icon, required this.label, this.action});
 
   final IconData icon;
   final String label;
@@ -576,16 +529,13 @@ class _RecentActionsSection extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       padding: const EdgeInsets.only(right: 24),
                     ),
-                    confirmDismiss: (direction) => _handleDismiss(
-                      context,
-                      action,
-                      direction,
-                      l10n,
-                    ),
+                    confirmDismiss: (direction) =>
+                        _handleDismiss(context, action, direction, l10n),
                     child: ListTile(
                       leading: CircleAvatar(
-                        backgroundColor:
-                            theme.colorScheme.primary.withOpacity(0.1),
+                        backgroundColor: theme.colorScheme.primary.withOpacity(
+                          0.1,
+                        ),
                         foregroundColor: theme.colorScheme.primary,
                         child: Icon(summary.icon),
                       ),
@@ -657,10 +607,7 @@ class _RecentActionsSection extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             label,
-            style: TextStyle(
-              color: foreground,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(color: foreground, fontWeight: FontWeight.w600),
           ),
         ],
       ),
@@ -727,15 +674,7 @@ class _RecentActionsSection extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     switch (action.kind) {
       case BabyActionKind.feed:
-        final message = await Navigator.of(context).push<String>(
-          MaterialPageRoute<String>(
-            builder: (_) => FeedActionScreen(
-              timePicker: timePicker,
-              datePicker: datePicker,
-              initialAction: action,
-            ),
-          ),
-        );
+        final message = await context.goToFeedAction(initialAction: action);
         if (!context.mounted) {
           return;
         }
@@ -747,14 +686,7 @@ class _RecentActionsSection extends StatelessWidget {
   }
 
   Future<void> _openActiveFeed(BuildContext context) async {
-    final message = await Navigator.of(context).push<String>(
-      MaterialPageRoute<String>(
-        builder: (_) => FeedActionScreen(
-          timePicker: timePicker,
-          datePicker: datePicker,
-        ),
-      ),
-    );
+    final message = await context.goToFeedAction();
     if (!context.mounted) {
       return;
     }
@@ -818,8 +750,9 @@ class _ActionSummary {
         if (notes != null) {
           subtitleParts.add(l10n.recentActionNotes(notes));
         }
-        final subtitle =
-            subtitleParts.isEmpty ? null : subtitleParts.join('\n');
+        final subtitle = subtitleParts.isEmpty
+            ? null
+            : subtitleParts.join('\n');
         return _ActionSummary(
           icon: Icons.local_drink_outlined,
           description: description,
@@ -1048,16 +981,20 @@ class _ActionButton extends StatelessWidget {
 
     return Tooltip(
       message: tooltip,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
+      child: SizedBox.square(
+        dimension: 72,
+        child: Material(
           color: theme.colorScheme.primary.withOpacity(0.12),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: IconButton(
-          constraints: const BoxConstraints.tightFor(width: 64, height: 64),
-          onPressed: onTap,
-          icon: Icon(icon),
-          color: theme.colorScheme.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: onTap,
+            child: Center(
+              child: Icon(icon, color: theme.colorScheme.primary, size: 28),
+            ),
+          ),
         ),
       ),
     );
@@ -1120,3 +1057,12 @@ class _PlaceholderBox extends StatelessWidget {
 }
 
 enum _BabyHomeMenuOption { edit, settings }
+
+void _showSnack(BuildContext context, String? message) {
+  if (message == null || !context.mounted) {
+    return;
+  }
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
+}

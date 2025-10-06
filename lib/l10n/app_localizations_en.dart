@@ -259,11 +259,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get feedTimerStart => 'Start feed';
 
   @override
-  String feedTimerRecordedDuration(Object duration) {
-    return 'Recorded duration: $duration';
-  }
-
-  @override
   String feedTimerRunningLabel(Object elapsed) {
     return 'Elapsed time: $elapsed';
   }
@@ -276,6 +271,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get feedTimerStop => 'Finish feed';
+
+  @override
+  String feedTimerRecordedDuration(Object duration) {
+    return 'Recorded duration: $duration';
+  }
 
   @override
   String get feedAmountLabel => 'Amount (ml)';
@@ -390,7 +390,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recentActionEditLabel => 'Edit';
 
   @override
-  String recentActionFeed(Object time, Object amount) {
+  String recentActionFeed(Object amount, Object time) {
     return '$time · $amount';
   }
 
@@ -455,11 +455,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recentActionDeleteError =>
-      "We couldn't delete the action. Try again.";
+      'We couldn\'t delete the action. Try again.';
 
   @override
-  String get recentActionEditUnsupported =>
-      "This action can't be edited yet.";
+  String get recentActionEditUnsupported => 'This action can\'t be edited yet.';
 
   @override
   String get editBabyTitle => 'Edit baby';

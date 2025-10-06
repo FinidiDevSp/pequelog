@@ -572,12 +572,6 @@ abstract class AppLocalizations {
   /// **'Iniciar toma'**
   String get feedTimerStart;
 
-  /// No description provided for @feedTimerRecordedDuration.
-  ///
-  /// In es, this message translates to:
-  /// **'Duración registrada: {duration}'**
-  String feedTimerRecordedDuration(Object duration);
-
   /// No description provided for @feedTimerRunningLabel.
   ///
   /// In es, this message translates to:
@@ -601,6 +595,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Terminar toma'**
   String get feedTimerStop;
+
+  /// No description provided for @feedTimerRecordedDuration.
+  ///
+  /// In es, this message translates to:
+  /// **'Duración registrada: {duration}'**
+  String feedTimerRecordedDuration(Object duration);
 
   /// No description provided for @feedAmountLabel.
   ///
