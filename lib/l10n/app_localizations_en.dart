@@ -780,4 +780,99 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get statisticsTitle => 'Statistics';
+
+  @override
+  String get statisticsRefresh => 'Refresh';
+
+  @override
+  String get statisticsDailySummary => 'Daily Summary';
+
+  @override
+  String get statisticsFeedingTitle => 'Feeding';
+
+  @override
+  String statisticsFeedingCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count feeds',
+      one: '1 feed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statisticsAverage => 'Average';
+
+  @override
+  String get statisticsDiapersTitle => 'Diapers';
+
+  @override
+  String get statisticsDiapersLabel => 'changes';
+
+  @override
+  String get statisticsFeces => 'poops';
+
+  @override
+  String get statisticsUrine => 'pees';
+
+  @override
+  String get statisticsBathsTitle => 'Baths';
+
+  @override
+  String get statisticsBathSingular => 'bath';
+
+  @override
+  String get statisticsBathPlural => 'baths';
+
+  @override
+  String statisticsVomitCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count vomits',
+      one: '1 vomit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statisticsIntervalsTitle => 'Intervals';
+
+  @override
+  String get statisticsAverageInterval => 'average';
+
+  @override
+  String get statisticsRange => 'Range';
+
+  @override
+  String get statisticsWeeklyChartTitle => 'Last 7 days';
+
+  @override
+  String get statisticsVolume => 'Volume (ml)';
+
+  @override
+  String get statisticsFeeds => 'Feeds';
+
+  @override
+  String get statisticsComparisonTitle => 'Today vs Yesterday';
+
+  @override
+  String get statisticsAveragePerFeed => 'Average per feed';
+
+  @override
+  String get statisticsToday => 'Today';
+
+  @override
+  String get statisticsYesterday => 'Yesterday';
+
+  @override
+  String get statisticsEmptyTitle => 'No records yet today';
+
+  @override
+  String get statisticsEmptyMessage =>
+      'Start by recording the first action of the day';
 }

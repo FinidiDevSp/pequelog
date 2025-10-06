@@ -12,6 +12,8 @@ import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
 import 'package:pequelog/presentation/features/settings/configuration_screen.dart';
 import 'package:pequelog/presentation/features/startup/baby_home_screen.dart';
 import 'package:pequelog/presentation/features/history/baby_history_screen.dart';
+import 'package:pequelog/presentation/features/statistics/statistics_screen.dart';
+import 'package:pequelog/presentation/features/statistics/statistics_screen.dart';
 
 /// Route names for type-safe navigation.
 class AppRoutes {
@@ -41,6 +43,9 @@ class AppRoutes {
 
   /// History screen route.
   static const String history = 'history';
+
+  /// Statistics screen route.
+  static const String statistics = 'statistics';
 
   AppRoutes._();
 }
@@ -84,6 +89,9 @@ extension AppNavigationExtension on BuildContext {
 
   /// Navigates to the history screen.
   void goToHistory() => pushNamed(AppRoutes.history);
+
+  /// Navigates to the statistics screen.
+  void goToStatistics() => pushNamed(AppRoutes.statistics);
 }
 
 /// Creates the app's router with all defined routes.
@@ -233,6 +241,15 @@ GoRouter createAppRouter({
           context,
           state,
           const BabyHistoryScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/statistics',
+        name: AppRoutes.statistics,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const StatisticsScreen(),
         ),
       ),
     ],

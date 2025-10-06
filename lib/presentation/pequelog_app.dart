@@ -22,8 +22,8 @@ import 'package:pequelog/presentation/app_settings.dart';
 import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
 import 'package:pequelog/presentation/features/baby_actions/feed_timer_state.dart';
 import 'package:pequelog/presentation/features/history/baby_history_state.dart';
+import 'package:pequelog/presentation/features/statistics/statistics_state.dart';
 import 'package:pequelog/presentation/features/startup/baby_state.dart';
-import 'package:pequelog/presentation/features/history/baby_history_state.dart';
 import 'package:pequelog/presentation/features/startup/setup_screen.dart';
 import 'package:pequelog/presentation/theme/app_color_palettes.dart';
 import 'package:provider/provider.dart';
@@ -131,6 +131,22 @@ class PequeLogApp extends StatelessWidget {
             historyState ??= BabyHistoryState(repository: _actionRepository);
             historyState.updateBabyId(babyState.selectedBaby?.id);
             return historyState;
+          },
+        ),
+        ChangeNotifierProxyProvider<BabyState, StatisticsState>(
+          create: (_) => StatisticsState(
+            repository: _actionRepository,
+            babyId: '',
+          ),
+          update: (_, babyState, statisticsState) {
+            final babyId = babyState.selectedBaby?.id ?? '';
+            if (statisticsState == null || statisticsState.babyId != babyId) {
+              return StatisticsState(
+                repository: _actionRepository,
+                babyId: babyId,
+              );
+            }
+            return statisticsState;
           },
         ),
       ],

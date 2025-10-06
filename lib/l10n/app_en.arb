@@ -358,5 +358,45 @@
         "type": "int"
       }
     }
-  }
+  },
+  "statisticsTitle": "Statistics",
+  "statisticsRefresh": "Refresh",
+  "statisticsDailySummary": "Daily Summary",
+  "statisticsFeedingTitle": "Feeding",
+  "statisticsFeedingCount": "{count, plural, =1{1 feed} other{{count} feeds}}",
+  "@statisticsFeedingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statisticsAverage": "Average",
+  "statisticsDiapersTitle": "Diapers",
+  "statisticsDiapersLabel": "changes",
+  "statisticsFeces": "poops",
+  "statisticsUrine": "pees",
+  "statisticsBathsTitle": "Baths",
+  "statisticsBathSingular": "bath",
+  "statisticsBathPlural": "baths",
+  "statisticsVomitCount": "{count, plural, =1{1 vomit} other{{count} vomits}}",
+  "@statisticsVomitCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statisticsIntervalsTitle": "Intervals",
+  "statisticsAverageInterval": "average",
+  "statisticsRange": "Range",
+  "statisticsWeeklyChartTitle": "Last 7 days",
+  "statisticsVolume": "Volume (ml)",
+  "statisticsFeeds": "Feeds",
+  "statisticsComparisonTitle": "Today vs Yesterday",
+  "statisticsAveragePerFeed": "Average per feed",
+  "statisticsToday": "Today",
+  "statisticsYesterday": "Yesterday",
+  "statisticsEmptyTitle": "No records yet today",
+  "statisticsEmptyMessage": "Start by recording the first action of the day"
 }

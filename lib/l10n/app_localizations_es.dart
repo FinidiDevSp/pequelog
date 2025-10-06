@@ -785,4 +785,99 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return 'Hace $_temp0';
   }
+
+  @override
+  String get statisticsTitle => 'Estadísticas';
+
+  @override
+  String get statisticsRefresh => 'Actualizar';
+
+  @override
+  String get statisticsDailySummary => 'Resumen del día';
+
+  @override
+  String get statisticsFeedingTitle => 'Alimentación';
+
+  @override
+  String statisticsFeedingCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tomas',
+      one: '1 toma',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statisticsAverage => 'Promedio';
+
+  @override
+  String get statisticsDiapersTitle => 'Pañales';
+
+  @override
+  String get statisticsDiapersLabel => 'cambios';
+
+  @override
+  String get statisticsFeces => 'cacas';
+
+  @override
+  String get statisticsUrine => 'pipís';
+
+  @override
+  String get statisticsBathsTitle => 'Baños';
+
+  @override
+  String get statisticsBathSingular => 'baño';
+
+  @override
+  String get statisticsBathPlural => 'baños';
+
+  @override
+  String statisticsVomitCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count vómitos',
+      one: '1 vómito',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statisticsIntervalsTitle => 'Intervalos';
+
+  @override
+  String get statisticsAverageInterval => 'promedio';
+
+  @override
+  String get statisticsRange => 'Rango';
+
+  @override
+  String get statisticsWeeklyChartTitle => 'Últimos 7 días';
+
+  @override
+  String get statisticsVolume => 'Volumen (ml)';
+
+  @override
+  String get statisticsFeeds => 'Tomas';
+
+  @override
+  String get statisticsComparisonTitle => 'Hoy vs Ayer';
+
+  @override
+  String get statisticsAveragePerFeed => 'Promedio por toma';
+
+  @override
+  String get statisticsToday => 'Hoy';
+
+  @override
+  String get statisticsYesterday => 'Ayer';
+
+  @override
+  String get statisticsEmptyTitle => 'Aún no hay registros hoy';
+
+  @override
+  String get statisticsEmptyMessage =>
+      'Comienza registrando la primera acción del día';
 }

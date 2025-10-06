@@ -358,5 +358,45 @@
         "type": "int"
       }
     }
-  }
+  },
+  "statisticsTitle": "Estadísticas",
+  "statisticsRefresh": "Actualizar",
+  "statisticsDailySummary": "Resumen del día",
+  "statisticsFeedingTitle": "Alimentación",
+  "statisticsFeedingCount": "{count, plural, =1{1 toma} other{{count} tomas}}",
+  "@statisticsFeedingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statisticsAverage": "Promedio",
+  "statisticsDiapersTitle": "Pañales",
+  "statisticsDiapersLabel": "cambios",
+  "statisticsFeces": "cacas",
+  "statisticsUrine": "pipís",
+  "statisticsBathsTitle": "Baños",
+  "statisticsBathSingular": "baño",
+  "statisticsBathPlural": "baños",
+  "statisticsVomitCount": "{count, plural, =1{1 vómito} other{{count} vómitos}}",
+  "@statisticsVomitCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statisticsIntervalsTitle": "Intervalos",
+  "statisticsAverageInterval": "promedio",
+  "statisticsRange": "Rango",
+  "statisticsWeeklyChartTitle": "Últimos 7 días",
+  "statisticsVolume": "Volumen (ml)",
+  "statisticsFeeds": "Tomas",
+  "statisticsComparisonTitle": "Hoy vs Ayer",
+  "statisticsAveragePerFeed": "Promedio por toma",
+  "statisticsToday": "Hoy",
+  "statisticsYesterday": "Ayer",
+  "statisticsEmptyTitle": "Aún no hay registros hoy",
+  "statisticsEmptyMessage": "Comienza registrando la primera acción del día"
 }

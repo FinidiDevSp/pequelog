@@ -1387,6 +1387,162 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Hace {count, plural, =1{1 año} other{{count} años}}'**
   String timelineYearsAgo(int count);
+
+  /// No description provided for @statisticsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Estadísticas'**
+  String get statisticsTitle;
+
+  /// No description provided for @statisticsRefresh.
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizar'**
+  String get statisticsRefresh;
+
+  /// No description provided for @statisticsDailySummary.
+  ///
+  /// In es, this message translates to:
+  /// **'Resumen del día'**
+  String get statisticsDailySummary;
+
+  /// No description provided for @statisticsFeedingTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Alimentación'**
+  String get statisticsFeedingTitle;
+
+  /// No description provided for @statisticsFeedingCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{1 toma} other{{count} tomas}}'**
+  String statisticsFeedingCount(int count);
+
+  /// No description provided for @statisticsAverage.
+  ///
+  /// In es, this message translates to:
+  /// **'Promedio'**
+  String get statisticsAverage;
+
+  /// No description provided for @statisticsDiapersTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Pañales'**
+  String get statisticsDiapersTitle;
+
+  /// No description provided for @statisticsDiapersLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'cambios'**
+  String get statisticsDiapersLabel;
+
+  /// No description provided for @statisticsFeces.
+  ///
+  /// In es, this message translates to:
+  /// **'cacas'**
+  String get statisticsFeces;
+
+  /// No description provided for @statisticsUrine.
+  ///
+  /// In es, this message translates to:
+  /// **'pipís'**
+  String get statisticsUrine;
+
+  /// No description provided for @statisticsBathsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Baños'**
+  String get statisticsBathsTitle;
+
+  /// No description provided for @statisticsBathSingular.
+  ///
+  /// In es, this message translates to:
+  /// **'baño'**
+  String get statisticsBathSingular;
+
+  /// No description provided for @statisticsBathPlural.
+  ///
+  /// In es, this message translates to:
+  /// **'baños'**
+  String get statisticsBathPlural;
+
+  /// No description provided for @statisticsVomitCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{1 vómito} other{{count} vómitos}}'**
+  String statisticsVomitCount(int count);
+
+  /// No description provided for @statisticsIntervalsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Intervalos'**
+  String get statisticsIntervalsTitle;
+
+  /// No description provided for @statisticsAverageInterval.
+  ///
+  /// In es, this message translates to:
+  /// **'promedio'**
+  String get statisticsAverageInterval;
+
+  /// No description provided for @statisticsRange.
+  ///
+  /// In es, this message translates to:
+  /// **'Rango'**
+  String get statisticsRange;
+
+  /// No description provided for @statisticsWeeklyChartTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Últimos 7 días'**
+  String get statisticsWeeklyChartTitle;
+
+  /// No description provided for @statisticsVolume.
+  ///
+  /// In es, this message translates to:
+  /// **'Volumen (ml)'**
+  String get statisticsVolume;
+
+  /// No description provided for @statisticsFeeds.
+  ///
+  /// In es, this message translates to:
+  /// **'Tomas'**
+  String get statisticsFeeds;
+
+  /// No description provided for @statisticsComparisonTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy vs Ayer'**
+  String get statisticsComparisonTitle;
+
+  /// No description provided for @statisticsAveragePerFeed.
+  ///
+  /// In es, this message translates to:
+  /// **'Promedio por toma'**
+  String get statisticsAveragePerFeed;
+
+  /// No description provided for @statisticsToday.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy'**
+  String get statisticsToday;
+
+  /// No description provided for @statisticsYesterday.
+  ///
+  /// In es, this message translates to:
+  /// **'Ayer'**
+  String get statisticsYesterday;
+
+  /// No description provided for @statisticsEmptyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay registros hoy'**
+  String get statisticsEmptyTitle;
+
+  /// No description provided for @statisticsEmptyMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Comienza registrando la primera acción del día'**
+  String get statisticsEmptyMessage;
 }
 
 class _AppLocalizationsDelegate

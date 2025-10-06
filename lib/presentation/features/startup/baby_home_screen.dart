@@ -54,6 +54,11 @@ class BabyHomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(baby.name),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.bar_chart),
+            tooltip: l10n.statisticsTitle,
+            onPressed: () => context.goToStatistics(),
+          ),
           PopupMenuButton<_BabyHomeMenuOption>(
             onSelected: (option) => _handleMenuSelection(option, context, l10n),
             itemBuilder: (context) => [
