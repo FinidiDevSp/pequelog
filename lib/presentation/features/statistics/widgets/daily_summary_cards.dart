@@ -55,8 +55,9 @@ class DailySummaryCards extends StatelessWidget {
           child: LayoutBuilder(
             builder: (context, constraints) {
               // Responsive: 2 columns on narrow screens, 4 on wide screens
-              final crossAxisCount = constraints.maxWidth > 600 ? 4 : 2;
-              final childAspectRatio = constraints.maxWidth > 600 ? 1.0 : 1.2;
+              final isWide = constraints.maxWidth > 600;
+              final crossAxisCount = isWide ? 4 : 2;
+              final childAspectRatio = isWide ? 1.1 : 0.9;
 
               return GridView.count(
                 crossAxisCount: crossAxisCount,

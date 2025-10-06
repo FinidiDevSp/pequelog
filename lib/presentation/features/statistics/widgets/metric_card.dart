@@ -63,9 +63,10 @@ class MetricCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             // Main metric
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text(
                   mainValue,
@@ -74,7 +75,6 @@ class MetricCard extends StatelessWidget {
                     color: colorScheme.onSurface,
                   ),
                 ),
-                const SizedBox(width: 8),
                 Text(
                   mainLabel,
                   style: theme.textTheme.bodyMedium?.copyWith(
@@ -91,6 +91,7 @@ class MetricCard extends StatelessWidget {
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
+                softWrap: true,
               ),
             ],
           ],

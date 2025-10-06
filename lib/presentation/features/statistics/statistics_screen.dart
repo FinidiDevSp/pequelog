@@ -138,19 +138,43 @@ class _StatisticsFilterBar extends StatelessWidget {
             segments: [
               ButtonSegment(
                 value: StatisticsRange.last7Days,
-                label: Text(l10n.statisticsRangeLast7Days),
+                label: Tooltip(
+                  message: l10n.statisticsRangeLast7Days,
+                  child: const Icon(
+                    Icons.calendar_view_week_outlined,
+                    size: 20,
+                  ),
+                ),
               ),
               ButtonSegment(
                 value: StatisticsRange.last14Days,
-                label: Text(l10n.statisticsRangeLast14Days),
+                label: Tooltip(
+                  message: l10n.statisticsRangeLast14Days,
+                  child: const Icon(
+                    Icons.calendar_view_month_outlined,
+                    size: 20,
+                  ),
+                ),
               ),
               ButtonSegment(
                 value: StatisticsRange.last30Days,
-                label: Text(l10n.statisticsRangeLast30Days),
+                label: Tooltip(
+                  message: l10n.statisticsRangeLast30Days,
+                  child: const Icon(
+                    Icons.calendar_today_outlined,
+                    size: 20,
+                  ),
+                ),
               ),
               ButtonSegment(
                 value: StatisticsRange.custom,
-                label: Text(l10n.statisticsRangeCustom),
+                label: Tooltip(
+                  message: l10n.statisticsRangeCustom,
+                  child: const Icon(
+                    Icons.edit_calendar_outlined,
+                    size: 20,
+                  ),
+                ),
               ),
             ],
             selected: <StatisticsRange>{state.selectedRange},
