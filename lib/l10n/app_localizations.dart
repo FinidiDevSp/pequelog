@@ -518,6 +518,36 @@ abstract class AppLocalizations {
   /// **'Elige la hora de la actividad'**
   String get actionTimePickerHelp;
 
+  /// No description provided for @actionDayPrevious.
+  ///
+  /// In es, this message translates to:
+  /// **'Día anterior'**
+  String get actionDayPrevious;
+
+  /// No description provided for @actionDayNext.
+  ///
+  /// In es, this message translates to:
+  /// **'Día siguiente'**
+  String get actionDayNext;
+
+  /// No description provided for @actionDayPickerTooltip.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir día'**
+  String get actionDayPickerTooltip;
+
+  /// No description provided for @actionDayToday.
+  ///
+  /// In es, this message translates to:
+  /// **'HOY'**
+  String get actionDayToday;
+
+  /// No description provided for @actionDayYesterday.
+  ///
+  /// In es, this message translates to:
+  /// **'AYER'**
+  String get actionDayYesterday;
+
   /// No description provided for @feedDaySelectorLabel.
   ///
   /// In es, this message translates to:
@@ -661,6 +691,42 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Editar toma'**
   String get feedActionEditTitle;
+
+  /// No description provided for @feedTimelineTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tomas del día'**
+  String get feedTimelineTitle;
+
+  /// No description provided for @feedTimelineEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no registraste tomas en este día.'**
+  String get feedTimelineEmpty;
+
+  /// No description provided for @feedTimelineGapLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'{duration} entre tomas'**
+  String feedTimelineGapLabel(Object duration);
+
+  /// No description provided for @feedTimelineGapShort.
+  ///
+  /// In es, this message translates to:
+  /// **'menos de un minuto'**
+  String get feedTimelineGapShort;
+
+  /// No description provided for @feedTimelineAmountLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad: {amount} ml'**
+  String feedTimelineAmountLabel(Object amount);
+
+  /// No description provided for @feedTimelineDurationLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Duración: {duration}'**
+  String feedTimelineDurationLabel(Object duration);
 
   /// No description provided for @bathDurationLabel.
   ///

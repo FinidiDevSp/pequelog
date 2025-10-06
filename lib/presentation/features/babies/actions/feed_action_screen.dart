@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action.dart';
+import 'package:pequelog/domain/baby_actions/entities/baby_action_kind.dart';
 import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/features/baby_actions/action_pickers.dart';
 import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
 import 'package:pequelog/presentation/features/baby_actions/feed_timer_state.dart';
 import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
+import 'package:pequelog/presentation/widgets/action_day_selector.dart';
 import 'package:provider/provider.dart';
 
 /// Form that lets caregivers log feeding sessions quickly.
@@ -208,6 +210,7 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
   @override
   Widget build(BuildContext context) {
     final timerState = context.watch<FeedTimerState>();
+    final actionsState = context.watch<BabyActionsState>();
     final timerStart = timerState.startedAt;
     if (timerStart != null) {
       final lastSynced = _lastSyncedTimerStart;
@@ -239,7 +242,6 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final material = MaterialLocalizations.of(context);
-    final dayLabel = material.formatMediumDate(_selectedDate);
     final title =
         widget.initialAction == null ? l10n.babyActionFeed : l10n.feedActionEditTitle;
 
@@ -253,60 +255,17 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  l10n.feedDaySelectorLabel,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: theme.colorScheme.outlineVariant,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          key: const Key('feed_day_previous'),
-                          tooltip: l10n.feedDayPrevious,
-                          onPressed: () => _changeDay(-1),
-                          icon: const Icon(Icons.chevron_left),
-                        ),
-                        Expanded(
-                          child: Tooltip(
-                            message: l10n.feedDayPickerTooltip,
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: _pickDate,
-                                borderRadius: BorderRadius.circular(12),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 6),
-                                  child: Text(
-                                    dayLabel,
-                                    textAlign: TextAlign.center,
-                                    style: theme.textTheme.titleMedium,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          key: const Key('feed_day_next'),
-                          tooltip: l10n.feedDayNext,
-                          onPressed: () => _changeDay(1),
-                          icon: const Icon(Icons.chevron_right),
-                        ),
-                      ],
-                    ),
-                  ),
+                ActionDaySelector(
+                  label: l10n.feedDaySelectorLabel,
+                  selectedDate: _selectedDate,
+                  onPickDay: _pickDate,
+                  onPreviousDay: () => _changeDay(-1),
+                  onNextDay: () => _changeDay(1),
+                  previousTooltip: l10n.feedDayPrevious,
+                  nextTooltip: l10n.feedDayNext,
+                  pickerTooltip: l10n.feedDayPickerTooltip,
+                  previousButtonKey: const Key('feed_day_previous'),
+                  nextButtonKey: const Key('feed_day_next'),
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -408,6 +367,12 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
                           ),
                   ),
                 ),
+                _buildFeedTimelineSection(
+                  l10n,
+                  theme,
+                  material,
+                  actionsState,
+                ),
               ],
             ),
           ),
@@ -508,6 +473,135 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
     );
   }
 
+  Widget _buildFeedTimelineSection(
+    AppLocalizations l10n,
+    ThemeData theme,
+    MaterialLocalizations material,
+    BabyActionsState actionsState,
+  ) {
+    final feeds = actionsState.recentActions
+        .where(
+          (action) =>
+              action.kind == BabyActionKind.feed &&
+              _isSameDay(action.occurredAt, _selectedDate),
+        )
+        .toList()
+      ..sort((a, b) => a.occurredAt.compareTo(b.occurredAt));
+
+    if (feeds.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.feedTimelineTitle,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.feedTimelineEmpty,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.outline,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final entries = <Widget>[];
+    for (var index = 0; index < feeds.length; index++) {
+      final action = feeds[index];
+      final timeLabel = material.formatTimeOfDay(
+        TimeOfDay.fromDateTime(action.occurredAt),
+        alwaysUse24HourFormat: true,
+      );
+      final amount = (action.details['amountMl'] as num?)?.toDouble();
+      final amountLabel =
+          amount != null ? l10n.feedTimelineAmountLabel(_formatAmount(amount)) : null;
+      final durationSeconds = action.details['durationSeconds'] as int?;
+      final durationLabel = durationSeconds != null && durationSeconds > 0
+          ? l10n.feedTimelineDurationLabel(
+              _formatDuration(Duration(seconds: durationSeconds)),
+            )
+          : null;
+      final notes = action.notes?.trim();
+      final showConnector = index < feeds.length - 1;
+      final gapLabel = showConnector
+          ? _buildGapLabel(
+              feeds[index + 1].occurredAt.difference(action.occurredAt),
+              l10n,
+            )
+          : null;
+
+      entries.add(
+        _FeedTimelineEntry(
+          timeLabel: timeLabel,
+          amountLabel: amountLabel,
+          durationLabel: durationLabel,
+          notes: notes?.isEmpty ?? true ? null : notes,
+          showConnector: showConnector,
+          connectorLabel: gapLabel,
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.feedTimelineTitle,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ...entries,
+        ],
+      ),
+    );
+  }
+
+  bool _isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  String _formatAmount(double amount) {
+    final text = amount.toStringAsFixed(2);
+    if (text.endsWith('.00')) {
+      return text.substring(0, text.length - 3);
+    }
+    if (text.endsWith('0')) {
+      return text.substring(0, text.length - 1);
+    }
+    return text;
+  }
+
+  String? _buildGapLabel(Duration gap, AppLocalizations l10n) {
+    if (gap.isNegative) {
+      return null;
+    }
+    if (gap.inSeconds < 60) {
+      return l10n.feedTimelineGapLabel(l10n.feedTimelineGapShort);
+    }
+    final hours = gap.inHours;
+    final minutes = gap.inMinutes.remainder(60);
+    final parts = <String>[];
+    if (hours > 0) {
+      parts.add('$hours h');
+    }
+    if (minutes > 0) {
+      parts.add('$minutes min');
+    }
+    final label = parts.isEmpty ? l10n.feedTimelineGapShort : parts.join(' ');
+    return l10n.feedTimelineGapLabel(label);
+  }
+
   void _hydrateInitialTimeLabel() {
     if (_timeController.text.isNotEmpty) {
       return;
@@ -598,5 +692,126 @@ class _FeedActionScreenState extends State<FeedActionScreen> {
       return '$hoursLabel:$minutes:$seconds';
     }
     return '$minutes:$seconds';
+  }
+}
+
+class _FeedTimelineEntry extends StatelessWidget {
+  const _FeedTimelineEntry({
+    required this.timeLabel,
+    this.amountLabel,
+    this.durationLabel,
+    this.notes,
+    required this.showConnector,
+    this.connectorLabel,
+  });
+
+  final String timeLabel;
+  final String? amountLabel;
+  final String? durationLabel;
+  final String? notes;
+  final bool showConnector;
+  final String? connectorLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final outline = theme.colorScheme.outlineVariant;
+    final notesLabel = AppLocalizations.of(context)!.actionNotesLabel;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 32,
+              child: Column(
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    timeLabel,
+                    style: textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  if (amountLabel != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      amountLabel!,
+                      style: textTheme.bodyMedium,
+                    ),
+                  ],
+                  if (durationLabel != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      durationLabel!,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                  if (notes != null && notes!.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      '$notesLabel: ${notes!}',
+                      style: textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.outline,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+        if (showConnector) ...[
+          const SizedBox(height: 8),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 32,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: 2,
+                    height: 36,
+                    color: outline,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  connectorLabel ?? '',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.outline,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+        ] else
+          const SizedBox(height: 16),
+      ],
+    );
   }
 }

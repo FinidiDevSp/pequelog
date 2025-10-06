@@ -98,6 +98,11 @@
   "actionNotesHint": "Agrega detalles u observaciones",
   "actionDatePickerHelp": "Elige el día de la actividad",
   "actionTimePickerHelp": "Elige la hora de la actividad",
+  "actionDayPrevious": "Día anterior",
+  "actionDayNext": "Día siguiente",
+  "actionDayPickerTooltip": "Elegir día",
+  "actionDayToday": "HOY",
+  "actionDayYesterday": "AYER",
   "feedDaySelectorLabel": "Día de la toma",
   "feedDayPrevious": "Día anterior",
   "feedDayNext": "Día siguiente",
@@ -122,6 +127,27 @@
   "feedActionUpdateSuccess": "Toma actualizada",
   "feedActionError": "No pudimos guardar la toma. Inténtalo de nuevo.",
   "feedActionEditTitle": "Editar toma",
+  "feedTimelineTitle": "Tomas del día",
+  "feedTimelineEmpty": "Aún no registraste tomas en este día.",
+  "feedTimelineGapLabel": "{duration} entre tomas",
+  "@feedTimelineGapLabel": {
+    "placeholders": {
+      "duration": {}
+    }
+  },
+  "feedTimelineGapShort": "menos de un minuto",
+  "feedTimelineAmountLabel": "Cantidad: {amount} ml",
+  "@feedTimelineAmountLabel": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "feedTimelineDurationLabel": "Duración: {duration}",
+  "@feedTimelineDurationLabel": {
+    "placeholders": {
+      "duration": {}
+    }
+  },
   "bathDurationLabel": "Duración del baño",
   "bathDurationHint": "Minutos",
   "bathDurationHelper": "Déjalo vacío si no quieres registrarlo",

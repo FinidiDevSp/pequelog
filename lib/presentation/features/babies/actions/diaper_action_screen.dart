@@ -4,6 +4,7 @@ import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/features/baby_actions/action_pickers.dart';
 import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
 import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
+import 'package:pequelog/presentation/widgets/action_day_selector.dart';
 import 'package:provider/provider.dart';
 
 /// Form that registers diaper changes with stool details.
@@ -24,7 +25,6 @@ class DiaperActionScreen extends StatefulWidget {
 
 class _DiaperActionScreenState extends State<DiaperActionScreen> {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _dateController;
   late final TextEditingController _timeController;
   late final TextEditingController _notesController;
 
@@ -41,7 +41,6 @@ class _DiaperActionScreenState extends State<DiaperActionScreen> {
     final now = DateTime.now();
     _selectedDate = DateTime(now.year, now.month, now.day);
     _selectedTime = TimeOfDay.fromDateTime(now);
-    _dateController = TextEditingController();
     _timeController = TextEditingController();
     _notesController = TextEditingController();
   }
@@ -53,7 +52,6 @@ class _DiaperActionScreenState extends State<DiaperActionScreen> {
       return;
     }
     final material = MaterialLocalizations.of(context);
-    _dateController.text = material.formatMediumDate(_selectedDate);
     _timeController.text = material.formatTimeOfDay(
       _selectedTime,
       alwaysUse24HourFormat: true,
@@ -63,7 +61,6 @@ class _DiaperActionScreenState extends State<DiaperActionScreen> {
 
   @override
   void dispose() {
-    _dateController.dispose();
     _timeController.dispose();
     _notesController.dispose();
     super.dispose();
@@ -78,8 +75,6 @@ class _DiaperActionScreenState extends State<DiaperActionScreen> {
     }
     setState(() {
       _selectedDate = DateTime(picked.year, picked.month, picked.day);
-      final material = MaterialLocalizations.of(context);
-      _dateController.text = material.formatMediumDate(_selectedDate);
     });
   }
 
@@ -163,15 +158,15 @@ class _DiaperActionScreenState extends State<DiaperActionScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextFormField(
-                  key: const Key('diaper_date'),
-                  controller: _dateController,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    labelText: l10n.actionDateLabel,
-                    hintText: l10n.actionDateHint,
-                  ),
-                  onTap: _pickDate,
+                ActionDaySelector(
+                  label: l10n.actionDateLabel,
+                  selectedDate: _selectedDate,
+                  onPickDay: _pickDate,
+                  onPreviousDay: () => _changeDay(-1),
+                  onNextDay: () => _changeDay(1),
+                  previousTooltip: l10n.actionDayPrevious,
+                  nextTooltip: l10n.actionDayNext,
+                  pickerTooltip: l10n.actionDayPickerTooltip,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -248,6 +243,12 @@ class _DiaperActionScreenState extends State<DiaperActionScreen> {
         ),
       ),
     );
+  }
+
+  void _changeDay(int delta) {
+    setState(() {
+      _selectedDate = _selectedDate.add(Duration(days: delta));
+    });
   }
 
   String _textureLabel(StoolTexture texture, AppLocalizations l10n) {
