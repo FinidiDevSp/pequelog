@@ -40,14 +40,27 @@ class ActionTimelineItem extends StatefulWidget {
 class _ActionTimelineItemState extends State<ActionTimelineItem> {
   Timer? _timer;
   String _relativeTime = '';
+  bool _hasInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    _updateRelativeTime();
     _timer = Timer.periodic(const Duration(minutes: 1), (_) {
       _updateRelativeTime();
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_hasInitialized) {
+      _updateRelativeTime();
+    } else {
+      final l10n = AppLocalizations.of(context)!;
+      _relativeTime =
+          RelativeTimeFormatter.format(widget.action.occurredAt, l10n);
+      _hasInitialized = true;
+    }
   }
 
   @override
