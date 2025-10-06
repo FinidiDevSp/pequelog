@@ -3,6 +3,29 @@ import 'package:pequelog/domain/baby_actions/entities/baby_action.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action_kind.dart';
 import 'package:pequelog/domain/baby_actions/repositories/baby_action_repository.dart';
 
+/// Available ranges to filter statistics data.
+enum StatisticsRange {
+  last7Days,
+  last14Days,
+  last30Days,
+  custom,
+}
+
+extension on StatisticsRange {
+  int? get daySpan {
+    switch (this) {
+      case StatisticsRange.last7Days:
+        return 7;
+      case StatisticsRange.last14Days:
+        return 14;
+      case StatisticsRange.last30Days:
+        return 30;
+      case StatisticsRange.custom:
+        return null;
+    }
+  }
+}
+
 /// Data class for daily statistics metrics
 class DailyMetrics {
   final int feedCount;
@@ -43,12 +66,12 @@ class DailyMetrics {
   );
 }
 
-/// Data class for weekly bar chart data
+/// Data class for time series chart data
 class WeeklyData {
   final DateTime date;
   final int feedCount;
   final int totalMl;
-  final String dayLabel; // 'L', 'M', 'X', 'J', 'V', 'S', 'D'
+  final String dayLabel;
 
   const WeeklyData({
     required this.date,
@@ -58,15 +81,31 @@ class WeeklyData {
   });
 }
 
+class _DateRange {
+  const _DateRange({
+    required this.start,
+    required this.end,
+  });
+
+  final DateTime start;
+  final DateTime end;
+}
+
 /// State management for statistics screen
 class StatisticsState extends ChangeNotifier {
   final BabyActionRepository _repository;
   final String babyId;
 
   bool _isLoading = false;
-  DailyMetrics _todayMetrics = DailyMetrics.empty;
-  DailyMetrics _yesterdayMetrics = DailyMetrics.empty;
+  StatisticsRange _selectedRange = StatisticsRange.last7Days;
+  DateTime? _customStartDate;
+  DailyMetrics _currentPeriodMetrics = DailyMetrics.empty;
+  DailyMetrics _previousPeriodMetrics = DailyMetrics.empty;
   List<WeeklyData> _weeklyData = [];
+  DateTime _currentRangeStart = DateTime.now();
+  DateTime _currentRangeEnd = DateTime.now();
+  DateTime? _previousRangeStart;
+  DateTime? _previousRangeEnd;
 
   StatisticsState({
     required BabyActionRepository repository,
@@ -76,12 +115,36 @@ class StatisticsState extends ChangeNotifier {
   }
 
   bool get isLoading => _isLoading;
-  DailyMetrics get todayMetrics => _todayMetrics;
-  DailyMetrics get yesterdayMetrics => _yesterdayMetrics;
+  StatisticsRange get selectedRange => _selectedRange;
+  DateTime? get customStartDate => _customStartDate;
+  DailyMetrics get currentPeriodMetrics => _currentPeriodMetrics;
+  DailyMetrics get previousPeriodMetrics => _previousPeriodMetrics;
   List<WeeklyData> get weeklyData => _weeklyData;
+  DateTime get currentRangeStart => _currentRangeStart;
+  DateTime get currentRangeEnd => _currentRangeEnd;
+  DateTime? get previousRangeStart => _previousRangeStart;
+  DateTime? get previousRangeEnd => _previousRangeEnd;
+  bool get hasPreviousPeriod => _previousRangeStart != null;
 
   /// Reload all statistics
   Future<void> reload() async {
+    await _loadStatistics();
+  }
+
+  Future<void> updateRange(StatisticsRange range) async {
+    if (_selectedRange == range && range != StatisticsRange.custom) {
+      return;
+    }
+    _selectedRange = range;
+    if (range != StatisticsRange.custom) {
+      _customStartDate = null;
+    }
+    await _loadStatistics();
+  }
+
+  Future<void> updateCustomStartDate(DateTime startDate) async {
+    _selectedRange = StatisticsRange.custom;
+    _customStartDate = DateTime(startDate.year, startDate.month, startDate.day);
     await _loadStatistics();
   }
 
@@ -91,9 +154,18 @@ class StatisticsState extends ChangeNotifier {
 
     try {
       final now = DateTime.now();
-      final todayStart = DateTime(now.year, now.month, now.day);
-      final yesterdayStart = todayStart.subtract(const Duration(days: 1));
-      final weekStart = todayStart.subtract(Duration(days: now.weekday - 1));
+      final todayEnd = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        23,
+        59,
+        59,
+        999,
+      );
+      final periodStart = _resolvePeriodStart(todayEnd);
+      _currentRangeStart = periodStart;
+      _currentRangeEnd = todayEnd;
 
       // Parse babyId to int
       final babyIdInt = int.tryParse(babyId);
@@ -103,36 +175,74 @@ class StatisticsState extends ChangeNotifier {
         return;
       }
 
-      // Load today's actions
-      final todayActions = await _repository.fetchFilteredActions(
+      // Load actions for the selected period
+      final currentActions = await _repository.fetchFilteredActions(
         babyIdInt,
-        startDate: todayStart,
-        endDate: now,
+        startDate: periodStart,
+        endDate: todayEnd,
       );
 
-      // Load yesterday's actions
-      final yesterdayActions = await _repository.fetchFilteredActions(
-        babyIdInt,
-        startDate: yesterdayStart,
-        endDate: todayStart,
-      );
+      _currentPeriodMetrics = _calculateMetrics(currentActions);
 
-      // Load weekly actions
-      final weeklyActions = await _repository.fetchFilteredActions(
-        babyIdInt,
-        startDate: weekStart,
-        endDate: now,
-      );
+      final previousRange = _resolvePreviousRange(periodStart, todayEnd);
+      if (previousRange != null) {
+        final previousActions = await _repository.fetchFilteredActions(
+          babyIdInt,
+          startDate: previousRange.start,
+          endDate: previousRange.end,
+        );
+        _previousPeriodMetrics = _calculateMetrics(previousActions);
+        _previousRangeStart = previousRange.start;
+        _previousRangeEnd = previousRange.end;
+      } else {
+        _previousPeriodMetrics = DailyMetrics.empty;
+        _previousRangeStart = null;
+        _previousRangeEnd = null;
+      }
 
-      _todayMetrics = _calculateMetrics(todayActions);
-      _yesterdayMetrics = _calculateMetrics(yesterdayActions);
-      _weeklyData = _calculateWeeklyData(weeklyActions, weekStart);
+      _weeklyData = _calculateWeeklyData(currentActions, periodStart, todayEnd);
     } catch (e) {
       debugPrint('Error loading statistics: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  DateTime _resolvePeriodStart(DateTime todayEnd) {
+    final daySpan = _selectedRange.daySpan;
+    if (_selectedRange == StatisticsRange.custom && _customStartDate != null) {
+      final custom = _customStartDate!;
+      final customStart = DateTime(custom.year, custom.month, custom.day);
+      if (customStart.isAfter(todayEnd)) {
+        return DateTime(todayEnd.year, todayEnd.month, todayEnd.day);
+      }
+      return customStart;
+    }
+
+    final startOfToday = DateTime(todayEnd.year, todayEnd.month, todayEnd.day);
+    if (daySpan == null || daySpan <= 1) {
+      return startOfToday;
+    }
+    return startOfToday.subtract(Duration(days: daySpan - 1));
+  }
+
+  _DateRange? _resolvePreviousRange(DateTime start, DateTime end) {
+    final spanDays = end.difference(start).inDays + 1;
+    if (spanDays <= 1) {
+      return null;
+    }
+
+    final previousPeriodEnd = start.subtract(const Duration(milliseconds: 1));
+    final previousPeriodStart = DateTime(
+      previousPeriodEnd.year,
+      previousPeriodEnd.month,
+      previousPeriodEnd.day,
+    ).subtract(Duration(days: spanDays - 1));
+    return _DateRange(
+      start: previousPeriodStart,
+      end: previousPeriodEnd,
+    );
   }
 
   DailyMetrics _calculateMetrics(List<BabyAction> actions) {
@@ -185,10 +295,13 @@ class StatisticsState extends ChangeNotifier {
     Duration? maxInterval;
 
     if (feedActions.length >= 2) {
+      feedActions.sort(
+        (a, b) => a.occurredAt.compareTo(b.occurredAt),
+      );
       final intervals = <Duration>[];
       for (int i = 0; i < feedActions.length - 1; i++) {
-        final interval = feedActions[i].occurredAt.difference(
-          feedActions[i + 1].occurredAt,
+        final interval = feedActions[i + 1].occurredAt.difference(
+          feedActions[i].occurredAt,
         );
         intervals.add(interval);
       }
@@ -223,13 +336,14 @@ class StatisticsState extends ChangeNotifier {
 
   List<WeeklyData> _calculateWeeklyData(
     List<BabyAction> actions,
-    DateTime weekStart,
+    DateTime periodStart,
+    DateTime periodEnd,
   ) {
     final weeklyMap = <DateTime, List<BabyAction>>{};
 
-    // Initialize all 7 days
-    for (int i = 0; i < 7; i++) {
-      final date = weekStart.add(Duration(days: i));
+    final totalDays = periodEnd.difference(periodStart).inDays;
+    for (int i = 0; i <= totalDays; i++) {
+      final date = periodStart.add(Duration(days: i));
       final dateKey = DateTime(date.year, date.month, date.day);
       weeklyMap[dateKey] = [];
     }
@@ -246,7 +360,6 @@ class StatisticsState extends ChangeNotifier {
 
     // Calculate metrics for each day
     final result = <WeeklyData>[];
-    final dayLabels = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
     weeklyMap.forEach((date, dayActions) {
       int feedCount = 0;
@@ -262,12 +375,11 @@ class StatisticsState extends ChangeNotifier {
         }
       }
 
-      final weekday = date.weekday - 1; // 0-6
       result.add(WeeklyData(
         date: date,
         feedCount: feedCount,
         totalMl: totalMl,
-        dayLabel: dayLabels[weekday],
+        dayLabel: '${date.day}/${date.month}',
       ));
     });
 

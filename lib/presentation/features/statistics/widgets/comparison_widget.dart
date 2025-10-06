@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/features/statistics/statistics_state.dart';
 
-/// Widget that displays a comparison between today's and yesterday's metrics
+/// Widget that displays a comparison between the current and previous period metrics
 class ComparisonWidget extends StatelessWidget {
   const ComparisonWidget({
-    required this.todayMetrics,
-    required this.yesterdayMetrics,
+    required this.currentMetrics,
+    required this.previousMetrics,
+    required this.currentLabel,
+    required this.previousLabel,
+    required this.showTrends,
     super.key,
   });
 
-  final DailyMetrics todayMetrics;
-  final DailyMetrics yesterdayMetrics;
+  final DailyMetrics currentMetrics;
+  final DailyMetrics previousMetrics;
+  final String currentLabel;
+  final String previousLabel;
+  final bool showTrends;
 
   @override
   Widget build(BuildContext context) {
@@ -45,37 +51,47 @@ class ComparisonWidget extends StatelessWidget {
               children: [
                 _ComparisonRow(
                   label: l10n.statisticsFeedingTitle,
-                  todayValue: '${todayMetrics.feedCount}',
-                  yesterdayValue: '${yesterdayMetrics.feedCount}',
-                  showTrend: true,
+                  todayValue: '${currentMetrics.feedCount}',
+                  yesterdayValue: '${previousMetrics.feedCount}',
+                  showTrend: showTrends,
+                  currentLabel: currentLabel,
+                  previousLabel: previousLabel,
                   colorScheme: colorScheme,
                 ),
                 const Divider(height: 24),
                 _ComparisonRow(
                   label: l10n.statisticsVolume,
-                  todayValue: '${todayMetrics.totalMl}ml',
-                  yesterdayValue: '${yesterdayMetrics.totalMl}ml',
-                  showTrend: true,
+                  todayValue: '${currentMetrics.totalMl}ml',
+                  yesterdayValue: '${previousMetrics.totalMl}ml',
+                  showTrend: showTrends,
+                  currentLabel: currentLabel,
+                  previousLabel: previousLabel,
                   colorScheme: colorScheme,
                 ),
                 const Divider(height: 24),
                 _ComparisonRow(
                   label: l10n.statisticsAveragePerFeed,
-                  todayValue: todayMetrics.averageMl > 0
-                      ? '${todayMetrics.averageMl.toStringAsFixed(0)}ml'
+                  todayValue: currentMetrics.averageMl > 0
+                      ? '${currentMetrics.averageMl.toStringAsFixed(0)}ml'
                       : '--',
-                  yesterdayValue: yesterdayMetrics.averageMl > 0
-                      ? '${yesterdayMetrics.averageMl.toStringAsFixed(0)}ml'
+                  yesterdayValue: previousMetrics.averageMl > 0
+                      ? '${previousMetrics.averageMl.toStringAsFixed(0)}ml'
                       : '--',
-                  showTrend: todayMetrics.averageMl > 0 && yesterdayMetrics.averageMl > 0,
+                  showTrend: showTrends &&
+                      currentMetrics.averageMl > 0 &&
+                      previousMetrics.averageMl > 0,
+                  currentLabel: currentLabel,
+                  previousLabel: previousLabel,
                   colorScheme: colorScheme,
                 ),
                 const Divider(height: 24),
                 _ComparisonRow(
                   label: l10n.statisticsDiapersTitle,
-                  todayValue: '${todayMetrics.diaperCount}',
-                  yesterdayValue: '${yesterdayMetrics.diaperCount}',
-                  showTrend: true,
+                  todayValue: '${currentMetrics.diaperCount}',
+                  yesterdayValue: '${previousMetrics.diaperCount}',
+                  showTrend: showTrends,
+                  currentLabel: currentLabel,
+                  previousLabel: previousLabel,
                   colorScheme: colorScheme,
                 ),
               ],
@@ -93,6 +109,8 @@ class _ComparisonRow extends StatelessWidget {
     required this.todayValue,
     required this.yesterdayValue,
     required this.showTrend,
+    required this.currentLabel,
+    required this.previousLabel,
     required this.colorScheme,
   });
 
@@ -100,12 +118,13 @@ class _ComparisonRow extends StatelessWidget {
   final String todayValue;
   final String yesterdayValue;
   final bool showTrend;
+  final String currentLabel;
+  final String previousLabel;
   final ColorScheme colorScheme;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
 
     // Parse numeric values for trend calculation
     final todayNum = _parseNumber(todayValue);
@@ -151,7 +170,7 @@ class _ComparisonRow extends StatelessWidget {
                 ),
               ),
               Text(
-                l10n.statisticsToday,
+                currentLabel,
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -176,7 +195,7 @@ class _ComparisonRow extends StatelessWidget {
                 ),
               ),
               Text(
-                l10n.statisticsYesterday,
+                previousLabel,
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),

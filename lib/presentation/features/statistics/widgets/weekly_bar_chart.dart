@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/features/statistics/statistics_state.dart';
 
@@ -31,13 +32,16 @@ class WeeklyBarChart extends StatelessWidget {
       (max, item) => item.feedCount > max ? item.feedCount : max,
     );
 
+    final locale = Localizations.localeOf(context);
+    final formatter = intl.DateFormat.Md(locale.toLanguageTag());
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
-            l10n.statisticsWeeklyChartTitle,
+            l10n.statisticsTrendChartTitle,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -68,26 +72,44 @@ class WeeklyBarChart extends StatelessWidget {
           height: 220,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: data.map((dayData) {
-                return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: _BarItem(
-                      dayLabel: dayData.dayLabel,
-                      mlValue: dayData.totalMl,
-                      countValue: dayData.feedCount,
-                      maxMl: maxMl,
-                      maxCount: maxCount,
-                      primaryColor: colorScheme.primary,
-                      secondaryColor: colorScheme.secondary,
-                      isToday: _isToday(dayData.date),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                const barWidth = 56.0;
+                final contentWidth = barWidth * data.length;
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minWidth: constraints.maxWidth,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: contentWidth <= constraints.maxWidth
+                          ? MainAxisAlignment.spaceEvenly
+                          : MainAxisAlignment.start,
+                      children: data.map((dayData) {
+                        final label = formatter.format(dayData.date);
+                        return SizedBox(
+                          width: barWidth,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: _BarItem(
+                              dayLabel: label,
+                              mlValue: dayData.totalMl,
+                              countValue: dayData.feedCount,
+                              maxMl: maxMl,
+                              maxCount: maxCount,
+                              primaryColor: colorScheme.primary,
+                              secondaryColor: colorScheme.secondary,
+                              isToday: _isToday(dayData.date),
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ),
                 );
-              }).toList(),
+              },
             ),
           ),
         ),

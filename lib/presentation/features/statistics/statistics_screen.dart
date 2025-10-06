@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/features/statistics/statistics_state.dart';
 import 'package:pequelog/presentation/features/statistics/widgets/comparison_widget.dart';
@@ -35,6 +36,20 @@ class StatisticsScreen extends StatelessWidget {
             );
           }
 
+          final locale = Localizations.localeOf(context);
+          final dateFormatter = intl.DateFormat.yMMMd(locale.toLanguageTag());
+          final currentRangeText =
+              '${dateFormatter.format(state.currentRangeStart)} – ${dateFormatter.format(_stripTime(state.currentRangeEnd))}';
+          final previousRangeText = state.previousRangeStart != null &&
+                  state.previousRangeEnd != null
+              ? '${dateFormatter.format(_stripTime(state.previousRangeStart!))} – ${dateFormatter.format(_stripTime(state.previousRangeEnd!))}'
+              : null;
+
+          final currentLabel = '${l10n.statisticsCurrentPeriod}\n$currentRangeText';
+          final previousLabel = previousRangeText != null
+              ? '${l10n.statisticsPreviousPeriod}\n$previousRangeText'
+              : l10n.statisticsPreviousPeriod;
+
           return RefreshIndicator(
             onRefresh: () => state.reload(),
             child: SingleChildScrollView(
@@ -43,41 +58,144 @@ class StatisticsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16),
-                  
+
+                  _StatisticsFilterBar(l10n: l10n),
+
+                  const SizedBox(height: 16),
+
                   // Daily Summary Cards
                   DailySummaryCards(
-                    metrics: state.todayMetrics,
+                    metrics: state.currentPeriodMetrics,
+                    title: l10n.statisticsPeriodSummary,
+                    subtitle: l10n.statisticsRangeLabel(currentRangeText),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Weekly Bar Chart
                   WeeklyBarChart(
                     data: state.weeklyData,
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Comparison: Today vs Yesterday
-                  ComparisonWidget(
-                    todayMetrics: state.todayMetrics,
-                    yesterdayMetrics: state.yesterdayMetrics,
-                  ),
-                  
+                  if (state.hasPreviousPeriod)
+                    ComparisonWidget(
+                      currentMetrics: state.currentPeriodMetrics,
+                      previousMetrics: state.previousPeriodMetrics,
+                      currentLabel: currentLabel,
+                      previousLabel: previousLabel,
+                      showTrends: state.hasPreviousPeriod,
+                    ),
+
                   const SizedBox(height: 32),
-                  
+
                   // Empty state for no data
-                  if (state.todayMetrics.feedCount == 0 &&
-                      state.todayMetrics.diaperCount == 0 &&
-                      state.todayMetrics.bathCount == 0)
+                  if (state.currentPeriodMetrics.feedCount == 0 &&
+                      state.currentPeriodMetrics.diaperCount == 0 &&
+                      state.currentPeriodMetrics.bathCount == 0)
                     _EmptyState(l10n: l10n),
-                  
+
                   const SizedBox(height: 16),
                 ],
               ),
             ),
           );
         },
+      ),
+    );
+  }
+
+  DateTime _stripTime(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+}
+
+class _StatisticsFilterBar extends StatelessWidget {
+  const _StatisticsFilterBar({
+    required this.l10n,
+  });
+
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final state = context.watch<StatisticsState>();
+    final locale = Localizations.localeOf(context);
+    final dateFormatter = intl.DateFormat.yMMMd(locale.toLanguageTag());
+    final customLabel = state.customStartDate != null
+        ? dateFormatter.format(state.customStartDate!)
+        : null;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SegmentedButton<StatisticsRange>(
+            segments: [
+              ButtonSegment(
+                value: StatisticsRange.last7Days,
+                label: Text(l10n.statisticsRangeLast7Days),
+              ),
+              ButtonSegment(
+                value: StatisticsRange.last14Days,
+                label: Text(l10n.statisticsRangeLast14Days),
+              ),
+              ButtonSegment(
+                value: StatisticsRange.last30Days,
+                label: Text(l10n.statisticsRangeLast30Days),
+              ),
+              ButtonSegment(
+                value: StatisticsRange.custom,
+                label: Text(l10n.statisticsRangeCustom),
+              ),
+            ],
+            selected: <StatisticsRange>{state.selectedRange},
+            onSelectionChanged: (selection) async {
+              final selected = selection.first;
+              await context.read<StatisticsState>().updateRange(selected);
+            },
+          ),
+          if (state.selectedRange == StatisticsRange.custom)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Wrap(
+                spacing: 12,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  FilledButton.tonal(
+                    onPressed: () async {
+                      final now = DateTime.now();
+                      final initialDate = state.customStartDate ?? state.currentRangeStart;
+                      final pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: initialDate,
+                        firstDate: DateTime(now.year - 2),
+                        lastDate: now,
+                        helpText: l10n.statisticsSelectStartDate,
+                      );
+                      if (pickedDate != null) {
+                        await context
+                            .read<StatisticsState>()
+                            .updateCustomStartDate(pickedDate);
+                      }
+                    },
+                    child: Text(l10n.statisticsSelectStartDate),
+                  ),
+                  if (customLabel != null)
+                    Text(
+                      l10n.statisticsCustomStartLabel(customLabel),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }

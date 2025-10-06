@@ -362,6 +362,7 @@
   "statisticsTitle": "Statistics",
   "statisticsRefresh": "Refresh",
   "statisticsDailySummary": "Daily Summary",
+  "statisticsPeriodSummary": "Period summary",
   "statisticsFeedingTitle": "Feeding",
   "statisticsFeedingCount": "{count, plural, =1{1 feed} other{{count} feeds}}",
   "@statisticsFeedingCount": {
@@ -390,13 +391,37 @@
   "statisticsIntervalsTitle": "Intervals",
   "statisticsAverageInterval": "average",
   "statisticsRange": "Range",
+  "statisticsRangeLabel": "Selected range: {range}",
+  "@statisticsRangeLabel": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "statisticsRangeLast7Days": "Last 7 days",
+  "statisticsRangeLast14Days": "Last 14 days",
+  "statisticsRangeLast30Days": "Last 30 days",
+  "statisticsRangeCustom": "Custom",
+  "statisticsSelectStartDate": "Choose start date",
+  "statisticsCustomStartLabel": "From {date}",
+  "@statisticsCustomStartLabel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "statisticsWeeklyChartTitle": "Last 7 days",
+  "statisticsTrendChartTitle": "Trend over time",
   "statisticsVolume": "Volume (ml)",
   "statisticsFeeds": "Feeds",
-  "statisticsComparisonTitle": "Today vs Yesterday",
+  "statisticsComparisonTitle": "Current vs previous period",
   "statisticsAveragePerFeed": "Average per feed",
   "statisticsToday": "Today",
   "statisticsYesterday": "Yesterday",
+  "statisticsCurrentPeriod": "Current period",
+  "statisticsPreviousPeriod": "Previous period",
   "statisticsEmptyTitle": "No records yet today",
   "statisticsEmptyMessage": "Start by recording the first action of the day"
 }

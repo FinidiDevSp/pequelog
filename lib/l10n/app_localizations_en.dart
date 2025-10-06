@@ -791,6 +791,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statisticsDailySummary => 'Daily Summary';
 
   @override
+  String get statisticsPeriodSummary => 'Period summary';
+
+  @override
   String get statisticsFeedingTitle => 'Feeding';
 
   @override
@@ -849,7 +852,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statisticsRange => 'Range';
 
   @override
+  String statisticsRangeLabel(String range) {
+    return 'Selected range: $range';
+  }
+
+  @override
+  String get statisticsRangeLast7Days => 'Last 7 days';
+
+  @override
+  String get statisticsRangeLast14Days => 'Last 14 days';
+
+  @override
+  String get statisticsRangeLast30Days => 'Last 30 days';
+
+  @override
+  String get statisticsRangeCustom => 'Custom';
+
+  @override
+  String get statisticsSelectStartDate => 'Choose start date';
+
+  @override
+  String statisticsCustomStartLabel(String date) {
+    return 'From $date';
+  }
+
+  @override
   String get statisticsWeeklyChartTitle => 'Last 7 days';
+
+  @override
+  String get statisticsTrendChartTitle => 'Trend over time';
 
   @override
   String get statisticsVolume => 'Volume (ml)';
@@ -858,7 +889,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statisticsFeeds => 'Feeds';
 
   @override
-  String get statisticsComparisonTitle => 'Today vs Yesterday';
+  String get statisticsComparisonTitle => 'Current vs previous period';
 
   @override
   String get statisticsAveragePerFeed => 'Average per feed';
@@ -868,6 +899,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statisticsYesterday => 'Yesterday';
+
+  @override
+  String get statisticsCurrentPeriod => 'Current period';
+
+  @override
+  String get statisticsPreviousPeriod => 'Previous period';
 
   @override
   String get statisticsEmptyTitle => 'No records yet today';
