@@ -61,8 +61,8 @@ class ComparisonWidget extends StatelessWidget {
                 const Divider(height: 24),
                 _ComparisonRow(
                   label: l10n.statisticsVolume,
-                  todayValue: '${currentMetrics.totalMl}ml',
-                  yesterdayValue: '${previousMetrics.totalMl}ml',
+                  todayValue: '${_formatMl(currentMetrics.totalMl)}ml',
+                  yesterdayValue: '${_formatMl(previousMetrics.totalMl)}ml',
                   showTrend: showTrends,
                   currentLabel: currentLabel,
                   previousLabel: previousLabel,
@@ -212,4 +212,10 @@ class _ComparisonRow extends StatelessWidget {
     final cleaned = value.replaceAll(RegExp(r'[^\d.]'), '');
     return double.tryParse(cleaned);
   }
+}
+
+String _formatMl(double value) {
+  return value.truncateToDouble() == value
+      ? value.toStringAsFixed(0)
+      : value.toStringAsFixed(1);
 }

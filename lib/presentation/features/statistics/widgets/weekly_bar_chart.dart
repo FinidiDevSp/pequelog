@@ -23,7 +23,7 @@ class WeeklyBarChart extends StatelessWidget {
     }
 
     // Find max value for scaling
-    final maxMl = data.fold<int>(
+    final maxMl = data.fold<double>(
       0,
       (max, item) => item.totalMl > max ? item.totalMl : max,
     );
@@ -173,9 +173,9 @@ class _BarItem extends StatelessWidget {
   });
 
   final String dayLabel;
-  final int mlValue;
+  final double mlValue;
   final int countValue;
-  final int maxMl;
+  final double maxMl;
   final int maxCount;
   final Color primaryColor;
   final Color secondaryColor;
@@ -202,7 +202,7 @@ class _BarItem extends StatelessWidget {
             children: [
               if (mlValue > 0)
                 Text(
-                  '${mlValue}ml',
+                  '${_formatMl(mlValue)}ml',
                   style: theme.textTheme.labelSmall?.copyWith(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
@@ -262,4 +262,10 @@ class _BarItem extends StatelessWidget {
       ],
     );
   }
+}
+
+String _formatMl(double value) {
+  return value.truncateToDouble() == value
+      ? value.toStringAsFixed(0)
+      : value.toStringAsFixed(1);
 }

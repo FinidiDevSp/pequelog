@@ -29,7 +29,7 @@ extension on StatisticsRange {
 /// Data class for daily statistics metrics
 class DailyMetrics {
   final int feedCount;
-  final int totalMl;
+  final double totalMl;
   final double averageMl;
   final int diaperCount;
   final int urineCount;
@@ -56,8 +56,8 @@ class DailyMetrics {
 
   static const empty = DailyMetrics(
     feedCount: 0,
-    totalMl: 0,
-    averageMl: 0,
+    totalMl: 0.0,
+    averageMl: 0.0,
     diaperCount: 0,
     urineCount: 0,
     fecesCount: 0,
@@ -70,7 +70,7 @@ class DailyMetrics {
 class WeeklyData {
   final DateTime date;
   final int feedCount;
-  final int totalMl;
+  final double totalMl;
   final String dayLabel;
 
   const WeeklyData({
@@ -249,7 +249,7 @@ class StatisticsState extends ChangeNotifier {
     if (actions.isEmpty) return DailyMetrics.empty;
 
     int feedCount = 0;
-    int totalMl = 0;
+    double totalMl = 0;
     int diaperCount = 0;
     int urineCount = 0;
     int fecesCount = 0;
@@ -263,9 +263,9 @@ class StatisticsState extends ChangeNotifier {
         case BabyActionKind.feed:
           feedCount++;
           feedActions.add(action);
-          final amountMl = action.details['amountMl'] as int?;
-          if (amountMl != null) {
-            totalMl += amountMl;
+          final amountMl = action.details['amountMl'];
+          if (amountMl is num) {
+            totalMl += amountMl.toDouble();
           }
           break;
 
@@ -363,14 +363,14 @@ class StatisticsState extends ChangeNotifier {
 
     weeklyMap.forEach((date, dayActions) {
       int feedCount = 0;
-      int totalMl = 0;
+      double totalMl = 0;
 
       for (final action in dayActions) {
         if (action.kind == BabyActionKind.feed) {
           feedCount++;
-          final amountMl = action.details['amountMl'] as int?;
-          if (amountMl != null) {
-            totalMl += amountMl;
+          final amountMl = action.details['amountMl'];
+          if (amountMl is num) {
+            totalMl += amountMl.toDouble();
           }
         }
       }
