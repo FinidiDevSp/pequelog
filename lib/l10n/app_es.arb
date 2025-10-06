@@ -230,5 +230,29 @@
   "configurationPalettePreviewDarkLabel": "Modo oscuro",
   "configurationPalettePreviewMockupLabel": "Vista previa en miniatura",
   "errorLoadingMessage": "Ups, algo salió mal al cargar.",
-  "retryButton": "Reintentar"
+  "retryButton": "Reintentar",
+  "historyTitle": "Historial",
+  "historyFilterAll": "Todos",
+  "historyFilterFeed": "Tomas",
+  "historyFilterDiaper": "Pañales",
+  "historyFilterBath": "Baños",
+  "historyFilterVomit": "Vómitos",
+  "historyEmptyTitle": "No hay registros",
+  "historyEmptyMessage": "Aún no has registrado ninguna acción.",
+  "historyEmptyFilterMessage": "No hay registros con los filtros seleccionados.",
+  "historyDayToday": "HOY",
+  "historyDayYesterday": "AYER",
+  "historyDayCount": "{count, plural, =1{1 registro} other{{count} registros}}",
+  "@historyDayCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historyLoadingMore": "Cargando más registros...",
+  "historyActionFeed": "Toma",
+  "historyActionDiaper": "Pañal",
+  "historyActionBath": "Baño",
+  "historyActionVomit": "Vómito"
 }

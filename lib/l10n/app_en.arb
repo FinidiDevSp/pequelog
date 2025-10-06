@@ -230,5 +230,29 @@
   "configurationPalettePreviewDarkLabel": "Dark mode",
   "configurationPalettePreviewMockupLabel": "Miniature screen preview",
   "errorLoadingMessage": "Oops, something went wrong while loading.",
-  "retryButton": "Retry"
+  "retryButton": "Retry",
+  "historyTitle": "History",
+  "historyFilterAll": "All",
+  "historyFilterFeed": "Feedings",
+  "historyFilterDiaper": "Diapers",
+  "historyFilterBath": "Baths",
+  "historyFilterVomit": "Vomits",
+  "historyEmptyTitle": "No records",
+  "historyEmptyMessage": "You haven't recorded any actions yet.",
+  "historyEmptyFilterMessage": "No records match the selected filters.",
+  "historyDayToday": "TODAY",
+  "historyDayYesterday": "YESTERDAY",
+  "historyDayCount": "{count, plural, =1{1 record} other{{count} records}}",
+  "@historyDayCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historyLoadingMore": "Loading more records...",
+  "historyActionFeed": "Feeding",
+  "historyActionDiaper": "Diaper",
+  "historyActionBath": "Bath",
+  "historyActionVomit": "Vomit"
 }

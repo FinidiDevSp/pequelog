@@ -11,6 +11,7 @@ import 'package:pequelog/presentation/features/babies/edit_baby_screen.dart';
 import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
 import 'package:pequelog/presentation/features/settings/configuration_screen.dart';
 import 'package:pequelog/presentation/features/startup/baby_home_screen.dart';
+import 'package:pequelog/presentation/features/history/baby_history_screen.dart';
 
 /// Route names for type-safe navigation.
 class AppRoutes {
@@ -37,6 +38,9 @@ class AppRoutes {
 
   /// Diaper action screen route.
   static const String diaperAction = 'diaper-action';
+
+  /// History screen route.
+  static const String history = 'history';
 
   AppRoutes._();
 }
@@ -77,6 +81,9 @@ extension AppNavigationExtension on BuildContext {
   Future<String?> goToDiaperAction() {
     return pushNamed<String>(AppRoutes.diaperAction);
   }
+
+  /// Navigates to the history screen.
+  void goToHistory() => pushNamed(AppRoutes.history);
 }
 
 /// Creates the app's router with all defined routes.
@@ -217,6 +224,15 @@ GoRouter createAppRouter({
             datePicker: datePicker,
             timePicker: timePicker,
           ),
+        ),
+      ),
+      GoRoute(
+        path: '/history',
+        name: AppRoutes.history,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const BabyHistoryScreen(),
         ),
       ),
     ],

@@ -95,6 +95,51 @@ class SQLiteBabyActionRepository implements BabyActionRepository {
     );
   }
 
+  @override
+  Future<List<BabyAction>> fetchFilteredActions(
+    int babyId, {
+    List<BabyActionKind>? kinds,
+    DateTime? startDate,
+    DateTime? endDate,
+    int limit = 100,
+    int offset = 0,
+  }) async {
+    final database = await _db;
+    
+    final whereClauses = <String>['baby_id = ?'];
+    final whereArgs = <Object>[babyId];
+
+    // Filter by action kinds
+    if (kinds != null && kinds.isNotEmpty) {
+      final placeholders = List.filled(kinds.length, '?').join(', ');
+      whereClauses.add('kind IN ($placeholders)');
+      whereArgs.addAll(kinds.map((k) => k.name));
+    }
+
+    // Filter by date range
+    if (startDate != null) {
+      whereClauses.add('occurred_at >= ?');
+      whereArgs.add(startDate.millisecondsSinceEpoch);
+    }
+    if (endDate != null) {
+      // Add 1 day to make it inclusive of the entire end date
+      final endOfDay = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59, 999);
+      whereClauses.add('occurred_at <= ?');
+      whereArgs.add(endOfDay.millisecondsSinceEpoch);
+    }
+
+    final rows = await database.query(
+      'baby_actions',
+      where: whereClauses.join(' AND '),
+      whereArgs: whereArgs,
+      orderBy: 'occurred_at DESC, id DESC',
+      limit: limit,
+      offset: offset,
+    );
+
+    return rows.map(_mapRow).toList(growable: false);
+  }
+
   BabyAction _mapRow(Map<String, Object?> row) {
     final detailsRaw = row['details'] as String?;
     final Map<String, Object?> details;

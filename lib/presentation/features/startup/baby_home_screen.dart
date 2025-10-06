@@ -68,6 +68,11 @@ class BabyHomeScreen extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _openHistory(context),
+        tooltip: l10n.historyTitle,
+        child: const Icon(Icons.history),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -210,8 +215,7 @@ class BabyHomeScreen extends StatelessWidget {
   }
 
   void _openHistory(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    _openFeatureComingSoon(context, l10n.babyActionHistory);
+    context.goToHistory();
   }
 
   void _openStatistics(BuildContext context) {
