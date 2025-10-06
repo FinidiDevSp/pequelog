@@ -362,6 +362,7 @@
   "statisticsTitle": "Estadísticas",
   "statisticsRefresh": "Actualizar",
   "statisticsDailySummary": "Resumen del día",
+  "statisticsPeriodSummary": "Resumen del periodo",
   "statisticsFeedingTitle": "Alimentación",
   "statisticsFeedingCount": "{count, plural, =1{1 toma} other{{count} tomas}}",
   "@statisticsFeedingCount": {
@@ -390,13 +391,37 @@
   "statisticsIntervalsTitle": "Intervalos",
   "statisticsAverageInterval": "promedio",
   "statisticsRange": "Rango",
+  "statisticsRangeLabel": "Rango seleccionado: {range}",
+  "@statisticsRangeLabel": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "statisticsRangeLast7Days": "Últimos 7 días",
+  "statisticsRangeLast14Days": "Últimos 14 días",
+  "statisticsRangeLast30Days": "Último mes",
+  "statisticsRangeCustom": "Personalizado",
+  "statisticsSelectStartDate": "Elegir fecha de inicio",
+  "statisticsCustomStartLabel": "Desde {date}",
+  "@statisticsCustomStartLabel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "statisticsWeeklyChartTitle": "Últimos 7 días",
+  "statisticsTrendChartTitle": "Tendencia del periodo",
   "statisticsVolume": "Volumen (ml)",
   "statisticsFeeds": "Tomas",
-  "statisticsComparisonTitle": "Hoy vs Ayer",
+  "statisticsComparisonTitle": "Periodo actual vs anterior",
   "statisticsAveragePerFeed": "Promedio por toma",
   "statisticsToday": "Hoy",
   "statisticsYesterday": "Ayer",
+  "statisticsCurrentPeriod": "Periodo actual",
+  "statisticsPreviousPeriod": "Periodo anterior",
   "statisticsEmptyTitle": "Aún no hay registros hoy",
   "statisticsEmptyMessage": "Comienza registrando la primera acción del día"
 }

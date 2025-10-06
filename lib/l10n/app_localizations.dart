@@ -1406,6 +1406,12 @@ abstract class AppLocalizations {
   /// **'Resumen del día'**
   String get statisticsDailySummary;
 
+  /// No description provided for @statisticsPeriodSummary.
+  ///
+  /// In es, this message translates to:
+  /// **'Resumen del periodo'**
+  String get statisticsPeriodSummary;
+
   /// No description provided for @statisticsFeedingTitle.
   ///
   /// In es, this message translates to:
@@ -1490,11 +1496,59 @@ abstract class AppLocalizations {
   /// **'Rango'**
   String get statisticsRange;
 
+  /// No description provided for @statisticsRangeLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Rango seleccionado: {range}'**
+  String statisticsRangeLabel(String range);
+
+  /// No description provided for @statisticsRangeLast7Days.
+  ///
+  /// In es, this message translates to:
+  /// **'Últimos 7 días'**
+  String get statisticsRangeLast7Days;
+
+  /// No description provided for @statisticsRangeLast14Days.
+  ///
+  /// In es, this message translates to:
+  /// **'Últimos 14 días'**
+  String get statisticsRangeLast14Days;
+
+  /// No description provided for @statisticsRangeLast30Days.
+  ///
+  /// In es, this message translates to:
+  /// **'Último mes'**
+  String get statisticsRangeLast30Days;
+
+  /// No description provided for @statisticsRangeCustom.
+  ///
+  /// In es, this message translates to:
+  /// **'Personalizado'**
+  String get statisticsRangeCustom;
+
+  /// No description provided for @statisticsSelectStartDate.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir fecha de inicio'**
+  String get statisticsSelectStartDate;
+
+  /// No description provided for @statisticsCustomStartLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Desde {date}'**
+  String statisticsCustomStartLabel(String date);
+
   /// No description provided for @statisticsWeeklyChartTitle.
   ///
   /// In es, this message translates to:
   /// **'Últimos 7 días'**
   String get statisticsWeeklyChartTitle;
+
+  /// No description provided for @statisticsTrendChartTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tendencia del periodo'**
+  String get statisticsTrendChartTitle;
 
   /// No description provided for @statisticsVolume.
   ///
@@ -1511,7 +1565,7 @@ abstract class AppLocalizations {
   /// No description provided for @statisticsComparisonTitle.
   ///
   /// In es, this message translates to:
-  /// **'Hoy vs Ayer'**
+  /// **'Periodo actual vs anterior'**
   String get statisticsComparisonTitle;
 
   /// No description provided for @statisticsAveragePerFeed.
@@ -1531,6 +1585,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ayer'**
   String get statisticsYesterday;
+
+  /// No description provided for @statisticsCurrentPeriod.
+  ///
+  /// In es, this message translates to:
+  /// **'Periodo actual'**
+  String get statisticsCurrentPeriod;
+
+  /// No description provided for @statisticsPreviousPeriod.
+  ///
+  /// In es, this message translates to:
+  /// **'Periodo anterior'**
+  String get statisticsPreviousPeriod;
 
   /// No description provided for @statisticsEmptyTitle.
   ///

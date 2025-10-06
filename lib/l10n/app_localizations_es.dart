@@ -796,6 +796,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get statisticsDailySummary => 'Resumen del día';
 
   @override
+  String get statisticsPeriodSummary => 'Resumen del periodo';
+
+  @override
   String get statisticsFeedingTitle => 'Alimentación';
 
   @override
@@ -854,7 +857,35 @@ class AppLocalizationsEs extends AppLocalizations {
   String get statisticsRange => 'Rango';
 
   @override
+  String statisticsRangeLabel(String range) {
+    return 'Rango seleccionado: $range';
+  }
+
+  @override
+  String get statisticsRangeLast7Days => 'Últimos 7 días';
+
+  @override
+  String get statisticsRangeLast14Days => 'Últimos 14 días';
+
+  @override
+  String get statisticsRangeLast30Days => 'Último mes';
+
+  @override
+  String get statisticsRangeCustom => 'Personalizado';
+
+  @override
+  String get statisticsSelectStartDate => 'Elegir fecha de inicio';
+
+  @override
+  String statisticsCustomStartLabel(String date) {
+    return 'Desde $date';
+  }
+
+  @override
   String get statisticsWeeklyChartTitle => 'Últimos 7 días';
+
+  @override
+  String get statisticsTrendChartTitle => 'Tendencia del periodo';
 
   @override
   String get statisticsVolume => 'Volumen (ml)';
@@ -863,7 +894,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get statisticsFeeds => 'Tomas';
 
   @override
-  String get statisticsComparisonTitle => 'Hoy vs Ayer';
+  String get statisticsComparisonTitle => 'Periodo actual vs anterior';
 
   @override
   String get statisticsAveragePerFeed => 'Promedio por toma';
@@ -873,6 +904,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get statisticsYesterday => 'Ayer';
+
+  @override
+  String get statisticsCurrentPeriod => 'Periodo actual';
+
+  @override
+  String get statisticsPreviousPeriod => 'Periodo anterior';
 
   @override
   String get statisticsEmptyTitle => 'Aún no hay registros hoy';
