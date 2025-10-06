@@ -70,7 +70,7 @@ class DailySummaryCards extends StatelessWidget {
                   MetricCard(
                     icon: Icons.restaurant,
                     title: l10n.statisticsFeedingTitle,
-                    mainValue: '${metrics.totalMl}',
+                    mainValue: _formatMl(metrics.totalMl),
                     mainLabel: 'ml',
                     secondaryValue: metrics.feedCount > 0
                         ? l10n.statisticsFeedingCount(metrics.feedCount)
@@ -142,4 +142,10 @@ class DailySummaryCards extends StatelessWidget {
       return '${minutes}min';
     }
   }
+}
+
+String _formatMl(double value) {
+  return value.truncateToDouble() == value
+      ? value.toStringAsFixed(0)
+      : value.toStringAsFixed(1);
 }
