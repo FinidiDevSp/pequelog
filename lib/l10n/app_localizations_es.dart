@@ -570,13 +570,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String configurationImportSuccess(int count) {
-    return intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      zero: 'No se importaron registros.',
-      one: 'Se importó 1 registro.',
       other: 'Se importaron $count registros.',
+      one: 'Se importó 1 registro.',
+      zero: 'No se importaron registros.',
     );
+    return '$_temp0';
   }
 
   @override
@@ -613,4 +614,175 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get retryButton => 'Reintentar';
+
+  @override
+  String get historyTitle => 'Historial';
+
+  @override
+  String get historyFilterAll => 'Todos';
+
+  @override
+  String get historyFilterFeed => 'Tomas';
+
+  @override
+  String get historyFilterDiaper => 'Pañales';
+
+  @override
+  String get historyFilterBath => 'Baños';
+
+  @override
+  String get historyFilterVomit => 'Vómitos';
+
+  @override
+  String get historyEmptyTitle => 'No hay registros';
+
+  @override
+  String get historyEmptyMessage => 'Aún no has registrado ninguna acción.';
+
+  @override
+  String get historyEmptyFilterMessage =>
+      'No hay registros con los filtros seleccionados.';
+
+  @override
+  String get historyDayToday => 'HOY';
+
+  @override
+  String get historyDayYesterday => 'AYER';
+
+  @override
+  String historyDayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count registros',
+      one: '1 registro',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get historyLoadingMore => 'Cargando más registros...';
+
+  @override
+  String get historyActionFeed => 'Toma';
+
+  @override
+  String get historyActionDiaper => 'Pañal';
+
+  @override
+  String get historyActionBath => 'Baño';
+
+  @override
+  String get historyActionVomit => 'Vómito';
+
+  @override
+  String get timelineRecentActions => 'Últimas acciones';
+
+  @override
+  String timelineShowCount(int count) {
+    return 'Mostrar $count';
+  }
+
+  @override
+  String get timelineShowAll => 'Ver todas';
+
+  @override
+  String get timelineViewFullHistory => 'Ver historial completo';
+
+  @override
+  String get timelineNoActions => 'Aún no hay acciones registradas';
+
+  @override
+  String timelineTimeAgo(String time) {
+    return 'Hace $time';
+  }
+
+  @override
+  String get timelineJustNow => 'Ahora mismo';
+
+  @override
+  String timelineMinutesShort(int count) {
+    return '${count}min';
+  }
+
+  @override
+  String timelineHoursShort(int count) {
+    return '${count}h';
+  }
+
+  @override
+  String timelineDaysShort(int count) {
+    return '${count}d';
+  }
+
+  @override
+  String timelineMinutesAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutos',
+      one: '1 minuto',
+    );
+    return 'Hace $_temp0';
+  }
+
+  @override
+  String timelineHoursAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count horas',
+      one: '1 hora',
+    );
+    return 'Hace $_temp0';
+  }
+
+  @override
+  String timelineHoursMinutesAgo(int hours, int minutes) {
+    return 'Hace ${hours}h ${minutes}min';
+  }
+
+  @override
+  String timelineDaysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días',
+      one: '1 día',
+    );
+    return 'Hace $_temp0';
+  }
+
+  @override
+  String timelineWeeksAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count semanas',
+      one: '1 semana',
+    );
+    return 'Hace $_temp0';
+  }
+
+  @override
+  String timelineMonthsAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count meses',
+      one: '1 mes',
+    );
+    return 'Hace $_temp0';
+  }
+
+  @override
+  String timelineYearsAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count años',
+      one: '1 año',
+    );
+    return 'Hace $_temp0';
+  }
 }

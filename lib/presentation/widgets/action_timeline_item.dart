@@ -1,23 +1,30 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:pequelog/core/utils/relative_time_formatter.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action.dart';
-import 'package:pequelog/domain/baby_actions/entities/baby_action_kind.dart';
-import 'package:pequelog/l10n/app_localizations.dart';
+import 'package:pequelog/domain/baby_actions/entities/baby_action_kind.dart                          if (widget.action.notes != null && widget.action.notes!.isNotEmpty) ..[
+                            const SizedBox(height: 8),
+                            Text(
+                              widget.action.notes!,import 'package:pequelog/l10n/app_localizations.dart';
 
 /// A single timeline item displaying a baby action with visual timeline elements.
-class ActionTimelineItem extends StatelessWidget {
+class ActionTimelineItem extends StatefulWidget {
   /// Creates a timeline item for a baby action.
   const ActionTimelineItem({
     required this.action,
     required this.isFirst,
     required this.isLast,
+    this.previousAction,
     this.onTap,
     super.key,
   });
 
   /// The action to display.
   final BabyAction action;
+
+  /// The previous action (chronologically earlier) for showing intervals.
+  final BabyAction? previousAction;
 
   /// Whether this is the first item in the timeline.
   final bool isFirst;
@@ -29,55 +36,171 @@ class ActionTimelineItem extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
+  State<ActionTimelineItem> createState() => _ActionTimelineItemState();
+}
+
+class _ActionTimelineItemState extends State<ActionTimelineItem> {
+  Timer? _timer;
+  String _relativeTime = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _updateRelativeTime();
+    _timer = Timer.periodic(const Duration(minutes: 1), (_) {
+      _updateRelativeTime();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _updateRelativeTime() {
+    if (mounted) {
+      setState(() {
+        final l10n = AppLocalizations.of(context)!;
+        _relativeTime = RelativeTimeFormatter.format(widget.action.occurredAt, l10n);
+      });
+    }
+  }
+
+  String _formatInterval(Duration interval, AppLocalizations l10n) {
+    if (interval.inMinutes < 60) {
+      return '${interval.inMinutes}min';
+    } else if (interval.inHours < 24) {
+      final hours = interval.inHours;
+      final minutes = interval.inMinutes % 60;
+      if (minutes == 0) {
+        return '${hours}h';
+      }
+      return '${hours}h ${minutes}min';
+    } else {
+      final days = interval.inDays;
+      if (days == 1) return '1 día';
+      return '$days días';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final relativeTime = RelativeTimeFormatter.format(action.occurredAt, l10n);
-    final absoluteTime = intl.DateFormat.Hm().format(action.occurredAt);
+    final absoluteTime = intl.DateFormat.Hm().format(widget.action.occurredAt);
+    final now = DateTime.now();
+    final minutesAgo = now.difference(widget.action.occurredAt).inMinutes;
+    final isVeryRecent = minutesAgo < 5;
+
+    // Calculate interval to previous action
+    Duration? interval;
+    if (widget.previousAction != null) {
+      interval = widget.action.occurredAt.difference(widget.previousAction!.occurredAt);
+    }
 
     return InkWell(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Timeline visual (line + node)
+            // Timeline visual (line + node + interval)
             SizedBox(
               width: 40,
               child: Column(
                 children: [
-                  // Top line (hidden for first item)
-                  if (!isFirst)
-                    Container(
-                      width: 2,
-                      height: 16,
-                      color: colorScheme.outlineVariant,
-                    ),
-                  // Node circle
-                  Container(
-                    width: 16,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      color: _getKindColor(colorScheme, action.kind),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: colorScheme.surface,
-                        width: 2,
+                  // Top line with interval (hidden for first item)
+                  if (!widget.isFirst)
+                    SizedBox(
+                      height: 60,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Dashed line
+                          CustomPaint(
+                            size: const Size(2, 60),
+                            painter: _DashedLinePainter(
+                              color: colorScheme.outlineVariant,
+                            ),
+                          ),
+                          // Interval badge
+                          if (interval != null)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colorScheme.surfaceContainerHighest,
+                                border: Border.all(
+                                  color: colorScheme.outlineVariant,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                _formatInterval(interval, l10n),
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                  fontSize: 9,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                    child: Center(
-                      child: Icon(
-                        _getKindIcon(action.kind),
-                        size: 8,
-                        color: colorScheme.onPrimaryContainer,
+                  // Node circle with pulse animation for very recent
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Pulse animation for very recent actions
+                      if (isVeryRecent)
+                        TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 1.0, end: 1.5),
+                          duration: const Duration(milliseconds: 1000),
+                          curve: Curves.easeInOut,
+                          onEnd: () {
+                            if (mounted) setState(() {});
+                          },
+                          builder: (context, value, child) {
+                            return Container(
+                              width: 16 * value,
+                              height: 16 * value,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: colorScheme.primary.withOpacity(0.3 / value),
+                              ),
+                            );
+                          },
+                        ),
+                      // Main node
+                      Container(
+                        width: 16,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          color: _getKindColor(colorScheme, widget.action.kind),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: colorScheme.surface,
+                            width: 2,
+                          ),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            _getKindIcon(widget.action.kind),
+                            size: 8,
+                            color: colorScheme.onPrimaryContainer,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                   // Bottom line (hidden for last item)
-                  if (!isLast)
+                  if (!widget.isLast)
                     Expanded(
                       child: Container(
                         width: 2,
@@ -93,13 +216,65 @@ class ActionTimelineItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Time relative label (above card)
-                  Text(
-                    relativeTime,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  // Time relative label with animation and recent badge
+                  Row(
+                    children: [
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        transitionBuilder: (child, animation) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(0, -0.3),
+                                end: Offset.zero,
+                              ).animate(animation),
+                              child: child,
+                            ),
+                          );
+                        },
+                        child: Text(
+                          _relativeTime,
+                          key: ValueKey(_relativeTime),
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      if (isVeryRecent) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.access_time,
+                                size: 10,
+                                color: colorScheme.onPrimaryContainer,
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                'Reciente',
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: colorScheme.onPrimaryContainer,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   const SizedBox(height: 4),
                   // Card with action details
@@ -128,7 +303,7 @@ class ActionTimelineItem extends StatelessWidget {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                _getKindLabel(l10n, action.kind),
+                                _getKindLabel(l10n, widget.action.kind),
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: colorScheme.onSurfaceVariant,
                                   fontWeight: FontWeight.w500,
@@ -253,4 +428,35 @@ class ActionTimelineItem extends StatelessWidget {
 
     return parts.join(' • ');
   }
+}
+
+/// Custom painter for dashed vertical line
+class _DashedLinePainter extends CustomPainter {
+  final Color color;
+
+  _DashedLinePainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+
+    const dashHeight = 5.0;
+    const dashSpace = 3.0;
+    double startY = 0;
+
+    while (startY < size.height) {
+      canvas.drawLine(
+        Offset(size.width / 2, startY),
+        Offset(size.width / 2, startY + dashHeight),
+        paint,
+      );
+      startY += dashHeight + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

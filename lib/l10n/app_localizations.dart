@@ -1183,6 +1183,210 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Reintentar'**
   String get retryButton;
+
+  /// No description provided for @historyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Historial'**
+  String get historyTitle;
+
+  /// No description provided for @historyFilterAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Todos'**
+  String get historyFilterAll;
+
+  /// No description provided for @historyFilterFeed.
+  ///
+  /// In es, this message translates to:
+  /// **'Tomas'**
+  String get historyFilterFeed;
+
+  /// No description provided for @historyFilterDiaper.
+  ///
+  /// In es, this message translates to:
+  /// **'Pañales'**
+  String get historyFilterDiaper;
+
+  /// No description provided for @historyFilterBath.
+  ///
+  /// In es, this message translates to:
+  /// **'Baños'**
+  String get historyFilterBath;
+
+  /// No description provided for @historyFilterVomit.
+  ///
+  /// In es, this message translates to:
+  /// **'Vómitos'**
+  String get historyFilterVomit;
+
+  /// No description provided for @historyEmptyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay registros'**
+  String get historyEmptyTitle;
+
+  /// No description provided for @historyEmptyMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no has registrado ninguna acción.'**
+  String get historyEmptyMessage;
+
+  /// No description provided for @historyEmptyFilterMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay registros con los filtros seleccionados.'**
+  String get historyEmptyFilterMessage;
+
+  /// No description provided for @historyDayToday.
+  ///
+  /// In es, this message translates to:
+  /// **'HOY'**
+  String get historyDayToday;
+
+  /// No description provided for @historyDayYesterday.
+  ///
+  /// In es, this message translates to:
+  /// **'AYER'**
+  String get historyDayYesterday;
+
+  /// No description provided for @historyDayCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{1 registro} other{{count} registros}}'**
+  String historyDayCount(int count);
+
+  /// No description provided for @historyLoadingMore.
+  ///
+  /// In es, this message translates to:
+  /// **'Cargando más registros...'**
+  String get historyLoadingMore;
+
+  /// No description provided for @historyActionFeed.
+  ///
+  /// In es, this message translates to:
+  /// **'Toma'**
+  String get historyActionFeed;
+
+  /// No description provided for @historyActionDiaper.
+  ///
+  /// In es, this message translates to:
+  /// **'Pañal'**
+  String get historyActionDiaper;
+
+  /// No description provided for @historyActionBath.
+  ///
+  /// In es, this message translates to:
+  /// **'Baño'**
+  String get historyActionBath;
+
+  /// No description provided for @historyActionVomit.
+  ///
+  /// In es, this message translates to:
+  /// **'Vómito'**
+  String get historyActionVomit;
+
+  /// No description provided for @timelineRecentActions.
+  ///
+  /// In es, this message translates to:
+  /// **'Últimas acciones'**
+  String get timelineRecentActions;
+
+  /// No description provided for @timelineShowCount.
+  ///
+  /// In es, this message translates to:
+  /// **'Mostrar {count}'**
+  String timelineShowCount(int count);
+
+  /// No description provided for @timelineShowAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver todas'**
+  String get timelineShowAll;
+
+  /// No description provided for @timelineViewFullHistory.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver historial completo'**
+  String get timelineViewFullHistory;
+
+  /// No description provided for @timelineNoActions.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay acciones registradas'**
+  String get timelineNoActions;
+
+  /// No description provided for @timelineTimeAgo.
+  ///
+  /// In es, this message translates to:
+  /// **'Hace {time}'**
+  String timelineTimeAgo(String time);
+
+  /// No description provided for @timelineJustNow.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora mismo'**
+  String get timelineJustNow;
+
+  /// No description provided for @timelineMinutesShort.
+  ///
+  /// In es, this message translates to:
+  /// **'{count}min'**
+  String timelineMinutesShort(int count);
+
+  /// No description provided for @timelineHoursShort.
+  ///
+  /// In es, this message translates to:
+  /// **'{count}h'**
+  String timelineHoursShort(int count);
+
+  /// No description provided for @timelineDaysShort.
+  ///
+  /// In es, this message translates to:
+  /// **'{count}d'**
+  String timelineDaysShort(int count);
+
+  /// No description provided for @timelineMinutesAgo.
+  ///
+  /// In es, this message translates to:
+  /// **'Hace {count, plural, =1{1 minuto} other{{count} minutos}}'**
+  String timelineMinutesAgo(int count);
+
+  /// No description provided for @timelineHoursAgo.
+  ///
+  /// In es, this message translates to:
+  /// **'Hace {count, plural, =1{1 hora} other{{count} horas}}'**
+  String timelineHoursAgo(int count);
+
+  /// No description provided for @timelineHoursMinutesAgo.
+  ///
+  /// In es, this message translates to:
+  /// **'Hace {hours}h {minutes}min'**
+  String timelineHoursMinutesAgo(int hours, int minutes);
+
+  /// No description provided for @timelineDaysAgo.
+  ///
+  /// In es, this message translates to:
+  /// **'Hace {count, plural, =1{1 día} other{{count} días}}'**
+  String timelineDaysAgo(int count);
+
+  /// No description provided for @timelineWeeksAgo.
+  ///
+  /// In es, this message translates to:
+  /// **'Hace {count, plural, =1{1 semana} other{{count} semanas}}'**
+  String timelineWeeksAgo(int count);
+
+  /// No description provided for @timelineMonthsAgo.
+  ///
+  /// In es, this message translates to:
+  /// **'Hace {count, plural, =1{1 mes} other{{count} meses}}'**
+  String timelineMonthsAgo(int count);
+
+  /// No description provided for @timelineYearsAgo.
+  ///
+  /// In es, this message translates to:
+  /// **'Hace {count, plural, =1{1 año} other{{count} años}}'**
+  String timelineYearsAgo(int count);
 }
 
 class _AppLocalizationsDelegate

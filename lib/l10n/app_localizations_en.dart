@@ -557,27 +557,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get configurationImportLegacyLoading => 'Importing records...';
 
   @override
-  String get configurationImportNoBaby =>
-      'Select a baby before importing.';
+  String get configurationImportNoBaby => 'Select a baby before importing.';
 
   @override
   String get configurationImportEmpty =>
-      "We couldn't find compatible records in the file.";
+      'We couldn\'t find compatible records in the file.';
 
   @override
   String configurationImportSuccess(int count) {
-    return intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      zero: 'No records were imported.',
-      one: '1 record imported.',
       other: '$count records imported.',
+      one: '1 record imported.',
+      zero: 'No records were imported.',
     );
+    return '$_temp0';
   }
 
   @override
   String get configurationImportFailure =>
-      "We couldn't import the file. Check the format and try again.";
+      'We couldn\'t import the file. Check the format and try again.';
 
   @override
   String get configurationPaletteDawnBlush => 'Blush sunrise';
@@ -609,4 +609,175 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retryButton => 'Retry';
+
+  @override
+  String get historyTitle => 'History';
+
+  @override
+  String get historyFilterAll => 'All';
+
+  @override
+  String get historyFilterFeed => 'Feedings';
+
+  @override
+  String get historyFilterDiaper => 'Diapers';
+
+  @override
+  String get historyFilterBath => 'Baths';
+
+  @override
+  String get historyFilterVomit => 'Vomits';
+
+  @override
+  String get historyEmptyTitle => 'No records';
+
+  @override
+  String get historyEmptyMessage => 'You haven\'t recorded any actions yet.';
+
+  @override
+  String get historyEmptyFilterMessage =>
+      'No records match the selected filters.';
+
+  @override
+  String get historyDayToday => 'TODAY';
+
+  @override
+  String get historyDayYesterday => 'YESTERDAY';
+
+  @override
+  String historyDayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count records',
+      one: '1 record',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get historyLoadingMore => 'Loading more records...';
+
+  @override
+  String get historyActionFeed => 'Feeding';
+
+  @override
+  String get historyActionDiaper => 'Diaper';
+
+  @override
+  String get historyActionBath => 'Bath';
+
+  @override
+  String get historyActionVomit => 'Vomit';
+
+  @override
+  String get timelineRecentActions => 'Recent actions';
+
+  @override
+  String timelineShowCount(int count) {
+    return 'Show $count';
+  }
+
+  @override
+  String get timelineShowAll => 'Show all';
+
+  @override
+  String get timelineViewFullHistory => 'View full history';
+
+  @override
+  String get timelineNoActions => 'No actions recorded yet';
+
+  @override
+  String timelineTimeAgo(String time) {
+    return '$time ago';
+  }
+
+  @override
+  String get timelineJustNow => 'Just now';
+
+  @override
+  String timelineMinutesShort(int count) {
+    return '${count}min';
+  }
+
+  @override
+  String timelineHoursShort(int count) {
+    return '${count}h';
+  }
+
+  @override
+  String timelineDaysShort(int count) {
+    return '${count}d';
+  }
+
+  @override
+  String timelineMinutesAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutes ago',
+      one: '1 minute ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timelineHoursAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours ago',
+      one: '1 hour ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timelineHoursMinutesAgo(int hours, int minutes) {
+    return '${hours}h ${minutes}min ago';
+  }
+
+  @override
+  String timelineDaysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days ago',
+      one: '1 day ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timelineWeeksAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count weeks ago',
+      one: '1 week ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timelineMonthsAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months ago',
+      one: '1 month ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timelineYearsAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count years ago',
+      one: '1 year ago',
+    );
+    return '$_temp0';
+  }
 }
