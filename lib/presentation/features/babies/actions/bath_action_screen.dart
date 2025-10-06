@@ -3,6 +3,7 @@ import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/features/baby_actions/action_pickers.dart';
 import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
 import 'package:pequelog/presentation/features/babies/new_baby_screen.dart';
+import 'package:pequelog/presentation/widgets/action_day_selector.dart';
 import 'package:provider/provider.dart';
 
 /// Screen that captures bath details for the daily log.
@@ -23,7 +24,6 @@ class BathActionScreen extends StatefulWidget {
 
 class _BathActionScreenState extends State<BathActionScreen> {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _dateController;
   late final TextEditingController _timeController;
   late final TextEditingController _durationController;
   late final TextEditingController _notesController;
@@ -39,7 +39,6 @@ class _BathActionScreenState extends State<BathActionScreen> {
     final now = DateTime.now();
     _selectedDate = DateTime(now.year, now.month, now.day);
     _selectedTime = TimeOfDay.fromDateTime(now);
-    _dateController = TextEditingController();
     _timeController = TextEditingController();
     _durationController = TextEditingController();
     _notesController = TextEditingController();
@@ -52,7 +51,6 @@ class _BathActionScreenState extends State<BathActionScreen> {
       return;
     }
     final material = MaterialLocalizations.of(context);
-    _dateController.text = material.formatMediumDate(_selectedDate);
     _timeController.text = material.formatTimeOfDay(
       _selectedTime,
       alwaysUse24HourFormat: true,
@@ -62,7 +60,6 @@ class _BathActionScreenState extends State<BathActionScreen> {
 
   @override
   void dispose() {
-    _dateController.dispose();
     _timeController.dispose();
     _durationController.dispose();
     _notesController.dispose();
@@ -78,8 +75,6 @@ class _BathActionScreenState extends State<BathActionScreen> {
     }
     setState(() {
       _selectedDate = DateTime(picked.year, picked.month, picked.day);
-      final material = MaterialLocalizations.of(context);
-      _dateController.text = material.formatMediumDate(_selectedDate);
     });
   }
 
@@ -169,15 +164,15 @@ class _BathActionScreenState extends State<BathActionScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextFormField(
-                  key: const Key('bath_date'),
-                  controller: _dateController,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    labelText: l10n.actionDateLabel,
-                    hintText: l10n.actionDateHint,
-                  ),
-                  onTap: _pickDate,
+                ActionDaySelector(
+                  label: l10n.actionDateLabel,
+                  selectedDate: _selectedDate,
+                  onPickDay: _pickDate,
+                  onPreviousDay: () => _changeDay(-1),
+                  onNextDay: () => _changeDay(1),
+                  previousTooltip: l10n.actionDayPrevious,
+                  nextTooltip: l10n.actionDayNext,
+                  pickerTooltip: l10n.actionDayPickerTooltip,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -233,5 +228,11 @@ class _BathActionScreenState extends State<BathActionScreen> {
         ),
       ),
     );
+  }
+
+  void _changeDay(int delta) {
+    setState(() {
+      _selectedDate = _selectedDate.add(Duration(days: delta));
+    });
   }
 }

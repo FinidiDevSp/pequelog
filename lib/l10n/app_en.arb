@@ -98,6 +98,11 @@
   "actionNotesHint": "Add details or observations",
   "actionDatePickerHelp": "Pick the day of the activity",
   "actionTimePickerHelp": "Pick the time of the activity",
+  "actionDayPrevious": "Previous day",
+  "actionDayNext": "Next day",
+  "actionDayPickerTooltip": "Pick day",
+  "actionDayToday": "TODAY",
+  "actionDayYesterday": "YESTERDAY",
   "feedDaySelectorLabel": "Feeding day",
   "feedDayPrevious": "Previous day",
   "feedDayNext": "Next day",
@@ -122,6 +127,27 @@
   "feedActionUpdateSuccess": "Feed updated",
   "feedActionError": "We couldn't save the feed. Try again.",
   "feedActionEditTitle": "Edit feed",
+  "feedTimelineTitle": "Feeds for the day",
+  "feedTimelineEmpty": "No feeds recorded for this day yet.",
+  "feedTimelineGapLabel": "{duration} between feeds",
+  "@feedTimelineGapLabel": {
+    "placeholders": {
+      "duration": {}
+    }
+  },
+  "feedTimelineGapShort": "less than a minute",
+  "feedTimelineAmountLabel": "Amount: {amount} ml",
+  "@feedTimelineAmountLabel": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "feedTimelineDurationLabel": "Duration: {duration}",
+  "@feedTimelineDurationLabel": {
+    "placeholders": {
+      "duration": {}
+    }
+  },
   "bathDurationLabel": "Bath duration",
   "bathDurationHint": "Minutes",
   "bathDurationHelper": "Leave empty if you don't want to track it",

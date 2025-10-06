@@ -232,6 +232,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionTimePickerHelp => 'Pick the time of the activity';
 
   @override
+  String get actionDayPrevious => 'Previous day';
+
+  @override
+  String get actionDayNext => 'Next day';
+
+  @override
+  String get actionDayPickerTooltip => 'Pick day';
+
+  @override
+  String get actionDayToday => 'TODAY';
+
+  @override
+  String get actionDayYesterday => 'YESTERDAY';
+
+  @override
   String get feedDaySelectorLabel => 'Feeding day';
 
   @override
@@ -306,6 +321,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get feedActionEditTitle => 'Edit feed';
+
+  @override
+  String get feedTimelineTitle => 'Feeds for the day';
+
+  @override
+  String get feedTimelineEmpty => 'No feeds recorded for this day yet.';
+
+  @override
+  String feedTimelineGapLabel(Object duration) {
+    return '$duration between feeds';
+  }
+
+  @override
+  String get feedTimelineGapShort => 'less than a minute';
+
+  @override
+  String feedTimelineAmountLabel(Object amount) {
+    return 'Amount: $amount ml';
+  }
+
+  @override
+  String feedTimelineDurationLabel(Object duration) {
+    return 'Duration: $duration';
+  }
 
   @override
   String get bathDurationLabel => 'Bath duration';

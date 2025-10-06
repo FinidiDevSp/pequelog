@@ -232,6 +232,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get actionTimePickerHelp => 'Elige la hora de la actividad';
 
   @override
+  String get actionDayPrevious => 'Día anterior';
+
+  @override
+  String get actionDayNext => 'Día siguiente';
+
+  @override
+  String get actionDayPickerTooltip => 'Elegir día';
+
+  @override
+  String get actionDayToday => 'HOY';
+
+  @override
+  String get actionDayYesterday => 'AYER';
+
+  @override
   String get feedDaySelectorLabel => 'Día de la toma';
 
   @override
@@ -307,6 +322,30 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get feedActionEditTitle => 'Editar toma';
+
+  @override
+  String get feedTimelineTitle => 'Tomas del día';
+
+  @override
+  String get feedTimelineEmpty => 'Aún no registraste tomas en este día.';
+
+  @override
+  String feedTimelineGapLabel(Object duration) {
+    return '$duration entre tomas';
+  }
+
+  @override
+  String get feedTimelineGapShort => 'menos de un minuto';
+
+  @override
+  String feedTimelineAmountLabel(Object amount) {
+    return 'Cantidad: $amount ml';
+  }
+
+  @override
+  String feedTimelineDurationLabel(Object duration) {
+    return 'Duración: $duration';
+  }
 
   @override
   String get bathDurationLabel => 'Duración del baño';
