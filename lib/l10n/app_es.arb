@@ -254,5 +254,109 @@
   "historyActionFeed": "Toma",
   "historyActionDiaper": "Pañal",
   "historyActionBath": "Baño",
-  "historyActionVomit": "Vómito"
+  "historyActionVomit": "Vómito",
+  "timelineRecentActions": "Últimas acciones",
+  "timelineShowCount": "Mostrar {count}",
+  "@timelineShowCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineShowAll": "Ver todas",
+  "timelineViewFullHistory": "Ver historial completo",
+  "timelineNoActions": "Aún no hay acciones registradas",
+  "timelineTimeAgo": "Hace {time}",
+  "@timelineTimeAgo": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineJustNow": "Ahora mismo",
+  "timelineMinutesShort": "{count}min",
+  "@timelineMinutesShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineHoursShort": "{count}h",
+  "@timelineHoursShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineDaysShort": "{count}d",
+  "@timelineDaysShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMinutesAgo": "Hace {count, plural, =1{1 minuto} other{{count} minutos}}",
+  "@timelineMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineHoursAgo": "Hace {count, plural, =1{1 hora} other{{count} horas}}",
+  "@timelineHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineHoursMinutesAgo": "Hace {hours}h {minutes}min",
+  "@timelineHoursMinutesAgo": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineDaysAgo": "Hace {count, plural, =1{1 día} other{{count} días}}",
+  "@timelineDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineWeeksAgo": "Hace {count, plural, =1{1 semana} other{{count} semanas}}",
+  "@timelineWeeksAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMonthsAgo": "Hace {count, plural, =1{1 mes} other{{count} meses}}",
+  "@timelineMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineYearsAgo": "Hace {count, plural, =1{1 año} other{{count} años}}",
+  "@timelineYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

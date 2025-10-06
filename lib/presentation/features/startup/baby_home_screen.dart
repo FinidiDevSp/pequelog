@@ -15,6 +15,7 @@ import 'package:pequelog/domain/babies/entities/baby.dart';
 import 'package:pequelog/l10n/app_localizations.dart';
 import 'package:pequelog/presentation/features/baby_actions/baby_actions_state.dart';
 import 'package:pequelog/presentation/features/baby_actions/feed_timer_state.dart';
+import 'package:pequelog/presentation/widgets/action_timeline_list.dart';
 
 import 'package:provider/provider.dart';
 
@@ -163,10 +164,22 @@ class BabyHomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const _LatestEventsOverview(),
-              const SizedBox(height: 32),
-              _RecentActionsSection(
-                datePicker: datePicker,
-                timePicker: timePicker,
+              const SizedBox(height: 24),
+              Consumer<BabyActionsState>(
+                builder: (context, actionsState, _) {
+                  final actions = actionsState.recentActions;
+                  return ActionTimelineList(
+                    actions: actions,
+                    onActionTap: (action) {
+                      // Navigate to edit screen based on action kind
+                      if (action.kind == BabyActionKind.feed) {
+                        context.goToFeedAction(initialAction: action);
+                      }
+                      // TODO: Add navigation for other action types
+                    },
+                    onViewHistory: () => context.goToHistory(),
+                  );
+                },
               ),
             ],
           ),

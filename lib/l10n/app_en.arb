@@ -254,5 +254,109 @@
   "historyActionFeed": "Feeding",
   "historyActionDiaper": "Diaper",
   "historyActionBath": "Bath",
-  "historyActionVomit": "Vomit"
+  "historyActionVomit": "Vomit",
+  "timelineRecentActions": "Recent actions",
+  "timelineShowCount": "Show {count}",
+  "@timelineShowCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineShowAll": "Show all",
+  "timelineViewFullHistory": "View full history",
+  "timelineNoActions": "No actions recorded yet",
+  "timelineTimeAgo": "{time} ago",
+  "@timelineTimeAgo": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineJustNow": "Just now",
+  "timelineMinutesShort": "{count}min",
+  "@timelineMinutesShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineHoursShort": "{count}h",
+  "@timelineHoursShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineDaysShort": "{count}d",
+  "@timelineDaysShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMinutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
+  "@timelineMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineHoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
+  "@timelineHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineHoursMinutesAgo": "{hours}h {minutes}min ago",
+  "@timelineHoursMinutesAgo": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineDaysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
+  "@timelineDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineWeeksAgo": "{count, plural, =1{1 week ago} other{{count} weeks ago}}",
+  "@timelineWeeksAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMonthsAgo": "{count, plural, =1{1 month ago} other{{count} months ago}}",
+  "@timelineMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineYearsAgo": "{count, plural, =1{1 year ago} other{{count} years ago}}",
+  "@timelineYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

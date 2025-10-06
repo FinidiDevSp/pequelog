@@ -116,11 +116,12 @@ class PequeLogApp extends StatelessWidget {
             return timerState;
           },
         ),
-        ChangeNotifierProxyProvider<BabyState, BabyActionsState>(
+        ChangeNotifierProxyProvider2<BabyState, AppSettings, BabyActionsState>(
           create: (_) => _createActionsState(),
-          update: (_, babyState, actionsState) {
+          update: (_, babyState, settings, actionsState) {
             actionsState ??= _createActionsState();
             actionsState.updateBabyId(babyState.selectedBaby?.id);
+            actionsState.updateMaxRecentActions(settings.recentActionsLimit);
             return actionsState;
           },
         ),

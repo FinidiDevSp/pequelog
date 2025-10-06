@@ -41,7 +41,7 @@ class BabyActionsState extends ChangeNotifier {
   final DeleteBabyAction _deleteBabyAction;
 
   /// Maximum amount of actions kept in the in-memory list.
-  final int maxRecentActions;
+  int maxRecentActions;
 
   List<BabyAction> _recentActions = const <BabyAction>[];
   bool _isLoading = false;
@@ -76,6 +76,15 @@ class BabyActionsState extends ChangeNotifier {
 
   /// Forces a refresh of the recent actions for the current baby.
   Future<void> reload() => _loadRecent(force: true);
+
+  /// Updates the maximum number of recent actions to fetch and reloads.
+  Future<void> updateMaxRecentActions(int limit) async {
+    if (maxRecentActions == limit) {
+      return;
+    }
+    maxRecentActions = limit;
+    await reload();
+  }
 
   /// Logs a feeding action and updates the in-memory list.
   Future<BabyAction> logFeed({

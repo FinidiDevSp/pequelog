@@ -11,10 +11,12 @@ class AppSettings extends ChangeNotifier {
     Locale? initialLocale,
     AppColorPalette initialPalette = AppColorPalette.dawnBlush,
     ThemeMode initialThemeMode = ThemeMode.system,
+    int initialRecentActionsLimit = 5,
     AppSettingsStore? store,
   })  : _locale = initialLocale ?? const Locale('es'),
         _palette = initialPalette,
         _themeMode = initialThemeMode,
+        _recentActionsLimit = initialRecentActionsLimit,
         _store = store ?? const SharedPreferencesAppSettingsStore() {
     _restorePersistedSettings();
   }
@@ -22,6 +24,7 @@ class AppSettings extends ChangeNotifier {
   Locale _locale;
   AppColorPalette _palette;
   ThemeMode _themeMode;
+  int _recentActionsLimit;
   final AppSettingsStore _store;
 
   /// Current locale for the application.
@@ -32,6 +35,9 @@ class AppSettings extends ChangeNotifier {
 
   /// Current theme mode selection applied across the app.
   ThemeMode get themeMode => _themeMode;
+
+  /// Number of recent actions to display in the home screen timeline.
+  int get recentActionsLimit => _recentActionsLimit;
 
   /// Updates the locale and notifies listeners when it changes.
   void setLocale(Locale locale) {
@@ -75,6 +81,20 @@ class AppSettings extends ChangeNotifier {
     );
   }
 
+  /// Updates the number of recent actions to display and notifies listeners.
+  void setRecentActionsLimit(int limit) {
+    if (limit == _recentActionsLimit) {
+      return;
+    }
+    _recentActionsLimit = limit;
+    notifyListeners();
+    unawaited(
+      _store.saveRecentActionsLimit(limit).catchError((_) {
+        // Persistence errors should not block UI updates.
+      }),
+    );
+  }
+
   Future<void> _restorePersistedSettings() async {
     try {
       final storedLocale = await _store.loadLocale();
@@ -95,6 +115,12 @@ class AppSettings extends ChangeNotifier {
 
       if (storedThemeMode != null && storedThemeMode != _themeMode) {
         _themeMode = storedThemeMode;
+        updated = true;
+      }
+
+      final storedLimit = await _store.loadRecentActionsLimit();
+      if (storedLimit != null && storedLimit != _recentActionsLimit) {
+        _recentActionsLimit = storedLimit;
         updated = true;
       }
 
@@ -126,6 +152,12 @@ abstract class AppSettingsStore {
 
   /// Persists the theme mode selection.
   Future<void> saveThemeMode(ThemeMode mode);
+
+  /// Reads the previously stored recent actions limit, if any.
+  Future<int?> loadRecentActionsLimit();
+
+  /// Persists the recent actions limit selection.
+  Future<void> saveRecentActionsLimit(int limit);
 }
 
 /// Stores the palette selection using `SharedPreferences`.
@@ -137,6 +169,7 @@ class SharedPreferencesAppSettingsStore implements AppSettingsStore {
   static const _paletteKey = 'presentation.palette';
   static const _localeKey = 'presentation.locale';
   static const _themeModeKey = 'presentation.themeMode';
+  static const _recentActionsLimitKey = 'presentation.recentActionsLimit';
 
   final SharedPreferences? _preferences;
 
@@ -208,6 +241,26 @@ class SharedPreferencesAppSettingsStore implements AppSettingsStore {
     try {
       final prefs = _preferences ?? await SharedPreferences.getInstance();
       await prefs.setString(_themeModeKey, mode.name);
+    } catch (_) {
+      // Ignore persistence errors silently.
+    }
+  }
+
+  @override
+  Future<int?> loadRecentActionsLimit() async {
+    try {
+      final prefs = _preferences ?? await SharedPreferences.getInstance();
+      return prefs.getInt(_recentActionsLimitKey);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Future<void> saveRecentActionsLimit(int limit) async {
+    try {
+      final prefs = _preferences ?? await SharedPreferences.getInstance();
+      await prefs.setInt(_recentActionsLimitKey, limit);
     } catch (_) {
       // Ignore persistence errors silently.
     }
