@@ -134,29 +134,37 @@ class PequeLogApp extends StatelessWidget {
             navigatorKey: navigatorKey,
           );
 
-          return MaterialApp.router(
-            routerConfig: router,
-            onGenerateTitle: (context) =>
-                AppLocalizations.of(context)!.appTitle,
-            theme: _buildTheme(settings.palette, Brightness.light),
-            darkTheme: _buildTheme(settings.palette, Brightness.dark),
-            themeMode: settings.themeMode,
-            locale: settings.locale,
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: AppLocalizations.supportedLocales,
-            builder: (context, child) {
-              return _StartupRouterWrapper(
-                imagePicker: _imagePicker,
-                datePicker: _datePicker,
-                timePicker: _timePicker,
-                child: child ?? const SizedBox.shrink(),
-              );
-            },
+          // Wrap with AnimatedTheme for smooth 400ms transitions when palette changes
+          return AnimatedTheme(
+            data: settings.themeMode == ThemeMode.dark
+                ? _buildTheme(settings.palette, Brightness.dark)
+                : _buildTheme(settings.palette, Brightness.light),
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
+            child: MaterialApp.router(
+              routerConfig: router,
+              onGenerateTitle: (context) =>
+                  AppLocalizations.of(context)!.appTitle,
+              theme: _buildTheme(settings.palette, Brightness.light),
+              darkTheme: _buildTheme(settings.palette, Brightness.dark),
+              themeMode: settings.themeMode,
+              locale: settings.locale,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
+              builder: (context, child) {
+                return _StartupRouterWrapper(
+                  imagePicker: _imagePicker,
+                  datePicker: _datePicker,
+                  timePicker: _timePicker,
+                  child: child ?? const SizedBox.shrink(),
+                );
+              },
+            ),
           );
         },
       ),

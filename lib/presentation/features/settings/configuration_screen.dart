@@ -45,6 +45,8 @@ class ConfigurationScreen extends StatelessWidget {
                   isSelected: settings.locale.languageCode == 'en',
                   onTap: () => settings.setLocale(const Locale('en')),
                 ),
+                const SizedBox(height: 16),
+                _LanguagePreviewCard(locale: settings.locale),
                 const SizedBox(height: 32),
                 Text(
                   l10n.configurationPaletteLabel,
@@ -106,37 +108,53 @@ class _LanguageOption extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Material(
-      color: isSelected
-          ? theme.colorScheme.primary.withOpacity(0.12)
-          : theme.colorScheme.surface,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Icon(
-                isSelected
-                    ? Icons.radio_button_checked
-                    : Icons.radio_button_unchecked,
-                color: isSelected
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurface.withOpacity(0.6),
+    return Semantics(
+      label: '$title ${isSelected ? 'selected' : 'not selected'}',
+      hint: 'Double tap to select this language',
+      selected: isSelected,
+      button: true,
+      child: Focus(
+        onKeyEvent: (node, event) {
+          if (event.logicalKey.keyLabel == 'Enter' ||
+              event.logicalKey.keyLabel == ' ') {
+            onTap();
+            return KeyEventResult.handled;
+          }
+          return KeyEventResult.ignored;
+        },
+        child: Material(
+          color: isSelected
+              ? theme.colorScheme.primary.withOpacity(0.12)
+              : theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(12),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Icon(
+                    isSelected
+                        ? Icons.radio_button_checked
+                        : Icons.radio_button_unchecked,
+                    color: isSelected
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                  const SizedBox(width: 16),
+                  Text(
+                    title,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                      color: isSelected
+                          ? theme.colorScheme.onSurface
+                          : theme.colorScheme.onSurface.withOpacity(0.87),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 16),
-              Text(
-                title,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                  color: isSelected
-                      ? theme.colorScheme.onSurface
-                      : theme.colorScheme.onSurface.withOpacity(0.87),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -162,14 +180,30 @@ class _PaletteOption extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = palette.colors.light;
 
-    return Material(
-      color: isSelected
-          ? theme.colorScheme.primary.withOpacity(0.12)
-          : theme.colorScheme.surface,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+    return Tooltip(
+      message: '$title color palette',
+      child: Semantics(
+        label: '$title palette ${isSelected ? 'selected' : 'not selected'}',
+        hint: 'Double tap to select this color palette',
+        selected: isSelected,
+        button: true,
+        child: Focus(
+          onKeyEvent: (node, event) {
+            if (event.logicalKey.keyLabel == 'Enter' ||
+                event.logicalKey.keyLabel == ' ') {
+              onTap();
+              return KeyEventResult.handled;
+            }
+            return KeyEventResult.ignored;
+          },
+          child: Material(
+            color: isSelected
+                ? theme.colorScheme.primary.withOpacity(0.12)
+                : theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(12),
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -209,6 +243,9 @@ class _PaletteOption extends StatelessWidget {
             ],
           ),
         ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -231,6 +268,78 @@ class _ColorDot extends StatelessWidget {
           color: Colors.black.withOpacity(0.12),
           width: 1,
         ),
+      ),
+    );
+  }
+}
+
+/// Preview card showing example text in the selected language.
+class _LanguagePreviewCard extends StatelessWidget {
+  const _LanguagePreviewCard({required this.locale});
+
+  final Locale locale;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isSpanish = locale.languageCode == 'es';
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.colorScheme.outline.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.translate_rounded,
+                size: 18,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                isSpanish ? 'Vista previa' : 'Preview',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            isSpanish ? '¡Hola! Bienvenido a PequeLog' : 'Hello! Welcome to PequeLog',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            isSpanish
+                ? 'Registra las actividades diarias de tu bebé'
+                : 'Track your baby\'s daily activities',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withOpacity(0.7),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            isSpanish
+                ? 'Comida, pañales, baños y más'
+                : 'Feeding, diapers, baths and more',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withOpacity(0.7),
+            ),
+          ),
+        ],
       ),
     );
   }
