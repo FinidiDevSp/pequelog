@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:pequelog/core/utils/relative_time_formatter.dart';
 import 'package:pequelog/domain/baby_actions/entities/baby_action.dart';
-import 'package:pequelog/domain/baby_actions/entities/baby_action_kind.dart                          if (widget.action.notes != null && widget.action.notes!.isNotEmpty) ..[
-                            const SizedBox(height: 8),
-                            Text(
-                              widget.action.notes!,import 'package:pequelog/l10n/app_localizations.dart';
+import 'package:pequelog/domain/baby_actions/entities/baby_action_kind.dart';
+import 'package:pequelog/l10n/app_localizations.dart';
 
 /// A single timeline item displaying a baby action with visual timeline elements.
 class ActionTimelineItem extends StatefulWidget {
@@ -89,16 +87,17 @@ class _ActionTimelineItemState extends State<ActionTimelineItem> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final action = widget.action;
 
-    final absoluteTime = intl.DateFormat.Hm().format(widget.action.occurredAt);
+    final absoluteTime = intl.DateFormat.Hm().format(action.occurredAt);
     final now = DateTime.now();
-    final minutesAgo = now.difference(widget.action.occurredAt).inMinutes;
+    final minutesAgo = now.difference(action.occurredAt).inMinutes;
     final isVeryRecent = minutesAgo < 5;
 
     // Calculate interval to previous action
     Duration? interval;
     if (widget.previousAction != null) {
-      interval = widget.action.occurredAt.difference(widget.previousAction!.occurredAt);
+      interval = action.occurredAt.difference(widget.previousAction!.occurredAt);
     }
 
     return InkWell(
@@ -182,7 +181,7 @@ class _ActionTimelineItemState extends State<ActionTimelineItem> {
                         width: 16,
                         height: 16,
                         decoration: BoxDecoration(
-                          color: _getKindColor(colorScheme, widget.action.kind),
+                          color: _getKindColor(colorScheme, action.kind),
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: colorScheme.surface,
@@ -191,7 +190,7 @@ class _ActionTimelineItemState extends State<ActionTimelineItem> {
                         ),
                         child: Center(
                           child: Icon(
-                            _getKindIcon(widget.action.kind),
+                            _getKindIcon(action.kind),
                             size: 8,
                             color: colorScheme.onPrimaryContainer,
                           ),
@@ -303,7 +302,7 @@ class _ActionTimelineItemState extends State<ActionTimelineItem> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                _getKindLabel(l10n, widget.action.kind),
+                                _getKindLabel(l10n, action.kind),
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: colorScheme.onSurfaceVariant,
                                   fontWeight: FontWeight.w500,
