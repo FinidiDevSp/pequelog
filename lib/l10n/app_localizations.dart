@@ -1082,6 +1082,12 @@ abstract class AppLocalizations {
   /// **'Elige los tonos suaves que prefieras'**
   String get configurationPaletteHint;
 
+  /// No description provided for @configurationChangeConfirmation.
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizado'**
+  String get configurationChangeConfirmation;
+
   /// No description provided for @configurationPaletteDawnBlush.
   ///
   /// In es, this message translates to:

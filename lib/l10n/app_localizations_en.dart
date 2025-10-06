@@ -548,6 +548,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Pick the pastel tones you enjoy the most';
 
   @override
+  String get configurationChangeConfirmation => 'Updated';
+
+  @override
   String get configurationPaletteDawnBlush => 'Blush sunrise';
 
   @override
