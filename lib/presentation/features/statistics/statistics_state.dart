@@ -95,23 +95,31 @@ class StatisticsState extends ChangeNotifier {
       final yesterdayStart = todayStart.subtract(const Duration(days: 1));
       final weekStart = todayStart.subtract(Duration(days: now.weekday - 1));
 
+      // Parse babyId to int
+      final babyIdInt = int.tryParse(babyId);
+      if (babyIdInt == null) {
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
+
       // Load today's actions
       final todayActions = await _repository.fetchFilteredActions(
-        babyId: babyId,
+        babyIdInt,
         startDate: todayStart,
         endDate: now,
       );
 
       // Load yesterday's actions
       final yesterdayActions = await _repository.fetchFilteredActions(
-        babyId: babyId,
+        babyIdInt,
         startDate: yesterdayStart,
         endDate: todayStart,
       );
 
       // Load weekly actions
       final weeklyActions = await _repository.fetchFilteredActions(
-        babyId: babyId,
+        babyIdInt,
         startDate: weekStart,
         endDate: now,
       );

@@ -139,7 +139,7 @@ class PequeLogApp extends StatelessWidget {
             babyId: '',
           ),
           update: (_, babyState, statisticsState) {
-            final babyId = babyState.selectedBaby?.id ?? '';
+            final babyId = babyState.selectedBaby?.id?.toString() ?? '';
             if (statisticsState == null || statisticsState.babyId != babyId) {
               return StatisticsState(
                 repository: _actionRepository,
